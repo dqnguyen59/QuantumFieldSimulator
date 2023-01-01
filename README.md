@@ -27,3 +27,4 @@ The simulation is tested on AMD Processor 3950 hyperthreading 32 cores and AMD G
 | Nodes    | Visible Nodes | Width | Height | Depth | FPS |
 | 80631    | 6561          | 51    | 51     | 31    | 70  |
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
+
