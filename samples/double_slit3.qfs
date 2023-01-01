@@ -13,9 +13,9 @@ numLights = 3
 
 [Lights0]
 name = DefaultPointLight
-position.x = -100.0
+position.x = -107.0
 position.y = 100.0
-position.z = 100.0
+position.z = 86.0
 rotation.x = 0.0
 rotation.y = 0.0
 rotation.z = 0.0
@@ -48,9 +48,9 @@ spotLight.shininess = 1.0
 
 [Lights1]
 name = DefaultSpotLight
-position.x = 20.0
+position.x = 35.0
 position.y = 73.0
-position.z = -51.0
+position.z = -89.0
 rotation.x = 0.0
 rotation.y = 0.0
 rotation.z = 0.0
@@ -82,7 +82,7 @@ spotLight.specularIntensity = 1.0
 spotLight.shininess = 1.0
 
 [Lights2]
-name = Light0
+name = Red Light
 position.x = 56.0
 position.y = 6.0
 position.z = 17.0
@@ -98,7 +98,7 @@ color.z = 0.019417465
 intensity = 2.79
 constant = 0.05000019
 linear = 0.01
-exponent = 0.005
+exponent = 0.0024999999441206455
 scale = 1.0
 spotlight = false
 cutOff = 60.0
@@ -118,9 +118,9 @@ spotLight.shininess = 1.0
 
 [Camera]
 fieldOfFiew = 45.0
-position.x = 0.0
+position.x = 27.199984
 position.y = -17.000029
-position.z = 281.28494
+position.z = 340.58838
 rotation.x = 0.0
 rotation.y = 0.0
 rotation.z = 0.0
@@ -128,7 +128,7 @@ rotation.z = 0.0
 [Base]
 rotation.x = -67.0
 rotation.y = 0.0
-rotation.z = 31.0
+rotation.z = 51.0
 
 [Terrain]
 visible = false
@@ -193,27 +193,6 @@ position = 0.5
 
 [Oscillators]
 Size = 1
-
-[Oscillator0]
-name = Oscillator 0
-nodeIndex.x = 60
-nodeIndex.y = 141
-nodeIndex.z = 0
-active.x = false
-active.y = false
-active.z = true
-OscillatorType.x = sin
-OscillatorType.y = cos
-OscillatorType.z = sin
-startangle.x = 0.0
-startangle.y = 0.0
-startangle.z = 0.0
-angleIncrement.x = 0.0
-angleIncrement.y = 0.0
-angleIncrement.z = 4.0
-amplitude.x = 0.0
-amplitude.y = 0.0
-amplitude.z = 40.0
 
 [Rain]
 active = false
@@ -1537,4 +1516,25 @@ index.z = 0
 index.x = 140
 index.y = 279
 index.z = 0
+
+[Oscillator0]
+name = Oscillator 0
+nodeIndex.x = 60
+nodeIndex.y = 141
+nodeIndex.z = 0
+active.x = false
+active.y = false
+active.z = true
+OscillatorType.x = sin
+OscillatorType.y = cos
+OscillatorType.z = sin
+startangle.x = 0.0
+startangle.y = 0.0
+startangle.z = 0.0
+angleIncrement.x = 0.0
+angleIncrement.y = 0.0
+angleIncrement.z = 4.0
+amplitude.x = 0.0
+amplitude.y = 0.0
+amplitude.z = 40.0
 

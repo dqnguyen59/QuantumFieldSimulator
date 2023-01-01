@@ -1,4 +1,0 @@
-
-Quantum Field Simulator
-
-
