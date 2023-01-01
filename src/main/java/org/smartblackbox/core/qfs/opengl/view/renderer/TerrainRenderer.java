@@ -1,0 +1,176 @@
+/*
+ * Copyright (C) 2023  Duy Quoc Nguyen <d.q.nguyen@smartblackbox.nl> and contributors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * File created on 01/01/2023
+ */
+package org.smartblackbox.core.qfs.opengl.view.renderer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
+import org.smartblackbox.core.qfs.Constants;
+import org.smartblackbox.core.qfs.opengl.model.Camera;
+import org.smartblackbox.core.qfs.opengl.model.ObjFileModel;
+import org.smartblackbox.core.qfs.opengl.model.Scene;
+import org.smartblackbox.core.qfs.opengl.model.Terrain;
+import org.smartblackbox.core.qfs.opengl.model.lights.DirectionalLight;
+import org.smartblackbox.core.qfs.opengl.model.lights.Light;
+import org.smartblackbox.core.qfs.settings.QFSProject;
+import org.smartblackbox.core.utils.Utils;
+
+public class TerrainRenderer implements IRenderer {
+
+	QFSProject qfsProject = QFSProject.getInstance();
+	
+	Shader shader;
+	private List<Terrain> terrains;
+
+	private int numLights = Constants.INITIAL_NUM_LIGHTS;
+	private String vertexShader;
+	private String fragmentShader;
+	
+	public TerrainRenderer() throws Exception {
+		terrains = new ArrayList<>();
+		shader = new Shader();
+	}
+	
+	@Override
+	public void init() throws Exception {
+		vertexShader = Utils.loadResource("shaders/terrain_vertex.vs");
+		fragmentShader = Utils.loadResource("shaders/terrain_fragment.fs");
+		updateShaders();
+	}
+
+	public void updateShaders() {
+		try {
+			shader.createVertextShader(vertexShader);
+			String fragmentShader = this.fragmentShader.replace("%MAX_LIGHTS%", "" + numLights);
+			shader.createFragmentShader(fragmentShader);
+			shader.link();
+			shader.createUniform("textureSampler");
+			shader.createUniform("transformationMatrix");
+			shader.createUniform("projectionMatrix");
+			shader.createUniform("viewMatrix");
+			shader.createUniform("ambientLight");
+			shader.createMaterialUniform("material");
+			shader.createUniform("specularPower");
+			shader.createUniform("depthVisibility");
+			shader.createUniform("ignoreLightIndex");
+			shader.createDirectionalLightUniform("directionalLight");
+			shader.createLightListUniform("lights", numLights);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void renderLights(DirectionalLight directionalLight, List<Light> lights, Shader shader) {
+		if (numLights != lights.size()) {
+			numLights = lights.size();
+			updateShaders();
+			try {
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		shader.setUniform("ambientLight", Constants.AMBIENT_LIGHT);
+		shader.setUniform("specularPower", Constants.SPECULAR_POWER);
+		shader.setUniform("directionalLight", directionalLight);
+		
+		for (int i = 0; i < numLights; i++) {
+			shader.setUniform("lights", lights.get(i), i);
+			shader.setUniform("ignoreLightIndex", i);
+			renderLight(shader, lights.get(i));
+		}
+	}
+
+	public void renderLight(Shader shader, Light light) {
+		if (light.getIntensity() > 0) {
+			light.updateMatrix();
+			ObjFileModel model = light.getModel();
+			bind(model);
+			shader.setUniform("material", light.getMaterial());
+			shader.setUniform("transformationMatrix", light.getTransformMatrixf());
+			GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+
+			if (light.isSpotLight()) {
+				model = light.getModelSpotLight();
+				bind(model);
+				shader.setUniform("material", light.getSpotLightHolder().getMaterial());
+				shader.setUniform("transformationMatrix", light.getSpotLightHolder().getTransformMatrixf());
+				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			}
+		}
+	}
+	
+	@Override
+	public void render(Camera camera, Scene scene) {
+		if (terrains.size() > 0) {
+			shader.bind();
+			shader.setUniform("textureSampler", 0);
+			shader.setUniform("projectionMatrix", camera.getProjectionMatrix());
+			shader.setUniform("viewMatrix", camera.getViewMatrix());
+			shader.setUniform("depthVisibility", qfsProject.terrain.getDepthVisibilityFactor());
+
+			renderLights(scene.getDirectionalLight(), qfsProject.getLights(), shader);
+			
+			for (Terrain terrain : terrains) {
+				bind(terrain.getModel());
+				shader.setUniform("transformationMatrix", terrain.getTransformationMatrix());
+				GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			}
+
+			terrains.clear();
+			unbind();
+
+			shader.unbind();
+		}
+	}
+
+	@Override
+	public void bind(ObjFileModel model) {
+		shader.setUniform("material", model.getMaterial());
+		GL30.glBindVertexArray(model.getId());
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
+		GL20.glActiveTexture(GL13.GL_TEXTURE0);
+		if (model.getTexture() != null)
+			GL30.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getId());
+	}
+
+	@Override
+	public void unbind() {
+		GL20.glDisableVertexAttribArray(0);
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(2);
+		GL30.glBindVertexArray(0);
+	}
+
+	@Override
+	public void cleanup() {
+		shader.cleanup();
+	}
+
+	public List<Terrain> getTerrains() {
+		return terrains;
+	}
+	
+}
