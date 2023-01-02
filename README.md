@@ -60,5 +60,5 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 </p>
 
 <p>
-  Todo: add youtube videos and short tutorials
+  Todo: add link to youtube videos and short tutorials
 </p>
