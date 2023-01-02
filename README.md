@@ -21,8 +21,6 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 * IDE: Eclipse
 * Compiler: Java 1.8
 
-<p>Download the project
-
 <p>Download the project to any folder. Then in Eclipse, File -> open Projects from File System... and select the downloaded project folder.</p>
 <p>Find the file Main.java and run.</p>
 <p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
