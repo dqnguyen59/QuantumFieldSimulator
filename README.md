@@ -11,7 +11,7 @@ Please note that the simulation does not approximate real world values, but rath
 
 I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.
 
-<p>The game library engine LWJGL is used to draw the field in 3D.</p>
+<p>The game library engine <a href="https://github.com/LWJGL/lwjgl3/releases" target="_blank">LWJGL</a> is used to draw the field in 3D.</p>
 
 ### Sample files:
 * double_slit.qfs
