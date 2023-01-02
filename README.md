@@ -26,6 +26,9 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 <p>Find the file Main.java and run.</p>
 <p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
 
+<b>Mac users:</b></br>
+VM arguments "-XstartOnFirstThread" needs to be added.
+
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
 * Processor: AMD Ryzen 9 3950x 16-core processor × 32 
