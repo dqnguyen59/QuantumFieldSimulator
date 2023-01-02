@@ -1,7 +1,7 @@
 # Quantum Field Simulator
 
 ## Introduction
-This source code simulates quantum field theory.
+This source code simulates the quantum field theory.
 Inititially it was developed to simulate the double slit experiment.
 It uses a simple motion formula to simulate the light wave.
 By defining the slits in the simulator, the interference patterns can be simulated.
