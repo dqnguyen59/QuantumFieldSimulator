@@ -132,7 +132,7 @@ rotation.z = 51.0
 
 [Terrain]
 visible = false
-texturePath = src/main/resources/textures/terrains/
+texturePath = resources/textures/terrains/
 textureFile = default.jpg
 scale = 1.0
 depthVisibility = 1.0

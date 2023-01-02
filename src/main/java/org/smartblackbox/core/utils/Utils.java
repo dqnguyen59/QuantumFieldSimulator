@@ -18,14 +18,21 @@
  */
 package org.smartblackbox.core.utils;
 
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -33,7 +40,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
+import org.joml.Random;
 import org.lwjgl.system.MemoryUtil;
+import org.smartblackbox.core.qfs.Constants;
 
 public class Utils {
 	
@@ -83,11 +92,15 @@ public class Utils {
 		return buffer;
 	}
 	
-	public static String loadResource(String filename) throws Exception {
+	public static String loadResource(String fileName) {
 		String result;
 
         ClassLoader classLoader = Utils.class.getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(filename);
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream == null) {
+        	// If running from jar file, then JAR_RESOURCES_PATH is required.
+        	inputStream = classLoader.getResourceAsStream(Constants.JAR_RESOURCES_PATH + fileName);
+        }
 		try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
 			result = scanner.useDelimiter("\\A").next();
 		}
@@ -95,21 +108,26 @@ public class Utils {
 		return result;
 	}
 	
-	public static List<String> readAllLines(String fineName) {
-		List<String> list = new ArrayList<>();
-        
-		ClassLoader classLoader = Utils.class.getClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fineName);
+	public static List<String> loadResourceToStringList(String fileName) {
+		List<String> result = new ArrayList<String>();
 
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-        	String line;
-        	while ((line = br.readLine()) != null) {
-				list.add(line);
+        ClassLoader classLoader = Utils.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream == null) {
+        	// If running from jar file, then JAR_RESOURCES_PATH is required.
+        	inputStream = classLoader.getResourceAsStream(Constants.JAR_RESOURCES_PATH + fileName);
+        }
+		try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+			while (scanner.hasNextLine()) {
+				result.add(scanner.nextLine());
 			}
-        } catch (IOException e) {
-        	e.printStackTrace();
-        };
-		return list;
+		}
+
+		return result;
+	}
+	
+	public static String loadTextFile(String fileName) throws IOException {
+		return new String(Files.readAllBytes(Paths.get(fileName)));
 	}
 
 	public static List<File> getFiles(String path, String filter) {
@@ -135,7 +153,79 @@ public class Utils {
 		return files;
 	}
 
-	public static void sleepMS(int msec) {
+	public static void copyStream(InputStream in, OutputStream out) throws IOException {
+	    byte[] buffer = new byte[1024];
+	    int read;
+	    while((read = in.read(buffer)) != -1) {
+	        out.write(buffer, 0, read);
+	    }
+	    in.close();
+	    out.close();
+	}
+	
+	public static void streamToFile(InputStream stream, String fileName) throws IOException {
+        OutputStream output = new BufferedOutputStream(new FileOutputStream(fileName));
+        copyStream(stream, output);
+    }
+	
+	public static void deleteAllTmpFiles(String path, String filter) {
+		List<File> files = getFiles(path, filter);
+		for (File file : files) {
+	        if (file.exists())
+	        	file.delete();
+		}
+	}
+	
+	/**
+	 * Delete all tmp files that is created in the application path.
+	 * 
+	 * @param path
+	 */
+	public static void deleteAllTmpFiles() {
+		List<File> files = getFiles("", ".tmp");
+		for (File file : files) {
+	        if (file.exists())
+	        	file.delete();
+		}
+	}
+	
+	public static ByteBuffer resourceToByteBuffer(String fileName, int bufferSize) throws IOException, URISyntaxException {
+        ClassLoader classLoader = Utils.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream == null) {
+        	// If running from jar file, then JAR_RESOURCES_PATH is required.
+        	inputStream = classLoader.getResourceAsStream(Constants.JAR_RESOURCES_PATH + fileName);
+        }
+
+        // When loading resource files from jar is needed, there's no way to convert inputStream to MappedByteBuffer.
+        // So, the file from resource must be saved to a temporary file that is saved outside the jar.
+        
+        long seed = Random.newSeed();
+        String tmpFile = "file" + seed + ".tmp";
+        File file = new File(tmpFile);
+        if (file.exists())
+        	file.delete();
+        streamToFile(inputStream, tmpFile);
+
+        // Now, the temporary file can be read and put it into MappedByteBuffer.
+        ByteBuffer buffer = fileToByteBuffer(tmpFile, bufferSize);
+        
+        file = new File(tmpFile);
+        if (file.exists())
+        	file.delete();
+        return buffer;
+    }
+
+    public static ByteBuffer fileToByteBuffer(String fileName, int bufferSize) throws IOException {
+        FileInputStream fis = new FileInputStream(new File(fileName));
+        FileChannel fc = fis.getChannel();
+        ByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+        fc.close();
+        fis.close();
+        return buffer;
+    }
+
+    public static void sleepMS(int msec) {
 		try {
 			Thread.sleep(msec);
 		} catch (InterruptedException e) {

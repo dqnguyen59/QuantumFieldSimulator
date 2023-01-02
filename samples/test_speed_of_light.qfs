@@ -132,7 +132,7 @@ rotation.z = 37.600000485777855
 
 [Terrain]
 visible = true
-texturePath = src/main/resources/textures/terrains/
+texturePath = resources/textures/terrains/
 textureFile = default2.jpg
 
 [QFSSettings]

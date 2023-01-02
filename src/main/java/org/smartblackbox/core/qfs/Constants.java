@@ -45,13 +45,25 @@ public class Constants {
             .b((byte) 0xB0)
             .a((byte) 0x70);
 
+	public static final String JAR_RESOURCES_PATH = "resources/";
+
 	public static final String TITLE = "Quantum Field Simulator";
-	public static final String TEXTURE_FILE_PATH = "src/main/resources/textures/terrains/";
+	public static final String TEXTURE_FILE_PATH = "textures/terrains/";
 
 	public static final String DEFAULT_FONT_FILE = "fonts/fira-sans/FiraSans-Medium.ttf";
 	public static final String DEFAULT_FONT_FILE_BOLD = "fonts/fira-sans/FiraSans-ExtraBold.ttf";
 	public static final String DEFAULT_FONT_FILE_ITALIC = "fonts/fira-sans/FiraSans-MediumItalic.ttf";
 	public static final int DEFAULT_FONT_SIZE = 18;
+
+	public static final String SHADER_TERRAIN_VERTEX_FILE = "shaders/terrain_vertex.vs";
+	public static final String SHADER_TERRAIN_FRAGMENT_FILE = "shaders/terrain_fragment.fs";
+	public static final String SHADER_NODE_VERTEX_FILE = "shaders/node_vertex.vs";
+	public static final String SHADER_NODE_FRAGMENT_FILE = "shaders/node_fragment.fs";
+
+	public static final String MODEL_NODE = "models/sphere2.obj";
+	public static final String MODEL_LIGHT_BULB = "models/sphere2.obj";
+	public static final String MODEL_LIGHT_CAP = "models/spotLight.obj";
+	public static final String MODEL_ARROW = "models/arrow.obj";
 
 	public static final String PROJECT_FILE_EXT = ".qfs";
 	public static final String PROJECT_FILE_PATH = "samples";

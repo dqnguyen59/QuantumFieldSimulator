@@ -46,7 +46,7 @@ public class QFSFields {
 	}
 
 	public void drawArrows(Entity baseField, float step, ObjFileModel modelSphere, int sizeI, int sizeJ, int sizeK) {
-		ObjFileModel modelArrow = loader.loadOBJModel("models/arrow.obj");
+		ObjFileModel modelArrow = loader.loadOBJModel(Constants.MODEL_ARROW);
 		float scale = 0.5f;
 		
 		Entity arrowC = scene.createEntity(baseField, modelSphere,
@@ -91,7 +91,7 @@ public class QFSFields {
 		Statistics.numNodesY = sizeJ;
 		Statistics.numNodesZ = sizeK;
 
-		ObjFileModel modelSphere = loader.loadOBJModel("models/sphere2.obj");
+		ObjFileModel modelSphere = loader.loadOBJModel(Constants.MODEL_NODE);
 
 		baseField = new Entity(null, null, new Vector3d(), new Vector3d(), 1.0f);
 		baseField.setPosition(0, 0, 0);

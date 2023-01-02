@@ -105,8 +105,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	}
 
 	public void initDefaultLights() {
-		ObjFileModel modelSphere = loader.loadOBJModel("models/sphere2.obj");
-		ObjFileModel modelSpotLight = loader.loadOBJModel("models/spotLight.obj");
+		ObjFileModel modelSphere = loader.loadOBJModel(Constants.MODEL_LIGHT_BULB);
+		ObjFileModel modelSpotLight = loader.loadOBJModel(Constants.MODEL_LIGHT_CAP);
 
 		modelSpotLight.getMaterial().setAmbientColor(0.0f, 1.0f, 0.0f, 1.0f);
 		modelSpotLight.getMaterial().setAmbientIntensity(6);
@@ -183,19 +183,19 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 				if (i != -1 || j != -1 || k != -1) {
 					boolean isBoundingLine =
-							i == 0			&& j == 0			||
-							i == 0			&& j == qfsProject.getDimensionY() - 1   ||
-							i == qfsProject.getDimensionX() - 1	&& j == 0			||
+							i == 0								&& j == 0								||
+							i == 0								&& j == qfsProject.getDimensionY() - 1  ||
+							i == qfsProject.getDimensionX() - 1	&& j == 0								||
 							i == qfsProject.getDimensionX() - 1	&& j == qfsProject.getDimensionY() - 1	||
 
-							i == 0			&& k == 0			||
-							i == 0			&& k == qfsProject.getDimensionZ() - 1   ||
-							i == qfsProject.getDimensionX() - 1	&& k == 0			||
+							i == 0								&& k == 0								||
+							i == 0								&& k == qfsProject.getDimensionZ() - 1  ||
+							i == qfsProject.getDimensionX() - 1	&& k == 0								||
 							i == qfsProject.getDimensionX() - 1	&& k == qfsProject.getDimensionZ() - 1	||
 
-							j == 0			&& k == 0			||
-							j == 0			&& k == qfsProject.getDimensionZ() - 1   ||
-							j == qfsProject.getDimensionY() - 1	&& k == 0			||
+							j == 0								&& k == 0								||
+							j == 0								&& k == qfsProject.getDimensionZ() - 1  ||
+							j == qfsProject.getDimensionY() - 1	&& k == 0								||
 							j == qfsProject.getDimensionY() - 1	&& k == qfsProject.getDimensionZ() - 1
 							;
 
@@ -864,8 +864,6 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					if (System.currentTimeMillis() - currentTime > 3000) {
 						if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
 							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found!");
-							//isCalcNextPhysicsReady = true;
-							//isRenderingReady = true;
 						}
 						currentTime = System.currentTimeMillis();
 						lastNumTask = scene.getNumTask();

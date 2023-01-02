@@ -23,6 +23,7 @@ import org.smartblackbox.core.qfs.Constants;
 import org.smartblackbox.core.qfs.opengl.controller.Engine;
 import org.smartblackbox.core.qfs.opengl.controller.QuantumFieldSimulator;
 import org.smartblackbox.core.qfs.opengl.view.GLWindow;
+import org.smartblackbox.core.utils.Utils;
 
 public class Main {
 	
@@ -34,6 +35,8 @@ public class Main {
 		System.out.println("https://www.smartblackbox.nl");
 		System.out.println("JWGL Version: " + Version.getVersion());
 
+		Utils.deleteAllTmpFiles();
+		
 		glWindow = new GLWindow(Constants.TITLE);
 		Engine engine = new QuantumFieldSimulator(glWindow);
 

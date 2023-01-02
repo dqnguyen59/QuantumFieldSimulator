@@ -67,7 +67,7 @@ Size = 0
 
 [Terrain]
 visible = true
-texturePath = src/main/resources/textures/terrains/
+texturePath = resources/textures/terrains/
 textureFile = default2.jpg
 scale = 1.0
 depthVisibility = 1.0

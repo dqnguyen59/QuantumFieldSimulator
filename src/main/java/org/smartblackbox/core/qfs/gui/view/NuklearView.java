@@ -19,6 +19,7 @@
 package org.smartblackbox.core.qfs.gui.view;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -61,7 +62,7 @@ import org.lwjgl.system.Platform;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel;
 import org.smartblackbox.core.qfs.gui.model.Theme;
 import org.smartblackbox.core.qfs.settings.AppSettings;
-import org.smartblackbox.core.utils.IOUtils;
+import org.smartblackbox.core.utils.Utils;
 
 /**
  * This class is a modified version to fit the needs of this project.
@@ -113,10 +114,10 @@ public class NuklearView {
 	public NuklearView(NuklearModel nuklearModel) {
 		this.nuklearModel = nuklearModel;
 		try {
-			ttf = IOUtils.ioResourceToByteBuffer(appSettings.getFontFile(), 512 * 1024);
-			ttfItalic = IOUtils.ioResourceToByteBuffer(appSettings.getFontFileItalic(), 512 * 1024);
-			ttfBold = IOUtils.ioResourceToByteBuffer(appSettings.getFontFileBold(), 512 * 1024);
-		} catch (IOException e) {
+			ttf = Utils.resourceToByteBuffer(appSettings.getFontFile(), 512 * 1024);
+			ttfItalic = Utils.resourceToByteBuffer(appSettings.getFontFileItalic(), 512 * 1024);
+			ttfBold = Utils.resourceToByteBuffer(appSettings.getFontFileBold(), 512 * 1024);
+		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
 	}

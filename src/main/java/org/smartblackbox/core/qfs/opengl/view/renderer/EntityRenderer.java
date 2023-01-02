@@ -54,8 +54,10 @@ public class EntityRenderer implements IRenderer {
 	
 	@Override
 	public void init() throws Exception {
-		vertexShader = Utils.loadResource("shaders/node_vertex.vs");
-		fragmentShader = Utils.loadResource("shaders/node_fragment.fs");
+		vertexShader = Utils.loadResource(Constants.SHADER_NODE_VERTEX_FILE);
+		fragmentShader = Utils.loadResource(Constants.SHADER_NODE_FRAGMENT_FILE);
+		//vertexShader = Utils.loadTextFile(Constants.SHADER_NODE_VERTEX_FILE);
+		//fragmentShader = Utils.loadTextFile(Constants.SHADER_NODE_FRAGMENT_FILE);
 		updateShaders();
 	}
 

@@ -25,6 +25,7 @@ import org.ini4j.Wini;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.smartblackbox.core.qfs.Constants;
 import org.smartblackbox.core.qfs.opengl.model.Camera;
 import org.smartblackbox.core.qfs.opengl.model.DetectorModel;
 import org.smartblackbox.core.qfs.opengl.model.Material;
@@ -459,8 +460,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	public Light createLight() {
-		ObjFileModel modelLightBulb = new OBJFormatLoader().loadOBJModel("models/sphere2.obj");
-		ObjFileModel modelSpotLight = new OBJFormatLoader().loadOBJModel("models/spotLight.obj");
+		ObjFileModel modelLightBulb = new OBJFormatLoader().loadOBJModel(Constants.MODEL_LIGHT_BULB);
+		ObjFileModel modelSpotLight = new OBJFormatLoader().loadOBJModel(Constants.MODEL_LIGHT_CAP);
 		Light light = createLight(null, modelLightBulb, modelSpotLight, new Vector3d(0, 10, 0), new Vector3d(0, 0, 0), 1.0);
 		light.set(new Vector3f(1.0f, 1.0f, 1.0f), 1.0f, 1.0f, 0.001f, 0.00001f, 60);
 		light.setDirection(new Vector3d(0, -1, 0));

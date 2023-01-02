@@ -53,8 +53,10 @@ public class TerrainRenderer implements IRenderer {
 	
 	@Override
 	public void init() throws Exception {
-		vertexShader = Utils.loadResource("shaders/terrain_vertex.vs");
-		fragmentShader = Utils.loadResource("shaders/terrain_fragment.fs");
+		vertexShader = Utils.loadResource(Constants.SHADER_TERRAIN_VERTEX_FILE);
+		fragmentShader = Utils.loadResource(Constants.SHADER_TERRAIN_FRAGMENT_FILE);
+		//vertexShader = Utils.loadTextFile(Constants.SHADER_TERRAIN_VERTEX_FILE);
+		//fragmentShader = Utils.loadTextFile(Constants.SHADER_TERRAIN_FRAGMENT_FILE);
 		updateShaders();
 	}
 

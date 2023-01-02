@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.smartblackbox.core.qfs.Constants;
 import org.smartblackbox.core.qfs.opengl.model.ObjFileModel;
 import org.smartblackbox.core.utils.Utils;
 
@@ -25,7 +26,7 @@ public class OBJFormatLoader {
 	private List<Integer> textures = new ArrayList<>();
 
 	public ObjFileModel loadOBJModel(String fileName) {
-		List<String> lines = Utils.readAllLines(fileName);
+		List<String> lines = Utils.loadResourceToStringList(fileName);
 		
 		List<Vector3f> vertices = new ArrayList<>();
 		List<Vector3f> normals = new ArrayList<>();
@@ -162,8 +163,12 @@ public class OBJFormatLoader {
 			IntBuffer c = stack.mallocInt(1);
 			
 			buffer = STBImage.stbi_load(filename, w, h, c, 4);
-			if (buffer == null)
-				throw new Exception("Image File " + filename + " not loaded " + STBImage.stbi_failure_reason());
+			if (buffer == null) {
+				buffer = STBImage.stbi_load(Constants.JAR_RESOURCES_PATH + filename, w, h, c, 4);
+				if (buffer == null) {
+					throw new Exception("Image File " + filename + " not loaded " + STBImage.stbi_failure_reason());
+				}
+			}
 			
 			width = w.get();
 			height = h.get();
