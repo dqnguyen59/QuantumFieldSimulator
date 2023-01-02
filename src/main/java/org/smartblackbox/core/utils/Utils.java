@@ -45,15 +45,15 @@ public class Utils {
 	}
 	
 	public static boolean isWindows() {
-		return osName.startsWith("Windows");
+		return getOsName().startsWith("Windows");
 	}
 	
 	public static boolean isMac() {
-		return osName.startsWith("Mac");
+		return getOsName().startsWith("Mac");
 	}
 	
 	public static boolean isLinux() {
-		return osName.startsWith("Linux");
+		return getOsName().startsWith("Linux");
 	}
 	
 	public static DecimalFormat setFormat(int minFractionDigits, int maxFractionDigits,
