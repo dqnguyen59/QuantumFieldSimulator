@@ -39,7 +39,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 <p>
   <b>!!! The code is tested on Linux and MacOS only !!!</b></br>
-  I recommend using equal or more powerful hardware than the ones mentioned above.</br>
+  Use of equivalent or more powerful hardware is recommended.</br>
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
 
