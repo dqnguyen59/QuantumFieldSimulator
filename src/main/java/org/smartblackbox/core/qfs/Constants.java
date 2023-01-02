@@ -24,6 +24,7 @@ import org.lwjgl.nuklear.NkColor;
 
 public class Constants {
 
+	public static final String APP_SETTINGS_FILE = "settings/qfs.ini";
 	public static final String SEPARATOR = System.getProperty("file.separator");
 	
 	public static final double NANOSECOND = 1000000000;

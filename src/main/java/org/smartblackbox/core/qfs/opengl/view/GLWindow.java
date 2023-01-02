@@ -24,6 +24,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
+import org.smartblackbox.core.qfs.Constants;
 import org.smartblackbox.core.qfs.opengl.model.QFSModel;
 import org.smartblackbox.core.qfs.settings.AppSettings;
 import org.smartblackbox.core.qfs.settings.QFSProject;
@@ -43,7 +44,7 @@ public class GLWindow {
 	public GLWindow(String title) {
 		this.title = title;
 		
-		qfsSettings.loadFromFile("qfs.ini");
+		qfsSettings.loadFromFile(Constants.APP_SETTINGS_FILE);
 		
 		this.left = qfsSettings.getWindowLeft();
 		this.top = qfsSettings.getWindowTop();
