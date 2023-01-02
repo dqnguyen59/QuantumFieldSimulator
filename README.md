@@ -56,5 +56,5 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 </p>
 
 <p>
-  Enjoy
+  Enjoy 😃
 </p>
