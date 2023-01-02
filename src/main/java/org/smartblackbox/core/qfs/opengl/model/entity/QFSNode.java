@@ -315,6 +315,8 @@ public class QFSNode extends Entity {
 	 * 		p = p + v + a * 0.5
 	 * 		v = v * r
 	 * 
+	 * A node can only have six neighbors in the field matrix, then the lenght of the array |N| is 6.
+	 * 
 	 * Remarks: the higher the k value the higher the speed of light, but k cannot exceed 1.
 	 * If k is greater than 1, the affected nodes become unstable and eventually fly away.
 	 * 
