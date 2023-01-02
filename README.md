@@ -6,7 +6,7 @@ Inititially it was developed to simulate the double slit experiment.
 It uses a simple motion formula to simulate the light wave.
 By defining the slits in the simulator, the interference patterns can be simulated.
 Even walls / mirrors can be defined freely in 3D quantum field.
-There are also other files to simulate, for example raindrops or detecting the speed of light.
+There are also other files to simulate, for example rain drops or detecting the speed of light.
 Please note that the simulation does not approximate real world values, but rather simulates light wave properties due to lack of cpu power.
 
 I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.
