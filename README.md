@@ -34,6 +34,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 | Nodes    | Visible Nodes | Width | Height | Depth | FPS |
 |----------|---------------|-------|--------|-------|-----|
 | 80631    | 6561          | 51    | 51     | 31    | 70  |
+| 22801    | 22801         | 151   | 151    | 1     | 32  |
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
 ### Double-Slit example
