@@ -48,7 +48,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 
 <p>
-  I am not a physicist and I have a no knowledge of the formulas used as shown in Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>.
+  I am not a physicist and I have very little knowledge of the formulas used as shown in Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>.
   But I have discovered that the formula above works very well for simulating any waves and double slit experiments.
 </p>
 <p>
