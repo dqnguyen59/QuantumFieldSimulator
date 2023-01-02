@@ -52,7 +52,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
   But I have discovered that the formula above works very well for simulating any waves and double slit experiments.
 </p>
 <p>
-  The equation of Quantum Field is simply based on the motion formula of basic physics and no special formulas are used here.
+  The equation above is simply derived from the physics motion formula.
   Have a look at the QFSNode.java source code to see how this formula is derived and used in the code.
   Note that this is not the full quantum field formula, only the electric field is simulated.
   Note that v is not the speed of light, but is actually the speed of the node itself.
