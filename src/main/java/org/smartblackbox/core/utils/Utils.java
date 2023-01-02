@@ -19,11 +19,13 @@
 package org.smartblackbox.core.utils;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -237,4 +239,70 @@ public class Utils {
 		return f.exists();
 	}
 	
+	public static String runCommand(String command, String suffix) throws Exception {
+		try {
+			Process p = Runtime.getRuntime().exec(command);
+
+			BufferedReader stdInput = new BufferedReader(new 
+					InputStreamReader(p.getInputStream()));
+
+			BufferedReader stdError = new BufferedReader(new 
+					InputStreamReader(p.getErrorStream()));
+
+			String s = null;
+			String sOutput = "";
+			String sError = null;
+
+			while ((s = stdError.readLine()) != null) {
+				sError += s;
+			}
+
+			if (sError != null) throw new Exception(sError);
+
+			while ((s = stdInput.readLine()) != null) {
+				sOutput += s + suffix;
+			}
+
+			return sOutput;
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String runCommand(String command) throws Exception {
+		return runCommand(command, "\n");
+	}
+
+	public static String runCommandWithThrows(String command, String suffix) throws Exception {
+		Process p = Runtime.getRuntime().exec(command);
+
+		BufferedReader stdInput = new BufferedReader(new 
+				InputStreamReader(p.getInputStream()));
+
+		BufferedReader stdError = new BufferedReader(new 
+				InputStreamReader(p.getErrorStream()));
+
+		String s = null;
+		String sOutput = "";
+		String sError = null;
+
+		while ((s = stdError.readLine()) != null) {
+			sError += s;
+		}
+
+		if (sError != null) throw new Exception(sError);
+
+		while ((s = stdInput.readLine()) != null) {
+			sOutput += s + suffix;
+		}
+
+		return sOutput;
+	}
+
+	public static String runCommandWithThrows(String command) throws Exception {
+		return runCommand(command, "\n");
+	}
+
 }

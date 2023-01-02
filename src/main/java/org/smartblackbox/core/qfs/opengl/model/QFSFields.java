@@ -101,7 +101,7 @@ public class QFSFields {
 		float step = Constants.EP_DEFAULT_DISTANCE;
 		
 		// Draw xyz arrows on entity baseField.
-		drawArrows(baseField, step, modelSphere, sizeI, sizeJ, sizeK);
+		//drawArrows(baseField, step, modelSphere, sizeI, sizeJ, sizeK);
 		
 		QFSNode[][][] fieldMatrix = new QFSNode[sizeK][sizeJ][sizeI];
 
