@@ -23,10 +23,13 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 <p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
 
 ### CPU & GPU Performance for comparison
-The simulation is tested on AMD Processor 3950 hyperthreading 32 cores and AMD GPU 6800.
+* OS: Ubuntu 20.04.5 LTS
+* Processor: AMD® Ryzen 9 3950x 16-core processor × 32 
+* Graphics: AMD® Radeon rx 6800
 
 | Nodes    | Visible Nodes | Width | Height | Depth | FPS |
 |----------|---------------|-------|--------|-------|-----|
 | 80631    | 6561          | 51    | 51     | 31    | 70  |
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
