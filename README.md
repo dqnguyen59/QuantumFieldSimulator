@@ -5,6 +5,7 @@ This source code simulates quantum field theory.
 Inititially it was developed to simulate the double slit experiment.
 It uses a simple motion formula to simulate the light wave.
 By defining the slits in the simulator, the interference patterns can be simulated.
+Even walls / mirrors can be defined freely in 3D space.
 There are other files to simulate, for example rain drops or detecting the speed of light.
 Please note that the simulation does not approximate real world values, but rather simulates light wave properties due to lack of cpu power.
 
