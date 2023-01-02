@@ -29,6 +29,9 @@ public class Main {
 	private static GLWindow glWindow;
 
 	public static void main(String[] args) {
+		System.out.println("Quantum Field Simulator");
+		System.out.println("Developed by Duy Quoc Nguyen");
+		System.out.println("https://www.smartblackbox.nl");
 		System.out.println("JWGL Version: " + Version.getVersion());
 
 		glWindow = new GLWindow(Constants.TITLE);
