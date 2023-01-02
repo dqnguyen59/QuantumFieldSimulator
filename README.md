@@ -38,6 +38,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
 <p>
+  <b>!!! The code is tested on Linux only !!!</b>
   The performance of your computer might be less or higher.
   I recommend using equal or more powerful hardware than the ones mentioned above.
 </p>
