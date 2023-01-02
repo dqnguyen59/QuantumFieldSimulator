@@ -289,7 +289,7 @@ public class QFSNode extends Entity {
 	 * 		t = time
 	 * 		a = acceleration
 	 * 		v = node velocity
-	 * 		n = neighbor position array[Right, Up, Front, Left, Down, Back]
+	 * 		N = neighbor position array[Right, Up, Front, Left, Down, Back]
 	 * 		p = position (variable positionBuff)
 	 * 		r = radiation (wave will fade when radiation < 1)
 	 * 		k = constant light speed  {k ∈ [0..1]}
