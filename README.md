@@ -45,5 +45,5 @@ I am not claiming that this is THE quantum field theory, but it should only be u
   The equation of Quantum Field is simply based on the motion formula of basic physics and no special formulas are used here. See the source code QFSNode.java how this formula is derived. 
   Note that this is not the full quantum field formula, only the electric field is simulated.
   Note that v is not the speed of light, but is actually the speed of the node itself.
-	The propagation of the light wave is caused by the motion of the node and the variable k.
+  The propagation of the light wave is caused by the motion of the node and the variable k determines the speed of light.
 </p>
