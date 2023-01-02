@@ -28,8 +28,8 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
-* Processor: AMD® Ryzen 9 3950x 16-core processor × 32 
-* Graphics: AMD® Radeon rx 6800
+* Processor: AMD Ryzen 9 3950x 16-core processor × 32 
+* Graphics: AMD Radeon RX6800
 
 | Nodes    | Visible Nodes | Width | Height | Depth | FPS |
 |----------|---------------|-------|--------|-------|-----|
@@ -38,9 +38,9 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
 <p>
-  <b>!!! The code is tested on Linux only !!!</b></br>
-  The performance of your computer might be less or higher.
-  I recommend using equal or more powerful hardware than the ones mentioned above.
+  <b>!!! The code is tested on Linux and MacOS only !!!</b></br>
+  Use of equivalent or more powerful hardware is recommended.</br>
+  Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
 
 ### Double-slit simulation
