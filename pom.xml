@@ -279,11 +279,14 @@
 		<artifactId>lwjgl-openvr</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
+<!--
+	// does not work on macos	
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-openxr</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
+-->
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-opus</artifactId>
@@ -477,72 +480,6 @@
 			<version>0.5.4</version>
 		</dependency>
 
-
 </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <release>11</release>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx</artifactId>
-                <version>13-ea+13</version>
-                <configuration>
-                    <mainClass>org.qubidia.doodlesoft.App</mainClass>
-                </configuration>
-            </plugin>
-			<plugin>
-			    <groupId>com.gluonhq</groupId>
-			    <artifactId>client-maven-plugin</artifactId>
-			    <version>0.1.36</version>
-			    <configuration>
-			        <mainClass>org.qubidia.doodlesoft.App</mainClass>
-			    </configuration>
-			</plugin>
-			
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-dependency-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <id>copy-dependencies</id>
-			            <phase>prepare-package</phase>
-			            <goals>
-			                <goal>copy-dependencies</goal>
-			            </goals>
-			            <configuration>
-			                <outputDirectory>
-			                    ${project.build.directory}/libs
-			                </outputDirectory>
-			            </configuration>
-			        </execution>
-			    </executions>
-			</plugin>
-			
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-jar-plugin</artifactId>
-			    <configuration>
-			        <archive>
-			            <manifest>
-			                <addClasspath>true</addClasspath>
-			                <classpathPrefix>libs/</classpathPrefix>
-			                <mainClass>
-			                    org.qubidia.doodlesoft.App
-			                </mainClass>
-			            </manifest>
-			        </archive>
-			    </configuration>
-			</plugin>
-				
-        </plugins>
-    </build>
 
 </project>
