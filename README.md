@@ -37,6 +37,11 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 | 22801    | 22801         | 151   | 151    | 1     | 32  |
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
+<p>
+  The performance of your computer might be less or higher.
+  I recommend using equal or more powerful hardware than the ones mentioned above.
+</p>
+
 ### Double-Slit example
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
 
