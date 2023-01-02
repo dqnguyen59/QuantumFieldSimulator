@@ -37,6 +37,25 @@ import org.lwjgl.system.MemoryUtil;
 
 public class Utils {
 	
+	private static String osName;
+
+	public static String getOsName() {
+		if (osName == null) osName = System.getProperty("os.name");
+		return osName;
+	}
+	
+	public static boolean isWindows() {
+		return osName.startsWith("Windows");
+	}
+	
+	public static boolean isMac() {
+		return osName.startsWith("Mac");
+	}
+	
+	public static boolean isLinux() {
+		return osName.startsWith("Linux");
+	}
+	
 	public static DecimalFormat setFormat(int minFractionDigits, int maxFractionDigits,
 			char decimalSeperator, boolean useGrouping, boolean alwaysShowDecimalSeperator) {
 		DecimalFormat format = new DecimalFormat();

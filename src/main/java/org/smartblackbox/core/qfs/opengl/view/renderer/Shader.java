@@ -30,6 +30,7 @@ import org.lwjgl.system.MemoryStack;
 import org.smartblackbox.core.qfs.opengl.model.Material;
 import org.smartblackbox.core.qfs.opengl.model.lights.DirectionalLight;
 import org.smartblackbox.core.qfs.opengl.model.lights.Light;
+import org.smartblackbox.core.utils.Utils;
 
 public class Shader {
 	
@@ -201,6 +202,12 @@ public class Shader {
 		if (fragmentShaderID != 0)
 			GL20.glDetachShader(programID, fragmentShaderID);
 		
+		if (!Utils.isMac()) {
+			validateProgram();
+		}
+	}
+	
+	public void validateProgram() throws Exception {
 		GL20.glValidateProgram(programID);
 		
 		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == 0)
