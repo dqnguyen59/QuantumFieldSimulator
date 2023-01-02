@@ -42,10 +42,19 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 ### Formulas used
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula.png">
 
+
+<p>
+  I am not a physicist and do not understand the formula used or taught by the universities.
+  But found that this formula works well for simulating double slit experiments.
+</p>
 <p>
   The equation of Quantum Field is simply based on the motion formula of basic physics and no special formulas are used here.
   Have a look at the QFSNode.java source code to see how this formula is derived.
   Note that this is not the full quantum field formula, only the electric field is simulated.
   Note that v is not the speed of light, but is actually the speed of the node itself.
   The propagation of the light wave is caused by the motion of the node and the variable k determines the speed of light.
+</p>
+
+<p>
+  Enjoy
 </p>
