@@ -1,17 +1,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>TheQuantumExperience</groupId>
-  <artifactId>EtherRealitySim</artifactId>
+  <groupId>SmartBlackBox</groupId>
+  <artifactId>QuantumFieldSimulator</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>D.Q. Nguyen</name>
-  <description>3D Ether Reality Simulator</description>
+  <name>Duy Quoc Nguyen</name>
+  <description>3D Quantum Field Simulator</description>
 
   <packaging>jar</packaging>
     
 <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 	<lwjgl.version>3.3.1</lwjgl.version>
 	<lwjgl.natives>natives-linux</lwjgl.natives>
 </properties>
@@ -363,6 +363,7 @@
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
 
+	<!-- 3D Vector & Matrix -->
 	<!-- https://mvnrepository.com/artifact/org.joml/joml -->
 	<dependency>
 	    <groupId>org.joml</groupId>
@@ -370,115 +371,12 @@
 	    <version>1.9.25</version>
 	</dependency>
 	
-	<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+	<!-- Windows Ini files -->
 	<dependency>
-	    <groupId>org.testng</groupId>
-	    <artifactId>testng</artifactId>
-	    <version>6.14.3</version>
-	    <scope>test</scope>
+		<groupId>org.ini4j</groupId>
+		<artifactId>ini4j</artifactId>
+		<version>0.5.4</version>
 	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core -->
-	<dependency>
-	    <groupId>org.openjdk.jmh</groupId>
-	    <artifactId>jmh-core</artifactId>
-	    <version>1.35</version>
-	</dependency>
-
-	<!-- https://mvnrepository.com/artifact/org.lwjgl.osgi/org.lwjgl.ovr -->
-	<dependency>
-	    <groupId>org.lwjgl.osgi</groupId>
-	    <artifactId>org.lwjgl.ovr</artifactId>
-	    <version>3.3.0</version>
-	</dependency>
-
-	<!-- https://mvnrepository.com/artifact/org.eclipse.swt/org.eclipse.swt.gtk.linux.x86_64 -->
-	<dependency>
-	    <groupId>org.eclipse.swt</groupId>
-	    <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
-	    <version>4.3</version>
-	</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>13-ea+13</version>
-        </dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-graphics</artifactId>
-			<version>13-ea+13</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx-base</artifactId>
-		    <version>13-ea+13</version>
-		</dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>13-ea+13</version>
-        </dependency>
-		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
-		<dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx-web</artifactId>
-		    <version>13-ea+13</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
-		<dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx-swing</artifactId>
-		    <version>13-ea+13</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
-		<dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx-media</artifactId>
-		    <version>13-ea+13</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
-		<dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx</artifactId>
-		    <version>13-ea+13</version>
-		    <type>pom</type>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/eu.mihosoft.vrl.workflow/vworkflows-fx -->
-		<dependency>
-		    <groupId>eu.mihosoft.vrl.workflow</groupId>
-		    <artifactId>vworkflows-fx</artifactId>
-		    <version>0.2.4.3</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.controlsfx</groupId>
-		    <artifactId>controlsfx</artifactId>
-		    <version>9.0.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/de.jensd/fontawesomefx-fontawesome -->
-		<dependency>
-		    <groupId>de.jensd</groupId>
-		    <artifactId>fontawesomefx-fontawesome</artifactId>
-		    <version>4.7.0-9.1.2</version>
-		</dependency>
-	    <dependency>
-	        <groupId>com.twelvemonkeys.imageio</groupId>
-	        <artifactId>imageio-batik</artifactId> <!-- svg -->
-	        <version>3.6.2</version>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.apache.xmlgraphics</groupId>
-	        <artifactId>batik-transcoder</artifactId>
-	        <version>1.14</version>
-	    </dependency>
-
-		<!-- Windows Ini files -->
-		<dependency>
-			<groupId>org.ini4j</groupId>
-			<artifactId>ini4j</artifactId>
-			<version>0.5.4</version>
-		</dependency>
 
 </dependencies>
 
