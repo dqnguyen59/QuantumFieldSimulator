@@ -192,7 +192,7 @@ public class FrameMenu extends AbstractFrame {
 			Nuklear.nk_menu_end(ctx);
 		}
 		
-		if (Nuklear.nk_menu_begin_label(ctx, "Info", Nuklear.NK_TEXT_LEFT, NkVec2.create().set(menuWidth, 300))) {
+		if (Nuklear.nk_menu_begin_label(ctx, "Help", Nuklear.NK_TEXT_LEFT, NkVec2.create().set(menuWidth, 300))) {
 			model.setMenuActive(true);
 			model.setMenuIndex(3);
 			Nuklear.nk_layout_row_dynamic(ctx, menuItemHeight, 1);
@@ -206,8 +206,13 @@ public class FrameMenu extends AbstractFrame {
 				Nuklear.nk_menu_close(ctx);
 			}
 			
-			if (nk_menu_item_label(ctx, "Help")) {
-				model.toggleFrame(Frame.help);
+			if (nk_menu_item_label(ctx, "Keyboard Shortcuts")) {
+				model.toggleFrame(Frame.keyboardShortcuts);
+				Nuklear.nk_menu_close(ctx);
+			}
+			
+			if (nk_menu_item_label(ctx, "About")) {
+				model.toggleFrame(Frame.about);
 				Nuklear.nk_menu_close(ctx);
 			}
 			

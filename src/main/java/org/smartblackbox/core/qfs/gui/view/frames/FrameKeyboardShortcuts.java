@@ -22,7 +22,7 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel;
 
-public class FrameHelp extends AbstractFrame {
+public class FrameKeyboardShortcuts extends AbstractFrame {
 
     private int width = 850;
 	private int height = 830;
@@ -31,7 +31,7 @@ public class FrameHelp extends AbstractFrame {
 	private int alignLabel = Nuklear.NK_TEXT_LEFT;
 	private int alignValue = Nuklear.NK_TEXT_LEFT;
 
-	public FrameHelp(NuklearModel frames) {
+	public FrameKeyboardShortcuts(NuklearModel frames) {
 		super(frames);
 	}
 
@@ -65,12 +65,12 @@ public class FrameHelp extends AbstractFrame {
 		nk_spacer(ctx, spacer1 , 1);
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
 		Nuklear.nk_label(ctx, " Rotate Field:", Nuklear.NK_TEXT_LEFT);
-		nk_label_value(ctx, "   - Ctrol->KeyPad-4:", "Rotate Z-Axis", leftCol, rightCol, alignLabel, alignValue);
-		nk_label_value(ctx, "   - Ctrol->KeyPad-6:", "Rotate Z-Axis", leftCol, rightCol, alignLabel, alignValue);
-		nk_label_value(ctx, "   - Ctrol->KeyPad-2:", "Rotate X-Axis", leftCol, rightCol, alignLabel, alignValue);
-		nk_label_value(ctx, "   - Ctrol->KeyPad-8:", "Rotate X-Axis", leftCol, rightCol, alignLabel, alignValue);
-		nk_label_value(ctx, "   - Ctrol->KeyPad-1:", "Rotate Y-Axis", leftCol, rightCol, alignLabel, alignValue);
-		nk_label_value(ctx, "   - Ctrol->KeyPad-3:", "Rotate Y-Axis", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - Ctrl->KeyPad-4:", "Rotate Z-Axis", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - Ctrl->KeyPad-6:", "Rotate Z-Axis", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - Ctrl->KeyPad-2:", "Rotate X-Axis", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - Ctrl->KeyPad-8:", "Rotate X-Axis", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - Ctrl->KeyPad-1:", "Rotate Y-Axis", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - Ctrl->KeyPad-3:", "Rotate Y-Axis", leftCol, rightCol, alignLabel, alignValue);
 		
 		nk_spacer(ctx, spacer1 , 1);
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
@@ -79,7 +79,7 @@ public class FrameHelp extends AbstractFrame {
 		nk_label_value(ctx, "   - N:", "Ctrl-> [Up, Down] (Move Z slice plane)", leftCol, rightCol, alignLabel, alignValue);
 		nk_label_value(ctx, "   - R:", "Rain Mode", leftCol, rightCol, alignLabel, alignValue);
 		nk_label_value(ctx, "   - G:", "Alpha Mode (change the alpha color of the nodes)", leftCol, rightCol, alignLabel, alignValue);
-		nk_label_value(ctx, "   - I:", "Intensity Mode (change the intensity color of the nodes)", leftCol, rightCol, alignLabel, alignValue);
+		nk_label_value(ctx, "   - I:", "Intensity Mode (change the intensity color of the nodes) [Up, Down]", leftCol, rightCol, alignLabel, alignValue);
 		nk_label_value(ctx, "   - L:", "Move Light Mode (Ctrl-{Shift}-> [Left, Right, Up, Down, Page Up, Page Down]])",
 				leftCol, rightCol, alignLabel, alignValue);
 		

@@ -23,8 +23,8 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.core.qfs.Constants;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel;
-import org.smartblackbox.core.qfs.gui.model.Theme;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel.Frame;
+import org.smartblackbox.core.qfs.gui.model.Theme;
 import org.smartblackbox.core.qfs.opengl.model.QFSModel;
 import org.smartblackbox.core.qfs.opengl.model.QFSModel.Mode;
 import org.smartblackbox.core.qfs.settings.QFSProject;
@@ -117,7 +117,7 @@ public class FrameStatusBar extends AbstractFrame {
 				break;
 			case light:
 				s = "L";
-				tip = "Light mode: keys [up | down | left | right | page-up | page-down]";
+				tip = "Light mode: Ctrl-{Shift}->[up | down | left | right | page-up | page-down]";
 				break;
 			default:
 				s = "";

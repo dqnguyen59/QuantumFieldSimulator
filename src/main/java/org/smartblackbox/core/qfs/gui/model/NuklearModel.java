@@ -30,10 +30,11 @@ import org.lwjgl.nuklear.NkUserFont;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.core.qfs.gui.view.frames.AbstractFrame;
+import org.smartblackbox.core.qfs.gui.view.frames.FrameAbout;
 import org.smartblackbox.core.qfs.gui.view.frames.FrameCameraSettings;
 import org.smartblackbox.core.qfs.gui.view.frames.FrameDetector;
 import org.smartblackbox.core.qfs.gui.view.frames.FrameEditWall;
-import org.smartblackbox.core.qfs.gui.view.frames.FrameHelp;
+import org.smartblackbox.core.qfs.gui.view.frames.FrameKeyboardShortcuts;
 import org.smartblackbox.core.qfs.gui.view.frames.FrameLights;
 import org.smartblackbox.core.qfs.gui.view.frames.FrameMenu;
 import org.smartblackbox.core.qfs.gui.view.frames.FrameOscillator;
@@ -59,7 +60,8 @@ public class NuklearModel {
 		statusBar,
 		statistic,
 		windowProperty,
-		help,
+		keyboardShortcuts,
+		about,
 		progress,
 		openFileDialog,
 		saveFileDialog,
@@ -211,8 +213,10 @@ public class NuklearModel {
 			return new FrameStatistics(this);
 		case windowProperty:
 			return new FrameProperties(this);
-		case help:
-			return new FrameHelp(this);
+		case keyboardShortcuts:
+			return new FrameKeyboardShortcuts(this);
+		case about:
+			return new FrameAbout(this);
 		case progress:
 			return new FrameProgress(this);
 		case confirmDialog:
