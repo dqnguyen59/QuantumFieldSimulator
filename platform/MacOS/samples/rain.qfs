@@ -1,0 +1,225 @@
+[Common]
+numThreads = 32
+
+[QuantumField]
+constantFrequency = 1.0
+radiation = 1.0
+dimension.x = 151
+dimension.y = 151
+dimension.z = 1
+
+[Lights]
+numLights = 3
+
+[Lights0]
+name = DefaultPointLight
+position.x = -41.0
+position.y = 76.0
+position.z = 64.0
+rotation.x = 0.0
+rotation.y = 0.0
+rotation.z = 0.0
+direction.x = 9.999999717180685E-10
+direction.y = 9.999999717180685E-10
+direction.z = 1.0
+color.x = 0.67194253
+color.y = 0.79919034
+color.z = 0.9747899
+intensity = 6.2799997
+constant = 1.0
+linear = 0.001
+exponent = 6.0E-4
+scale = 1.0
+spotlight = false
+cutOff = 90.0
+spotLight.ambient.x = 1.0
+spotLight.ambient.y = 1.0
+spotLight.ambient.z = 1.0
+spotLight.ambientIntensity = 1.0
+spotLight.diffuse.x = 1.0
+spotLight.diffuse.y = 1.0
+spotLight.diffuse.z = 1.0
+spotLight.diffuseIntensity = 1.0
+spotLight.specular.x = 1.0
+spotLight.specular.y = 1.0
+spotLight.specular.z = 1.0
+spotLight.specularIntensity = 1.0
+spotLight.shininess = 1.0
+
+[Lights1]
+name = DefaultSpotLight
+position.x = 9.0
+position.y = 45.0
+position.z = -54.0
+rotation.x = 0.0
+rotation.y = 0.0
+rotation.z = 0.0
+direction.x = -0.15000000596046448
+direction.y = -0.7900000214576721
+direction.z = 0.18000000715255737
+color.x = 0.0
+color.y = 1.0
+color.z = 0.0
+intensity = 2.930001
+constant = 0.0
+linear = 0.01
+exponent = 7.0E-4
+scale = 2.930000066757202
+spotlight = true
+cutOff = 37.29001
+spotLight.ambient.x = 0.11991359
+spotLight.ambient.y = 0.9747899
+spotLight.ambient.z = 0.09017879
+spotLight.ambientIntensity = 4.69999885559082
+spotLight.diffuse.x = 1.0
+spotLight.diffuse.y = 1.0
+spotLight.diffuse.z = 0.09017879
+spotLight.diffuseIntensity = 0.2600000500679016
+spotLight.specular.x = 1.0
+spotLight.specular.y = 1.0
+spotLight.specular.z = 1.0
+spotLight.specularIntensity = 1.0
+spotLight.shininess = 1.0
+
+[Lights2]
+name = Light0
+position.x = 34.0
+position.y = 15.0
+position.z = 6.0
+rotation.x = 0.0
+rotation.y = 0.0
+rotation.z = 0.0
+direction.x = 9.999999717180685E-10
+direction.y = -1.0
+direction.z = 9.999999717180685E-10
+color.x = 1.0
+color.y = 0.019417465
+color.z = 0.019417465
+intensity = 2.79
+constant = 0.05000019
+linear = 0.01
+exponent = 0.005
+scale = 1.0
+spotlight = false
+cutOff = 60.0
+spotLight.ambient.x = 1.0
+spotLight.ambient.y = 1.0
+spotLight.ambient.z = 1.0
+spotLight.ambientIntensity = 1.0
+spotLight.diffuse.x = 1.0
+spotLight.diffuse.y = 1.0
+spotLight.diffuse.z = 1.0
+spotLight.diffuseIntensity = 1.0
+spotLight.specular.x = 1.0
+spotLight.specular.y = 1.0
+spotLight.specular.z = 1.0
+spotLight.specularIntensity = 1.0
+spotLight.shininess = 1.0
+
+[Camera]
+fieldOfFiew = 45.0
+position.x = 8.000001
+position.y = 0.0
+position.z = 225.2059
+rotation.x = 0.0
+rotation.y = 0.0
+rotation.z = 0.0
+
+[Base]
+rotation.x = -75.20000019669533
+rotation.y = 0.0
+rotation.z = 37.600000485777855
+
+[Terrain]
+visible = true
+texturePath = resources/textures/terrains/
+textureFile = default2.jpg
+scale = 1.0
+depthVisibility = 1.0
+material.ambientColor.x = 1.0
+material.ambientColor.y = 1.0
+material.ambientColor.z = 1.0
+material.diffuseColor.x = 1.0
+material.diffuseColor.y = 1.0
+material.diffuseColor.z = 1.0
+material.specularColor.x = 1.0
+material.specularColor.y = 1.0
+material.specularColor.z = 1.0
+material.ambientIntensity = 1.0
+material.diffuseIntensity = 1.0
+material.specularIntensity = 1.0
+material.shininess = 1.0
+material.disableCulling = false
+
+[QFSSettings]
+defaultNodeColor.x = 0.5940559
+defaultNodeColor.y = 0.63785946
+defaultNodeColor.z = 0.96638656
+defaultNodeColor.w = 1.0
+fixedColor.x = 1.0
+fixedColor.y = 1.0
+fixedColor.z = 1.0
+fixedColor.w = 1.0
+wallColor.x = 1.0
+wallColor.y = 1.0
+wallColor.z = 1.0
+wallColor.w = 1.0
+selectedColor.x = 1.0
+selectedColor.y = 1.0
+selectedColor.z = 1.0
+selectedColor.w = 1.0
+hiLightColor.x = 1.0
+hiLightColor.y = 1.0
+hiLightColor.z = 1.0
+hiLightColor.w = 1.0
+depthFadingOffset = 0.6799998
+colorMode = normal
+renderType = slice
+visibleIndexZ = 0
+alphaIntensitySlice = 0.9099996
+alphaIntensiityAll = 0.5
+intensitySlice = 347.0
+intensiityAll = 100.0
+shininess = 0.65000015
+
+[SlitWall]
+active = false
+direction = x
+numSlits = 2
+slitWidth = 3
+slitHeight = 10
+slitDistance = 51
+position = 0.25
+
+[Oscillators]
+Size = 1
+
+[Rain]
+active = true
+force = -25.0
+iterations = 2
+
+[Walls]
+numWalls = 0
+
+[Oscillator0]
+name = Oscillator 0
+nodeIndex.x = 60
+nodeIndex.y = 141
+nodeIndex.z = 0
+active.x = false
+active.y = false
+active.z = false
+OscillatorType.x = sin
+OscillatorType.y = cos
+OscillatorType.z = sin
+startangle.x = 0.0
+startangle.y = 0.0
+startangle.z = 0.0
+angleIncrement.x = 0.0
+angleIncrement.y = 0.0
+angleIncrement.z = 4.0
+amplitude.x = 0.0
+amplitude.y = 0.0
+amplitude.z = 40.0
+
