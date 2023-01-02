@@ -40,6 +40,9 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 ### Double-Slit example
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
 
+### Rain simulation
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/rain.png">
+
 ### Formulas used
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula.png">
 
