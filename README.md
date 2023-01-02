@@ -16,7 +16,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 ### Sample files:
 * double_slit.qfs
 * rain.qfs
-* test_speed_of_light.gfs
+* test_speed_of_light.qfs
 
 ### Compilation
 * IDE: Eclipse
