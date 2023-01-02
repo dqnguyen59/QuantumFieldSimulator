@@ -340,11 +340,14 @@
 		<artifactId>lwjgl-openvr</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
+<!--
+	NOT available for MAC OS
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-openxr</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
+-->
 	<dependency>
 		<groupId>org.lwjgl</groupId>
 		<artifactId>lwjgl-opus</artifactId>
