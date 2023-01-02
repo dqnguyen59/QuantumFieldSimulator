@@ -1,9 +1,12 @@
 # Quantum Field Simulator
 
 ## Introduction
-Quantum Field Simulator is a cross-platform simulator to simulate the quantum field theory. Inititially it was developed to simulate the double slit experiment. It uses simple motion formula to simulate the light wave. By defining the slits in the simulator, the interference patterns can be simulated. There are other files to simulate i.e. rain or testing speed of light.
-
-Please note that the simulation does not approach the real world values, but rather to simulate the light wave properties due to lack of cpu power.
+Quantum Field Simulator is a simulator to simulate quantum field theory.
+Inititially it was developed to simulate the double slit experiment.
+It uses a simple motion formula to simulate the light wave.
+By defining the slits in the simulator, the interference patterns can be simulated.
+There are other files to simulate, for example rain drops or detecting the speed of light.
+Please note that the simulation does not approximate real world values, but rather simulates light wave properties due to lack of cpu power.
 
 I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.
 
