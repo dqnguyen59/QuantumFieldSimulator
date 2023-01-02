@@ -44,7 +44,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 
 <p>
-  I am not a physicist and do not understand the formulas used as shown in <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank">Wikipedia: Quantum field theory</a>.
+  I am not a physicist and do not understand the formulas used as shown in <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="noopener">Wikipedia: Quantum field theory</a>.
   But found that this formula works well for simulating double slit experiments.
 </p>
 <p>
