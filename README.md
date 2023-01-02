@@ -21,8 +21,10 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 * IDE: Eclipse
 * Compiler: Java 1.8
 
-<p>In Eclipse, File -> open Projects from File System... and select the project folder.</p>
-<p>Run the file Main.java.</p>
+<p>Download the project
+
+<p>Download the project to any folder. Then in Eclipse, File -> open Projects from File System... and select the downloaded project folder.</p>
+<p>Find the file Main.java and run.</p>
 <p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
 
 ### CPU & GPU Performance for comparison
@@ -35,4 +37,5 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 | 80631    | 6561          | 51    | 51     | 31    | 70  |
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
+### Double-Slit example
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
