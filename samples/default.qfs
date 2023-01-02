@@ -15,7 +15,7 @@ fieldOfFiew = 45.0
 defaultNodeColor.x = 1.0
 defaultNodeColor.y = 1.0
 defaultNodeColor.z = 1.0
-defaultNodeColor.w = 0.3
+defaultNodeColor.w = 1.0
 fixedColor.x = 1.0
 fixedColor.y = 1.0
 fixedColor.z = 1.0
@@ -32,18 +32,19 @@ hiLightColor.x = 1.0
 hiLightColor.y = 1.0
 hiLightColor.z = 0.0
 hiLightColor.w = 0.5
-depthFadingOffset = 0.0
+depthFadingOffset = 0.4
 colorMode = normal
 renderType = slice
 visibleIndexZ = 15
 alphaIntensitySlice = 1.0
 alphaIntensiityAll = 0.1
-intensitySlice = 80.0
+intensitySlice = 150.0
 intensiityAll = 130.0
-shininess = 0.7
+shininess = 0.5
+scale = 1.0
 
 [QuantumField]
-constantFrequency = 10.0
+constantFrequency = 1.0
 radiation = 1.0
 dimension.x = 51
 dimension.y = 51
@@ -57,8 +58,8 @@ active = false
 direction = x
 numSlits = 2
 slitWidth = 3
-slitHeight = 10
-slitDistance = 51
+slitHeight = 20
+slitDistance = 17
 position = 0.25
 
 [Oscillators]
@@ -68,6 +69,22 @@ Size = 0
 visible = true
 texturePath = src/main/resources/textures/terrains/
 textureFile = default2.jpg
+scale = 1.0
+depthVisibility = 1.0
+material.ambientColor.x = 1.0
+material.ambientColor.y = 1.0
+material.ambientColor.z = 1.0
+material.diffuseColor.x = 1.0
+material.diffuseColor.y = 1.0
+material.diffuseColor.z = 1.0
+material.specularColor.x = 1.0
+material.specularColor.y = 1.0
+material.specularColor.z = 1.0
+material.ambientIntensity = 1.0
+material.diffuseIntensity = 1.0
+material.specularIntensity = 1.0
+material.shininess = 1.0
+material.disableCulling = false
 
 [Rain]
 active = false
@@ -114,15 +131,15 @@ spotLight.shininess = 1.0
 
 [Lights1]
 name = DefaultSpotLight
-position.x = 20.0
+position.x = 25.0
 position.y = 40.0
-position.z = -7.0
+position.z = -10.0
 rotation.x = 0.0
 rotation.y = 0.0
 rotation.z = 0.0
-direction.x = -0.2
+direction.x = -0.3
 direction.y = -1.0
-direction.z = 1.0E-9
+direction.z = 0.1
 color.x = 0.5
 color.y = 1.0
 color.z = 0.5
@@ -151,4 +168,7 @@ spotLight.shininess = 1.0
 rotation.x = -66.6
 rotation.y = 0.0
 rotation.z = 0.0
+
+[Walls]
+numWalls = 0
 

@@ -49,6 +49,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	public int numThreads = MAX_NUM_THREADS;
 
 	private boolean isResetting;
+	private boolean isFileSaved;
 	
 	/**
 	 * Set the universe dimension.
@@ -96,6 +97,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 
 	public void set(QFSProject qfsProject) {
 		isResetting = qfsProject.isResetting;
+		isFileSaved = qfsProject.isFileSaved;
 		dimension.x = qfsProject.getDimensionX();
 		dimension.y = qfsProject.getDimensionY();
 		dimension.z = qfsProject.getDimensionZ();
@@ -232,6 +234,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		rainModel.saveToFile(ini, "Rain", index);
 		
 		saveWalls(ini);
+		isFileSaved = true;
 	}
 
 	private void loadWalls(Wini ini) {
@@ -387,6 +390,14 @@ public class QFSProject extends AbstractSettings implements ISettings {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean isFileSaved() {
+		return isFileSaved;
+	}
+
+	public void setFileSaved(boolean isFileSaved) {
+		this.isFileSaved = isFileSaved;
 	}
 
 	public int getDimensionX() {

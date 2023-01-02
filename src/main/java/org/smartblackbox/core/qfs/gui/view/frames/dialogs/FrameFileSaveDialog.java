@@ -22,10 +22,10 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.system.MemoryStack;
 import org.smartblackbox.core.qfs.Constants;
+import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.core.qfs.gui.model.DialogDefaultModel;
 import org.smartblackbox.core.qfs.gui.model.DialogFileModel;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel;
-import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.core.utils.Utils;
 
 public class FrameFileSaveDialog extends FrameDialog {
@@ -80,19 +80,16 @@ public class FrameFileSaveDialog extends FrameDialog {
 			}
 			nk_spacer(ctx, spacer1, 1);
 
-			checkAndSaveFile(isSaveFilePerformed);
-		}
-	}
-	
-	private void checkAndSaveFile(boolean isSaveFilePerformed) {
-		if (isSaveFilePerformed) {
-			if (Utils.fileExists(appSettings.getProjectFilePath() + Constants.SEPARATOR + dlgFileModel.getSelectedFileName())) {
-				confirmDialog = model.showConfirmDialog(DialogDefaultModel.NO_YES, "File save",
-						"File '" + dlgFileModel.getSelectedFileName() + "' already exists!\nDo you want to overwrite?");
-				if (confirmDialog.getConfirmState() == ConfirmState.yes)
+			if (isSaveFilePerformed) {
+				if (Utils.fileExists(appSettings.getProjectFilePath() + Constants.SEPARATOR + dlgFileModel.getSelectedFileName())) {
+					confirmDialog = model.showConfirmDialog(DialogDefaultModel.NO_YES, "File save",
+							"File '" + dlgFileModel.getSelectedFileName() + "' already exists!\nDo you want to overwrite?");
+				}
+				else
 					save();
 			}
-			else
+
+			if (confirmDialog != null && confirmDialog.getConfirmState() == ConfirmState.yes)
 				save();
 		}
 	}

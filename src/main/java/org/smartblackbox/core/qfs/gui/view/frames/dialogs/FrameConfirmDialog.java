@@ -21,9 +21,9 @@ package org.smartblackbox.core.qfs.gui.view.frames.dialogs;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.system.MemoryStack;
+import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.core.qfs.gui.model.DialogDefaultModel;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel;
-import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 
 public class FrameConfirmDialog extends FrameDialog {
 

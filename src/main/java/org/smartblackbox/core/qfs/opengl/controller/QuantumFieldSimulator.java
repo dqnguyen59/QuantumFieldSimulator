@@ -33,11 +33,11 @@ import org.smartblackbox.core.qfs.opengl.model.Material;
 import org.smartblackbox.core.qfs.opengl.model.ObjFileModel;
 import org.smartblackbox.core.qfs.opengl.model.Oscillator;
 import org.smartblackbox.core.qfs.opengl.model.QFSModel;
+import org.smartblackbox.core.qfs.opengl.model.QFSModel.Mode;
+import org.smartblackbox.core.qfs.opengl.model.QFSModel.NodeSelectionMode;
 import org.smartblackbox.core.qfs.opengl.model.Scene;
 import org.smartblackbox.core.qfs.opengl.model.Terrain;
 import org.smartblackbox.core.qfs.opengl.model.Texture;
-import org.smartblackbox.core.qfs.opengl.model.QFSModel.Mode;
-import org.smartblackbox.core.qfs.opengl.model.QFSModel.NodeSelectionMode;
 import org.smartblackbox.core.qfs.opengl.model.entity.Entity;
 import org.smartblackbox.core.qfs.opengl.model.entity.QFSNode;
 import org.smartblackbox.core.qfs.opengl.model.lights.DirectionalLight;
@@ -47,11 +47,11 @@ import org.smartblackbox.core.qfs.opengl.view.GLWindow;
 import org.smartblackbox.core.qfs.opengl.view.renderer.Renderer;
 import org.smartblackbox.core.qfs.settings.QFSProject;
 import org.smartblackbox.core.qfs.settings.QFSSettings;
-import org.smartblackbox.core.qfs.settings.SlitWallSettings;
 import org.smartblackbox.core.qfs.settings.QFSSettings.RenderType;
+import org.smartblackbox.core.qfs.settings.SlitWallSettings;
 import org.smartblackbox.core.utils.PerformanceMonitor;
-import org.smartblackbox.core.utils.Utils;
 import org.smartblackbox.core.utils.PerformanceMonitor.Measurement;
+import org.smartblackbox.core.utils.Utils;
 
 public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEvents {
 
@@ -665,6 +665,10 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			scene.getQfsFields().build();
 		}
 
+		if (qfsProject.isFileSaved()) {
+			setCustomTitle(qfsProject.getCurrentFilename());
+		}
+		
 		if (qfsModel.isChanged()) {
 			qfsModel.setChanged(false);
 			isNodesUpdateRequired = true;

@@ -298,6 +298,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		hiLightColor.z = ((s = ini.get(section, "hiLightColor.z")) == null? 1 : Float.parseFloat(s));
 		hiLightColor.w = ((s = ini.get(section, "hiLightColor.w")) == null? 1 : Float.parseFloat(s));
 
+		scale = ((s = ini.get(section, "scale")) == null? 1.0f : Float.parseFloat(s));
 		depthVisibility = ((s = ini.get(section, "depthFadingOffset")) == null? 0.8f : Float.parseFloat(s));
 		colorMode = ((s = ini.get(section, "colorMode")) == null? ColorMode.normal : ColorMode.valueOf(s));
 		setRenderType((s = ini.get(section, "renderType")) == null? RenderType.slice : RenderType.valueOf(s));
@@ -332,6 +333,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		ini.put(section, "hiLightColor.z", hiLightColor.z);
 		ini.put(section, "hiLightColor.w", hiLightColor.w);
 
+		ini.put(section, "scale", scale);
 		ini.put(section, "depthFadingOffset", depthVisibility);
 		ini.put(section, "colorMode", colorMode == null? "" : colorMode.toString());
 		ini.put(section, "renderType", renderType == null? "" : renderType.toString());
