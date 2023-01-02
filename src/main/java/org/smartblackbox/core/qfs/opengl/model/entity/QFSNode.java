@@ -281,8 +281,7 @@ public class QFSNode extends Entity {
 	}
 
 	/**
-	 * Note that this is not the full quantum field formula,
-	 * only the electric field is used here. 
+	 * Note that this is not the full quantum field formula, only the electric field is simulated. 
 	 * 
 	 * Some definitions:
 	 * 
@@ -292,7 +291,7 @@ public class QFSNode extends Entity {
 	 * 		N = neighbor position array[Right, Up, Front, Left, Down, Back]
 	 * 		p = position (variable positionBuff)
 	 * 		r = radiation (wave will fade when radiation < 1)
-	 * 		k = constant light speed  {k ∈ [0..1]}
+	 * 		k = constant light speed {k ∈ [0..1]}
 	 * 			this constant is responsible for the speed of light.
 	 * 			Meaning, changing this constant would change the speed of light.
 	 * 			Decreasing this constant will result in a lower speed of light.
@@ -306,7 +305,8 @@ public class QFSNode extends Entity {
 	 * 		v = v * r
 	 * 
 	 * Note that v is not the speed of light, but is actually the speed of the node itself.
-	 * The speed of light is the propagation of the wave caused by the movement of the node and the variable k.
+	 * The propagation of the light wave is caused by the motion of the node
+	 * and the variable k determines the speed of light.
 	 * 
 	 * If ∆t is one frame and one frame is one Planck time unit, then the short formula can be written as: 
 	 * 
