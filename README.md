@@ -27,7 +27,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 <p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
 
 <b>Mac users:</b></br>
-VM arguments "-XstartOnFirstThread" needs to be added.
+VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
