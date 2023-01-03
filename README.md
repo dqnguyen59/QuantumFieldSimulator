@@ -20,7 +20,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 ### Compilation
 * IDE: Eclipse
-* Compiler: Java 1.8
+* Compiler: Java 11
 
 <p>Download the project to any folder. Then from the File menu in Eclipse click on "open Projects from File System..." and import the downloaded project folder.</p>
 <p>Find the file Main.java and run.</p>
