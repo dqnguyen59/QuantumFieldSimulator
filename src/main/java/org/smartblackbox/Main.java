@@ -35,7 +35,7 @@ public class Main {
 		System.out.println("https://www.smartblackbox.nl");
 		System.out.println("JWGL Version: " + Version.getVersion());
 
-		Utils.deleteAllTmpFiles();
+		Utils.deleteAllTmpFiles("tmp");
 		
 		glWindow = new GLWindow(Constants.TITLE);
 		Engine engine = new QuantumFieldSimulator(glWindow);

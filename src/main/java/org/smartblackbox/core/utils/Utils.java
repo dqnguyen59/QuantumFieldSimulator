@@ -32,6 +32,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 import org.joml.Random;
 import org.lwjgl.system.MemoryUtil;
@@ -66,6 +68,10 @@ public class Utils {
 	public static boolean isLinux() {
 		return getOsName().startsWith("Linux");
 	}
+	
+    public static String generateString() {
+    	return UUID.randomUUID().toString();
+    }
 	
 	public static DecimalFormat setFormat(int minFractionDigits, int maxFractionDigits,
 			char decimalSeperator, boolean useGrouping, boolean alwaysShowDecimalSeperator) {
@@ -166,8 +172,10 @@ public class Utils {
 	}
 	
 	public static void streamToFile(InputStream stream, String fileName) throws IOException {
-        OutputStream output = new BufferedOutputStream(new FileOutputStream(fileName));
+		FileOutputStream fos = new FileOutputStream(fileName);
+        OutputStream output = new BufferedOutputStream(fos);
         copyStream(stream, output);
+        fos.close();
     }
 	
 	public static void deleteAllTmpFiles(String path, String filter) {
@@ -178,13 +186,17 @@ public class Utils {
 		}
 	}
 	
+	public static String getSystemTempFolder() {
+		return System.getProperty("java.io.tmpdir");
+	}
+	
 	/**
 	 * Delete all tmp files that is created in the application path.
 	 * 
 	 * @param path
 	 */
-	public static void deleteAllTmpFiles() {
-		List<File> files = getFiles("", ".tmp");
+	public static void deleteAllTmpFiles(String folder) {
+		List<File> files = getFiles(folder, ".tmp");
 		for (File file : files) {
 	        if (file.exists())
 	        	file.delete();
@@ -202,19 +214,19 @@ public class Utils {
         // When loading resource files from jar is needed, there's no way to convert inputStream to MappedByteBuffer.
         // So, the file from resource must be saved to a temporary file that is saved outside the jar.
         
-        long seed = Random.newSeed();
-        String tmpFile = "file" + seed + ".tmp";
-        File file = new File(tmpFile);
-        if (file.exists())
-        	file.delete();
+        String dir = "tmp";
+        
+        File directory = new File(dir);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+        
+        String tmpFile = dir + File.separator + "file" + generateString() + ".tmp";
         streamToFile(inputStream, tmpFile);
 
         // Now, the temporary file can be read and put it into MappedByteBuffer.
         ByteBuffer buffer = fileToByteBuffer(tmpFile, bufferSize);
         
-        file = new File(tmpFile);
-        if (file.exists())
-        	file.delete();
         return buffer;
     }
 
