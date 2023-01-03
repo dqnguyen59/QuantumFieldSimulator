@@ -41,10 +41,12 @@ VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
 <p>
-  <b>!!! The code is tested on Linux and MacOS only !!!</b></br>
   Use of equivalent or more powerful hardware is recommended.</br>
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
+
+### Download binary files
+Binaries for Windows/MacOS/Linux can be found here <a href="https://github.com/dqnguyen59/QFS-Launcher">https://github.com/dqnguyen59/QFS-Launcher</a>.
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
