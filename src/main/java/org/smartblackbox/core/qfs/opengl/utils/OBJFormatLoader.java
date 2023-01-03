@@ -15,7 +15,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
-import org.smartblackbox.core.qfs.Constants;
 import org.smartblackbox.core.qfs.opengl.model.ObjFileModel;
 import org.smartblackbox.core.utils.Utils;
 
@@ -164,9 +163,9 @@ public class OBJFormatLoader {
 			
 			buffer = STBImage.stbi_load(filename, w, h, c, 4);
 			if (buffer == null) {
-				buffer = STBImage.stbi_load(Constants.JAR_RESOURCES_PATH + filename, w, h, c, 4);
+				buffer = STBImage.stbi_load(filename, w, h, c, 4);
 				if (buffer == null) {
-					throw new Exception("Image File " + filename + " not loaded " + STBImage.stbi_failure_reason());
+					throw new Exception("Image File '" + filename + "' not loaded " + STBImage.stbi_failure_reason());
 				}
 			}
 			

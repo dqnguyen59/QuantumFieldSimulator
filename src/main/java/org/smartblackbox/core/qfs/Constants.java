@@ -18,13 +18,15 @@
  */
 package org.smartblackbox.core.qfs;
 
+import java.io.File;
+
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
+import org.smartblackbox.core.utils.Utils;
 
 public class Constants {
 
-	public static final String APP_SETTINGS_FILE = "qfs.ini";
 	public static final String SEPARATOR = System.getProperty("file.separator");
 	
 	public static final double NANOSECOND = 1000000000;
@@ -45,10 +47,16 @@ public class Constants {
             .b((byte) 0xB0)
             .a((byte) 0x70);
 
-	public static final String JAR_RESOURCES_PATH = "resources/";
-
 	public static final String TITLE = "Quantum Field Simulator";
-	public static final String TEXTURE_FILE_PATH = "textures/terrains/";
+
+	public static final String JAR_RESOURCES_PATH = "resources" + File.separator;
+	public static final String BASE_PATH = Utils.getCurrentPath() + File.separator;
+
+	public static final String APP_SETTINGS_FILE = BASE_PATH + "qfs.ini";
+
+	public static final String PROJECT_FILE_EXT = ".qfs";
+	public static final String PROJECT_FILE_PATH = BASE_PATH + "samples";
+	public static final String TEXTURE_FILE_PATH = BASE_PATH + JAR_RESOURCES_PATH + "textures/terrains/";
 
 	public static final String DEFAULT_FONT_FILE = "fonts/fira-sans/FiraSans-Medium.ttf";
 	public static final String DEFAULT_FONT_FILE_BOLD = "fonts/fira-sans/FiraSans-ExtraBold.ttf";
@@ -64,9 +72,6 @@ public class Constants {
 	public static final String MODEL_LIGHT_BULB = "models/sphere2.obj";
 	public static final String MODEL_LIGHT_CAP = "models/spotLight.obj";
 	public static final String MODEL_ARROW = "models/arrow.obj";
-
-	public static final String PROJECT_FILE_EXT = ".qfs";
-	public static final String PROJECT_FILE_PATH = "samples";
 
 	public static final int STATUS_BAR_HEIGHT = 40;
 	

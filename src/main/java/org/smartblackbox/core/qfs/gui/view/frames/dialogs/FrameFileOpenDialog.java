@@ -22,9 +22,9 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.system.MemoryStack;
 import org.smartblackbox.core.qfs.Constants;
+import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.core.qfs.gui.model.DialogFileModel;
 import org.smartblackbox.core.qfs.gui.model.NuklearModel;
-import org.smartblackbox.core.qfs.gui.model.AbstractDialogModel.ConfirmState;
 
 public class FrameFileOpenDialog extends FrameDialog {
 
@@ -59,7 +59,7 @@ public class FrameFileOpenDialog extends FrameDialog {
 
 			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
     		Nuklear.nk_label(ctx, " File: " + dlgFileModel.getSelectedFileName(), Nuklear.NK_TEXT_LEFT);
-
+    		
     		nk_spacer(ctx, spacer1, 1);
     		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, dlgFileModel.getConfirmStates().length + 2);
     		Nuklear.nk_label(ctx, "", Nuklear.NK_TEXT_LEFT);

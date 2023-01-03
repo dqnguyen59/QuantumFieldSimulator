@@ -305,4 +305,25 @@ public class Utils {
 		return runCommand(command, "\n");
 	}
 
+	/**
+	 * If you are unable to run Jar file from Linux, 
+	 * then call this method to force run from the current directory instead of home folder.
+	 */
+	public static void forceJarCurrentDirectory() {
+		String path = System.getProperty("java.class.path");
+		
+		// If running from Eclipse, then do nothing
+		if (path.contains("target")) return;
+		
+		File f = new File(path);
+		path = f.getParent();
+		if (path != null) {
+			System.getProperties().put("user.dir", path);
+		}
+	}
+	
+	public static String getCurrentPath() {
+		return System.getProperty("user.dir");
+	}
+
 }

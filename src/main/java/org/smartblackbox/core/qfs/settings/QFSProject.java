@@ -60,7 +60,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	 */
 	private Vector3i dimension = new Vector3i();
 	
-	private double constantFrequency = 1.0;
+	private double constantFrequency = 0.99;
 	private double constantLightSpeed = 1;
 	private double radiation = 1.0;
 
