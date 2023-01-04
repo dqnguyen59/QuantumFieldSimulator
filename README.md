@@ -46,7 +46,7 @@ VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 </p>
 
 ### Download binary files
-Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqnguyen59/QFS-Launcher">https://github.com/dqnguyen59/QFS-Launcher</a>.
+Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqnguyen59/QFSLauncher">https://github.com/dqnguyen59/QFSLauncher</a>.
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
