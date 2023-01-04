@@ -20,14 +20,14 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 ### Compilation
 * IDE: Eclipse
-* Compiler: Java 1.8
+* Compiler: Java 11
 
 <p>Download the project to any folder. Then from the File menu in Eclipse click on "open Projects from File System..." and import the downloaded project folder.</p>
 <p>Find the file Main.java and run.</p>
 <p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
 
 <b>Mac users:</b></br>
-VM arguments "-XstartOnFirstThread" needs to be added.
+VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
@@ -41,10 +41,12 @@ VM arguments "-XstartOnFirstThread" needs to be added.
 | 78961    | 78961         | 281   | 281    | 1     | 10  |
 
 <p>
-  <b>!!! The code is tested on Linux and MacOS only !!!</b></br>
   Use of equivalent or more powerful hardware is recommended.</br>
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
+
+### Download binary files
+Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqnguyen59/QFS-Launcher">https://github.com/dqnguyen59/QFS-Launcher</a>.
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
