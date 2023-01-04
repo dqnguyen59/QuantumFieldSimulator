@@ -54,6 +54,9 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
 ### Rain simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/rain.png">
 
+### Wave simulation
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/waves.png">
+
 ### Formulas used
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula.png">
 
