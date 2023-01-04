@@ -95,6 +95,7 @@ public abstract class Engine {
     	initMouseAndKeyboard(glWindow.getWindowHandle());
     	
     	nuklearController.unfocusAllFrames();
+
 	}
 	
 	protected void addMouseAndKeyboardListener(IMouseAndKeyboardEvents listener) {

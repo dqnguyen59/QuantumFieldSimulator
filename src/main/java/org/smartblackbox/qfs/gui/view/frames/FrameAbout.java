@@ -21,11 +21,12 @@ package org.smartblackbox.qfs.gui.view.frames;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
+import org.smartblackbox.utils.AppInfo;
 
 public class FrameAbout extends AbstractFrame {
 
     private int width = 850;
-	private int height = 330;
+	private int height = 320;
 
 	public FrameAbout(NuklearModel frames) {
 		super(frames);
@@ -46,16 +47,16 @@ public class FrameAbout extends AbstractFrame {
 	@Override
 	public void layout(NkContext ctx, int x, int y, int width, int height) {
 		
-		nk_spacer(ctx, spacer1 , 1);
+		String copyRight = String.format("(c) Copyright %s <%s> and contributers. All right reserved.", AppInfo.getAuthor(), AppInfo.getEmail());
+		String version = String.format("Version: %s    (%s)", AppInfo.getVersion(), AppInfo.getDateTime());
+		
+		Nuklear.nk_layout_row_dynamic(ctx, rowHeight * 5, 1);
+		Nuklear.nk_label_wrap(ctx, AppInfo.getDescription() != null? AppInfo.getDescription() : "Only visible when running from JAR MANIFEST.MF.");
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
-		Nuklear.nk_label(ctx, " About", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " ", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " Quantum Field Simulator", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " Version: 2023-01 (1.19)", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " ", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " (c) Copyright Duy Quoc Nguyen <d.q.nguyen@smartblackbox.nl> and contributers. All rights reserved. ", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " ", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_label(ctx, " Website: https://www.smartblackbox.nl ", Nuklear.NK_TEXT_LEFT);
+		Nuklear.nk_label(ctx, version, Nuklear.NK_TEXT_LEFT);
+		Nuklear.nk_label(ctx, "", Nuklear.NK_TEXT_LEFT);
+		Nuklear.nk_label(ctx, copyRight, Nuklear.NK_TEXT_LEFT);
+		Nuklear.nk_label(ctx, AppInfo.getWebsite(), Nuklear.NK_TEXT_LEFT);
 
 		nk_spacer(ctx, spacer1 , 1);
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 3);

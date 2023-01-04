@@ -105,7 +105,7 @@ public class Utils {
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if (inputStream == null) {
         	// If running from jar file, then JAR_RESOURCES_PATH is required.
-        	inputStream = classLoader.getResourceAsStream(Constants.JAR_RESOURCES_PATH + fileName);
+        	inputStream = classLoader.getResourceAsStream(fileName);
         }
 		try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
 			result = scanner.useDelimiter("\\A").next();
@@ -121,7 +121,7 @@ public class Utils {
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if (inputStream == null) {
         	// If running from jar file, then JAR_RESOURCES_PATH is required.
-        	inputStream = classLoader.getResourceAsStream(Constants.JAR_RESOURCES_PATH + fileName);
+        	inputStream = classLoader.getResourceAsStream(fileName);
         }
 		try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
 			while (scanner.hasNextLine()) {

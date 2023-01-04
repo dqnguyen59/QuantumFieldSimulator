@@ -27,6 +27,8 @@ import org.smartblackbox.utils.Utils;
 
 public class Constants {
 
+	public static final String MANIFEST_FILE = "META-INF/MANIFEST.MF";
+	
 	public static final String SEPARATOR = System.getProperty("file.separator");
 	
 	public static final double NANOSECOND = 1000000000;

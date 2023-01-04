@@ -96,7 +96,7 @@ public class NuklearModel {
 	private AbstractFrame focusedFrame;
 	private boolean menuActive;
 	private int menuIndex;
-	private int menuBarHeight = 24;
+	private int menuBarHeight = 28;
 	private int menuItemWidth = 40;
 	private NkUserFont defaultFont = NkUserFont.create();
 	private NkUserFont defaultFontBold = NkUserFont.create();

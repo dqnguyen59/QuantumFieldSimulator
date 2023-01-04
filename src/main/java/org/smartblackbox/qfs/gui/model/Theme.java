@@ -123,9 +123,13 @@ public class Theme {
 
 			context.style().window().group_border_color(Theme.groupBorderColor);
 
-			NkVec2 padding = context.style().window().group_padding();
-			padding.x(4);
-			padding.y(4);
+			NkVec2 windowPadding = context.style().window().padding();
+			windowPadding.x(8);
+			windowPadding.y(8);
+			
+			NkVec2 groupPadding = context.style().window().group_padding();
+			groupPadding.x(4);
+			groupPadding.y(4);
 		
 			context.style().selectable().hover().data().color(Theme.blue2);
 			context.style().selectable().hover_active().data().color(Theme.grey13);

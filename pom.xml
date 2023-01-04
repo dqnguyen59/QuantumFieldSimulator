@@ -1,10 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+<!--
+	mvn clean package assembly:single
+-->
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>SmartBlackBox</groupId>
   <artifactId>QuantumFieldSimulator</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <name>Duy Quoc Nguyen</name>
-  <description>3D Quantum Field Simulator</description>
+  <description>This application simulates the quantum field theory. Inititially it was developed to simulate the double slit experiment. It uses a simple motion formula to simulate the light wave. By defining the slits in the simulator, the interference patterns can be simulated. Even walls/mirrors can be defined freely in 3D quantum field. There are also other files to simulate, for example rain drops or detecting the speed of light. This simulator does not approximate the real world values, but rather simulates the properties of the light wave due to a lack of CPU/GPU power.</description>
 
   <packaging>jar</packaging>
 
@@ -26,6 +31,7 @@
 		</activation>
 		<properties>
 			<lwjgl.natives>natives-linux</lwjgl.natives>
+			<smartblackbox.platform>Linux</smartblackbox.platform>
 		</properties>
 	</profile>
 	<profile>
@@ -38,6 +44,7 @@
 		</activation>
 		<properties>
 			<lwjgl.natives>natives-macos</lwjgl.natives>
+			<smartblackbox.platform>MacOS</smartblackbox.platform>
 		</properties>
 		<dependencies>
 			<dependency>
@@ -57,6 +64,7 @@
 		</activation>
 		<properties>
 			<lwjgl.natives>natives-windows</lwjgl.natives>
+			<smartblackbox.platform>Windows</smartblackbox.platform>
 		</properties>
 	</profile>
 	<profile>
@@ -69,6 +77,7 @@
 		</activation>
 		<properties>
 			<lwjgl.natives>natives-windows-x86</lwjgl.natives>
+			<smartblackbox.platform>Windows-x86</smartblackbox.platform>
 		</properties>
 	</profile>
 </profiles>
@@ -448,5 +457,111 @@
 	</dependency>
 
 </dependencies>
+
+<!-- 
+<scm>
+    <connection>scm:svn:http://127.0.0.1/dummy</connection>
+    <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+    <tag>HEAD</tag>
+    <url>http://127.0.0.1/dummy</url>
+</scm>
+<scm>
+    <url>https://github.com/${repo.user}/${repo.name}</url>
+    <connection>scm:git:ssh://git@github.com/${repo.user}/${repo.name}.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/${repo.user}/${repo.name}.git</developerConnection>
+    <tag>HEAD</tag>
+</scm>
+-->
+
+<scm>
+    <connection>scm:svn:http://127.0.0.1/dummy</connection>
+    <developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+    <tag>HEAD</tag>
+    <url>http://127.0.0.1/dummy</url>
+</scm>
+
+
+<build>
+	<plugins>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.4</version>
+        <executions>
+          <execution>
+            <id>buildnumber</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+
+        <execution>
+            <id>buildDateTime</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+            <configuration>
+                <timestampFormat>{0,date,yyyy-MM-dd HH:mm:ss}</timestampFormat>
+                <timestampPropertyName>buildDateTime</timestampPropertyName>
+                <!-- formats the timestamp all together like 2016-04-04 14:17:05.123 and puts 
+                    it in the ${myBuildNumberVariable} buildProperty -->
+            </configuration>
+        </execution>
+
+        </executions>
+        <configuration>
+	        <revisionOnScmFailure>no.scm.config.in.pom</revisionOnScmFailure>
+          <format>{0,number}</format>
+          <items>
+            <item>buildNumber</item>
+          </items>                    
+          <doCheck>false</doCheck>
+          <doUpdate>false</doUpdate>
+        </configuration>
+      </plugin> 
+
+		<plugin>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<executions>
+				<execution>
+					<phase>package</phase>
+					<goals>
+						<goal>single</goal>
+					</goals>
+				</execution>
+			</executions>
+			<configuration>
+				<finalName>${project.artifactId}-${project.version}.${buildNumber}-${smartblackbox.platform}</finalName>
+				<appendAssemblyId>false</appendAssemblyId>
+				<descriptorRefs>
+					<descriptorRef>jar-with-dependencies</descriptorRef>
+				</descriptorRefs>
+	            <archive>
+                    <manifest>	                
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>dependency/</classpathPrefix>
+                        <mainClass>org.smartblackbox.Main</mainClass>
+                    </manifest>
+	                <manifestEntries>
+	                	<Title>Quantum Field Simulator</Title>
+	                	<Description>${project.description}</Description>
+	                	<Date-Time>${buildDateTime}</Date-Time>
+	                	<Built-By>${project.groupId}</Built-By>
+	                	<Author>${project.name}</Author>
+	                	<Contributers>${project.name}</Contributers>
+	                	<Version>${project.version}.${buildNumber}</Version>
+	                	<Website>https://www.smartblackbox.nl</Website>
+	                	<Email>d.q.nguyen@smartblackbox.nl</Email>
+	                </manifestEntries>
+	            </archive>
+	            <outputDirectory>../QFSLauncher/binary/QuantumFieldSimulator/</outputDirectory>
+			</configuration>
+		</plugin>
+
+	</plugins>
+</build>
 
 </project>
