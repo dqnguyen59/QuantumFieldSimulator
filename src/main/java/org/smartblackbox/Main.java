@@ -32,10 +32,14 @@ public class Main {
 	private static GLWindow glWindow;
 
 	public static void main(String[] args) {
-		System.out.println("Quantum Field Simulator");
-		System.out.println("Developed by Duy Quoc Nguyen");
-		System.out.println("https://www.smartblackbox.nl");
+		System.out.println(AppInfo.getTitle());
+		System.out.println("Developed by " + AppInfo.getAuthor() + " <" + AppInfo.getEmail() + ">");
+		System.out.println("Version: " + AppInfo.getVersion());
+		System.out.println("Version Date: " + AppInfo.getDateTime());
+		System.out.println(AppInfo.getWebsite());
+		System.out.println(AppInfo.getWebsite());
 		System.out.println("JWGL Version: " + Version.getVersion());
+		System.out.println("");
 
 		Utils.forceJarCurrentDirectory();
 		
