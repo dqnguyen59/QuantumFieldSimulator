@@ -87,7 +87,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	
 	public float scale = 1.0f;
 	
-	private Float depthVisibility = 0.4f;
+	private Float depthVisibility = 0.6f;
 	private float alphaSlice = 1.0f;
 	private float alphaAll = 0.1f;
 	private float intensitySlice = 150f;
