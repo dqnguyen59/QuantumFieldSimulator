@@ -16,7 +16,7 @@ public class AppInfo {
 	private static String contributers = "";
 	private static String version = "";
 	private static String website = "https://www.smartblackbox.nl";
-	private static String author = "Duy Quoc Nguyen";
+	private static String creator = "Duy Quoc Nguyen";
 	private static String email = "d.q.nguyen@smartblackbox.nl";
 	private static String dateTime = "";
 
@@ -40,7 +40,7 @@ public class AppInfo {
 							setDescription(mainAttribs.getValue("Description"));
 							setDateTime(mainAttribs.getValue("Date-Time"));
 							setBuiltBy(mainAttribs.getValue("Built-By"));
-							setAuthor(mainAttribs.getValue("Author"));
+							setCreator(mainAttribs.getValue("Author"));
 							setContributers(mainAttribs.getValue("Contributers"));
 							setVersion(mainAttribs.getValue("Version"));
 							setWebsite(mainAttribs.getValue("Website"));
@@ -59,7 +59,7 @@ public class AppInfo {
 	}
 
 	public static String getCopyRight() {
-		return String.format("© Copyright %s <%s> and contributers. All right reserved.", author, email);
+		return String.format("© Copyright %s <%s> and contributers. All right reserved.", creator, email);
 	}
 	
 	public static String getTitle() {
@@ -98,13 +98,13 @@ public class AppInfo {
 			AppInfo.builtBy = builtBy;
 	}
 
-	public static String getAuthor() {
-		return author;
+	public static String getCreator() {
+		return creator;
 	}
 
-	public static void setAuthor(String author) {
-		if (author != null)
-			AppInfo.author = author;
+	public static void setCreator(String creator) {
+		if (creator != null)
+			AppInfo.creator = creator;
 	}	
 
 	public static String getContributers() {
