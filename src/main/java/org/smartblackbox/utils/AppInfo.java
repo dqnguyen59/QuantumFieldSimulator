@@ -10,7 +10,7 @@ import java.util.jar.Manifest;
 
 public class AppInfo {
 
-	private static String title = "";
+	private static String title = "Quantum Field Simulator";
 	private static String description = "Only visible when running from JAR MANIFEST.MF.";
 	private static String builtBy = "SmartBlackBox";
 	private static String contributers = "";
@@ -45,15 +45,6 @@ public class AppInfo {
 							setVersion(mainAttribs.getValue("Version"));
 							setWebsite(mainAttribs.getValue("Website"));
 							setEmail(mainAttribs.getValue("Email"));
-							
-							String copyRight = String.format("© Copyright %s <%s> and contributers. All right reserved.", author, email);
-							System.out.println(copyRight);
-							System.out.println("Date-Time: " + dateTime);
-							System.out.println("Built By: " + builtBy);
-							System.out.println("Author: " + author);
-							System.out.println("Contributers: " + contributers);
-							System.out.println("Version: " + version);
-							System.out.println("Website: " + website);
 						}
 					}
 				}
@@ -67,6 +58,10 @@ public class AppInfo {
 		}
 	}
 
+	public static String getCopyRight() {
+		return String.format("© Copyright %s <%s> and contributers. All right reserved.", author, email);
+	}
+	
 	public static String getTitle() {
 		return title;
 	}
