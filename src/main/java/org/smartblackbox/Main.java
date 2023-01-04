@@ -32,19 +32,22 @@ public class Main {
 	private static GLWindow glWindow;
 
 	public static void main(String[] args) {
+		AppInfo.getManifestInfo("QuantumFieldSimulator");
+
 		System.out.println(AppInfo.getTitle());
-		System.out.println("Developed by " + AppInfo.getAuthor() + " <" + AppInfo.getEmail() + ">");
+		System.out.println(AppInfo.getCopyRight());
 		System.out.println("Version: " + AppInfo.getVersion());
 		System.out.println("Version Date: " + AppInfo.getDateTime());
+		System.out.println("Built By: " + AppInfo.getBuiltBy());
+		System.out.println("Creator: " + AppInfo.getCreator());
+		System.out.println("Contributers: " + AppInfo.getContributers());
 		System.out.println(AppInfo.getWebsite());
-		System.out.println(AppInfo.getWebsite());
+		System.out.println("");
 		System.out.println("JWGL Version: " + Version.getVersion());
 		System.out.println("");
 
 		Utils.forceJarCurrentDirectory();
 		
-		AppInfo.getManifestInfo("QuantumFieldSimulator");
-
 		Utils.deleteAllTmpFiles("tmp");
 		
 		AppSettings.getInstance().loadFromFile(Constants.APP_SETTINGS_FILE);
