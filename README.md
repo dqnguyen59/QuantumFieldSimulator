@@ -71,7 +71,8 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
   Have a look at the QFSNode.java source code to see how this formula is derived and used in the code.
   Note that this is not the full quantum field formula, only the electric field is simulated.
   Note that v is not the speed of light, but is actually the speed of the node itself.
-  The propagation of the light wave is caused by the motion of the node and the variable k determines the speed of light.
+  The propagation of the light wave is caused by the motion of the node where each node influences the neighboring nodes.
+  The variable k determines the speed of light.
 </p>
 
 <p>
