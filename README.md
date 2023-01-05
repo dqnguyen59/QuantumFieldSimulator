@@ -29,6 +29,9 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 <b>Mac users:</b></br>
 VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 
+### Download executable binary files
+Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/releases/tag/v0.1.90">release</a>.
+
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
 * Processor: AMD Ryzen 9 3950x 16-core processor × 32 
@@ -44,9 +47,6 @@ VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
   Use of equivalent or more powerful hardware is recommended.</br>
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
-
-### Download executable binary files
-Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/releases/tag/v0.1.90">release</a>.
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
