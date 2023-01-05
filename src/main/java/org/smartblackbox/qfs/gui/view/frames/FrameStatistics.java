@@ -24,12 +24,15 @@ import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
 import org.smartblackbox.qfs.opengl.model.Statistics;
+import org.smartblackbox.qfs.settings.QFSProject;
 import org.smartblackbox.utils.PerformanceMonitor;
 import org.smartblackbox.utils.PerformanceMonitor.Measurement;
 
 public class FrameStatistics extends AbstractFrame {
 
-    private int width = 250;
+	private QFSProject qfsProject = QFSProject.getInstance();
+
+	private int width = 250;
 	private int height = 420;
 	private float leftCol = 0.7f;
 	private float rightCol = 0.3f;
@@ -100,6 +103,7 @@ public class FrameStatistics extends AbstractFrame {
 		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
 		Nuklear.nk_label(ctx, " CPU:", Nuklear.NK_TEXT_LEFT);
 		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		nk_label_value(ctx, "   - Threads:", String.format("%d", qfsProject.numThreads), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, "   - Physics:", String.format("%.2f ms", mPhysics), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, "   - Matrix Update:", String.format("%.2f ms", mUpdateMatrix), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, "   - Total:", String.format("%.2f ms", mTotalCPURenderTime), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
