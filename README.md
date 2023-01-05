@@ -2,7 +2,7 @@
 
 ## Introduction
 This source code simulates the quantum field theory.
-Inititially it was developed to simulate the double slit experiment.
+Initially it was developed to simulate the double slit experiment.
 It uses a simple motion formula to simulate the light wave.
 By defining the slits in the simulator, the interference patterns can be simulated.
 Even walls/mirrors can be defined freely in 3D quantum field.
