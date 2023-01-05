@@ -64,7 +64,7 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 
 <p>
   I am not a physicist and I have very little knowledge of the formulas used as shown in Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>.
-  After many trials and errors, I have discovered that the formula above works very well for simulating any waves and double slit experiments.
+  After much trial and error, I've found that the above formula works really well for simulating waves and double-slit experiments.
 </p>
 <p>
   The equation above is simply derived from the physics motion formula.
