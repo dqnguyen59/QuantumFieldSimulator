@@ -50,6 +50,7 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit2.png">
 
 ### Rain simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/rain.png">
