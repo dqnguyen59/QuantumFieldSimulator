@@ -79,5 +79,5 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
 </p>
 
 <p>
-  <b>Todo:</b> add links to youtube videos and short tutorials
+  <b>Todo:</b> add links to youtube videos and tutorials
 </p>
