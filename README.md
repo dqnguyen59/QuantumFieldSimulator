@@ -45,7 +45,7 @@ VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
 
-### Download binary files
+### Download executable binary files
 Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/releases/tag/v0.1.90">release</a>.
 
 ### Double-slit simulation
