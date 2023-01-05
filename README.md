@@ -24,7 +24,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 <p>Download the project to any folder. Then from the File menu in Eclipse click on "open Projects from File System..." and import the downloaded project folder.</p>
 <p>Find the file Main.java and run.</p>
-<p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
+<p>Make sure you have Java 11 installed. JDK 11 or later is recommended.</p>
 
 <b>Mac users:</b></br>
 VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
