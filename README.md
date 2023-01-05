@@ -11,7 +11,7 @@ This simulator does not approximate the real world values, but rather simulates 
 
 I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.
 
-<p>The game library engine <a href="https://github.com/LWJGL/lwjgl3/releases" target="_blank">LWJGL</a> is used to draw the field in 3D.</p>
+<p>The game library engine <a href="https://github.com/LWJGL/lwjgl3" target="_blank">LWJGL</a> is used to draw the field in 3D.</p>
 
 ### Sample files:
 * double_slit.qfs
@@ -29,6 +29,9 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 <b>Mac users:</b></br>
 VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 
+### Download executable binary files
+Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/releases/tag/v0.1.90">release</a>.
+
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
 * Processor: AMD Ryzen 9 3950x 16-core processor × 32 
@@ -44,9 +47,6 @@ VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
   Use of equivalent or more powerful hardware is recommended.</br>
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
-
-### Download binary files
-Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqnguyen59/QFSLauncher">https://github.com/dqnguyen59/QFSLauncher</a>.
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
@@ -64,7 +64,7 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
 
 <p>
   I am not a physicist and I have very little knowledge of the formulas used as shown in Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>.
-  But I have discovered that the formula above works very well for simulating any waves and double slit experiments.
+  After much trial and error, I've found that the above formula works really well for simulating waves and double-slit experiments.
 </p>
 <p>
   The equation above is simply derived from the physics motion formula.
