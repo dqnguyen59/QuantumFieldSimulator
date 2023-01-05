@@ -24,7 +24,7 @@ I am not claiming that this is THE quantum field theory, but it should only be u
 
 <p>Download the project to any folder. Then from the File menu in Eclipse click on "open Projects from File System..." and import the downloaded project folder.</p>
 <p>Find the file Main.java and run.</p>
-<p>Make sure you have Java 8 installed. JDK 8 or later is recommended.</p>
+<p>Make sure you have Java 11 installed. JDK 11 or later is recommended.</p>
 
 <b>Mac users:</b></br>
 VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
@@ -50,6 +50,7 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
 
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit2.png">
 
 ### Rain simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/rain.png">
@@ -70,7 +71,8 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
   Have a look at the QFSNode.java source code to see how this formula is derived and used in the code.
   Note that this is not the full quantum field formula, only the electric field is simulated.
   Note that v is not the speed of light, but is actually the speed of the node itself.
-  The propagation of the light wave is caused by the motion of the node and the variable k determines the speed of light.
+  The propagation of the light wave is caused by the motion of the node where each node influences the neighboring nodes.
+  The variable k determines the speed of light.
 </p>
 
 <p>
@@ -78,5 +80,5 @@ Binaries for Windows/MacOS/Linux can be found at <a href="https://github.com/dqn
 </p>
 
 <p>
-  <b>Todo:</b> add links to youtube videos and short tutorials
+  <b>Todo:</b> add links to youtube videos and tutorials
 </p>
