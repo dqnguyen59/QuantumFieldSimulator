@@ -11,7 +11,7 @@ This simulator does not approximate the real world values, but rather simulates 
 
 I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.<br/>
 
-for more detailed information, go to my website: <a href="https://www.smartblackbox.org/">https://www.smartblackbox.org/</a>
+Go to website <a href="https://www.smartblackbox.org/">https://www.smartblackbox.org/</a> for more information.
 
 <p>The game library engine <a href="https://github.com/LWJGL/lwjgl3" target="_blank">LWJGL</a> is used to draw the field in 3D.</p>
 
