@@ -520,7 +520,7 @@
 				</execution>
 			</executions>
 			<configuration>
-				<finalName>${project.artifactId}-${project.version}.${buildNumber}-${smartblackbox.platform}</finalName>
+				<finalName>${project.artifactId}-v${project.version}.${buildNumber}-${smartblackbox.platform}</finalName>
 				<appendAssemblyId>false</appendAssemblyId>
 				<descriptorRefs>
 					<descriptorRef>jar-with-dependencies</descriptorRef>
