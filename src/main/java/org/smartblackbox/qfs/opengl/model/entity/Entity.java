@@ -176,6 +176,14 @@ public class Entity {
 		return rotation;
 	}
 
+	/**
+	 * Values are in degrees.
+	 * Range: 0..360
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void setRotation(double x, double y, double z) {
 		this.rotation.x = x;
 		this.rotation.y = y;
@@ -183,6 +191,14 @@ public class Entity {
 		updateRotation();
 	}
 	
+	/**
+	 * Values are in degrees.
+	 * Range: 0..360
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void incRotation(double x, double y, double z) {
 		this.rotation.x += x;
 		this.rotation.y += y;
@@ -190,6 +206,14 @@ public class Entity {
 		updateRotation();
 	}
 	
+	/**
+	 * Values are in degrees.
+	 * Range: 0..360
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void decRotation(double x, double y, double z) {
 		this.rotation.x -= x;
 		this.rotation.y -= y;
