@@ -9,9 +9,9 @@ Even walls/mirrors can be defined freely in 3D quantum field.
 There are also other files to simulate, for example rain drops or detecting the speed of light.
 This simulator does not approximate the real world values, but rather simulates the properties of the light wave due to a lack of CPU/GPU power.
 
-I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.<br/>
+I am not claiming that this is The formula for quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.<br/>
 
-Go to website <a href="https://www.smartblackbox.org/">https://www.smartblackbox.org/</a> for more information.
+Go to website <a href="https://www.smartblackbox.org/">https://www.smartblackbox.org/</a> for more detailed information.
 
 <p>The game library engine <a href="https://github.com/LWJGL/lwjgl3" target="_blank">LWJGL</a> is used to draw the field in 3D.</p>
 
@@ -53,20 +53,22 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit2.png">
+<br/>
 
 ### Rain simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/rain.png">
+<br/>
 
 ### Random wave simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/waves.png">
+<br/>
 
 ### Formulas used
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula_v1.1.png">
 
 
 <p>
-  I am not a physicist and I have very little knowledge of the formulas used as shown in Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>.
-  After much trial and error, I've found that the above formula works really well for simulating waves and double-slit experiments.
+  I have a little knowledge of the formulas used as shown in Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>, but after a lot of trials and errors, I've found that the above formula works pretty well for simulating waves and double-slit experiments.
 </p>
 <p>
   The equation above is simply derived from the physics motion formula.
