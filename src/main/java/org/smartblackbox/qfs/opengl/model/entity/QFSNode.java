@@ -125,10 +125,6 @@ public class QFSNode extends Entity {
 		this.isWall = isWall;
 	}
 
-	public Vector3d getForce() {
-		return acceleration;
-	}
-
 	public Vector3d getVelocity() {
 		return velocity;
 	}
@@ -298,10 +294,10 @@ public class QFSNode extends Entity {
 	 * 
 	 * The equation of Quantum Field is simply based on motion formula:
 	 * 
-	 * 	   ∆v = avg(N) = k² / |N|  ∑(n – p) {n ∈ N}
+	 * 	   ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N}
 	 * 		a = ∆v / ∆t
-	 * 		v = v + a * ∆t				
-	 * 		p = p + v * ∆t + 1/2 a * ∆t²				
+	 * 		v = v + a * t				
+	 * 		x = x0 + v0 * t + 1/2 a * t²				
 	 * 		v = v * r
 	 * 
 	 * Note that v is not the speed of light, but is actually the speed of the node itself.
@@ -310,10 +306,9 @@ public class QFSNode extends Entity {
 	 * 
 	 * If ∆t is one frame and one frame is one Planck time unit, then the short formula can be written as: 
 	 * 
-	 * 		a = avg(N) = k² / |N|  ∑(n – p) {n ∈ N}
-	 * 		v = v + a
+	 * 		a = avg(N) = k² / |N| * ∑(n – p) {n ∈ N}
+	 * 		v = (v + a) * r
 	 * 		p = p + v + a * 0.5
-	 * 		v = v * r
 	 * 
 	 * A node can only have six neighbors in the field matrix, then the length of the array |N| is 6.
 	 * 
