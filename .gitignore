@@ -16,6 +16,7 @@ buildNumber.properties
 /settings/
 /private/
 qfs.ini
+*.xcf
 
 # log files
 .log
