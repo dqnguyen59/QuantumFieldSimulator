@@ -53,15 +53,18 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit2.png">
-
+<br/>
 ### Rain simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/rain.png">
+<br/>
 
 ### Random wave simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/waves.png">
+<br/>
 
 ### Formulas used
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula_v1.1.png">
+<br/>
 
 
 <p>
