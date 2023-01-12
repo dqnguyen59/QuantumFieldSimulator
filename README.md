@@ -64,7 +64,6 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 
 ### Formulas used
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula_v1.1.png">
-<br/>
 
 
 <p>
