@@ -91,7 +91,7 @@ rotation.y = 0.0
 rotation.z = 0.0
 
 [Base]
-rotation.x = -74.0
+rotation.x = -64.0
 rotation.y = 0.0
 rotation.z = -24.199999943375587
 
@@ -159,27 +159,6 @@ position = 0.31899968
 
 [Oscillators]
 Size = 1
-
-[Oscillator0]
-name = Oscillator 0
-nodeIndex.x = 20
-nodeIndex.y = 100
-nodeIndex.z = 0
-active.x = false
-active.y = false
-active.z = true
-OscillatorType.x = sin
-OscillatorType.y = sin
-OscillatorType.z = sin
-startangle.x = 0.0
-startangle.y = 0.0
-startangle.z = 0.0
-angleIncrement.x = 0.0
-angleIncrement.y = 0.0
-angleIncrement.z = 4.0
-amplitude.x = 0.0
-amplitude.y = 0.0
-amplitude.z = 40.0
 
 [Rain]
 active = false
@@ -4463,4 +4442,25 @@ index.z = 0
 index.x = 64
 index.y = 199
 index.z = 0
+
+[Oscillator0]
+name = Oscillator 0
+nodeIndex.x = 20
+nodeIndex.y = 100
+nodeIndex.z = 0
+active.x = false
+active.y = false
+active.z = true
+OscillatorType.x = sin
+OscillatorType.y = sin
+OscillatorType.z = sin
+startangle.x = 0.0
+startangle.y = 0.0
+startangle.z = 0.0
+angleIncrement.x = 0.0
+angleIncrement.y = 0.0
+angleIncrement.z = 4.0
+amplitude.x = 0.0
+amplitude.y = 0.0
+amplitude.z = 40.0
 
