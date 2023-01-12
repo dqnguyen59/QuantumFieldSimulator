@@ -63,6 +63,12 @@ public class Scene {
 	private int numTask;
 
 	private DirectionalLight directionalLight;
+
+	private boolean animated;
+
+	protected double animateInc;
+
+	private int animateDirection = -1;
 	
 	public Scene() {
 		entities = new ArrayList<>();
@@ -527,6 +533,42 @@ public class Scene {
 			}
 		}			
 		numTask = 0;
+	}
+
+	public boolean isAnimated() {
+		return animated;
+	}
+
+	public void setAnimated(boolean animated) {
+		this.animated = animated;
+	}
+
+	public void startAnimation() {
+		setAnimated(true);
+	}
+
+	public void stopAnimation() {
+		setAnimated(false);
+	}
+
+	public void runAnimation() {
+		if (animated) {
+			double z = getQfsFields().getBaseField().getRotation().z;
+			
+			if (animateDirection == -1 && z <= -160) {
+				animateDirection = 1;
+			}
+			else if (animateDirection == 1 && z >= -30) {
+				animateDirection = -1;
+			}
+			
+			System.out.println(getQfsFields().getBaseField().getRotation().z);
+			getQfsFields().getBaseField().incRotation(0.0f, 0.0f, 0.2 * animateDirection);
+		}
+	}
+
+	public void toggleAnimation() {
+		setAnimated(!animated);
 	}
 
 }

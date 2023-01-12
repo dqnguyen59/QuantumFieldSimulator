@@ -604,6 +604,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			case GLFW.GLFW_KEY_L:
 				qfsModel.setMode(Mode.light);
 				break;
+			case GLFW.GLFW_KEY_F4:
+				scene.toggleAnimation();
+				break;
 			case GLFW.GLFW_KEY_F5:
 				scene.updateWalls();
 				break;
@@ -732,6 +735,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		isRenderingReady = true;
 		PerformanceMonitor.stop(Measurement.sendToGPU);
 		
+		scene.runAnimation();
+		
 		super.render();
 	}
 
@@ -756,8 +761,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				while (isRenderingReady) {
 					Utils.sleepMS(1);
 				}
-				// Not sure why, but some nodes weren't rendered. Wait at least for 4 ms to fix it.
-				Utils.sleepMS(4);
+				// Not sure why, but some nodes weren't rendered. Wait at least for 8 ms to fix it.
+				Utils.sleepMS(12);
 
 				PerformanceMonitor.start(Measurement.totalCPURenderTime);
 				scene.resetTasks();
@@ -876,6 +881,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 	@Override
 	public void cleanUp() {
+		scene.stopAnimation();
 		renderer.cleanup();
 		loader.cleanup();
 		super.cleanUp();
