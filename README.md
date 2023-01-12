@@ -2,14 +2,16 @@
 
 ## Introduction
 This source code simulates the quantum field theory.
-Inititially it was developed to simulate the double slit experiment.
+Initially it was developed to simulate the double slit experiment.
 It uses a simple motion formula to simulate the light wave.
 By defining the slits in the simulator, the interference patterns can be simulated.
 Even walls/mirrors can be defined freely in 3D quantum field.
 There are also other files to simulate, for example rain drops or detecting the speed of light.
 This simulator does not approximate the real world values, but rather simulates the properties of the light wave due to a lack of CPU/GPU power.
 
-I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.
+I am not claiming that this is THE quantum field theory, but it should only be used for educational purposes to understand the concept of quantum field theory.<br/>
+
+Go to website <a href="https://www.smartblackbox.org/">https://www.smartblackbox.org/</a> for more information.
 
 <p>The game library engine <a href="https://github.com/LWJGL/lwjgl3" target="_blank">LWJGL</a> is used to draw the field in 3D.</p>
 
@@ -59,7 +61,7 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/waves.png">
 
 ### Formulas used
-<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula.png">
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula_v1.1.png">
 
 
 <p>
