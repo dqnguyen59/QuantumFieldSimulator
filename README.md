@@ -84,5 +84,5 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 </p>
 
 <p>
-  <b>Todo:</b> add links to youtube videos and tutorials
+  <b>Youtube video tutorial:</b> <a href="https://www.youtube.com/watch?v=TSEYb4WCsVA">https://www.youtube.com/watch?v=TSEYb4WCsVA</a>
 </p>
