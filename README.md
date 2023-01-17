@@ -35,7 +35,7 @@ VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
 Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/releases/tag/v0.1.90">release</a>.
 
 ### Youtube videos
-  <b>Youtube video tutorial:</b> <a href="https://www.youtube.com/watch?v=TSEYb4WCsVA">https://www.youtube.com/watch?v=TSEYb4WCsVA</a>
+  Youtube video tutorial: <a href="https://www.youtube.com/watch?v=TSEYb4WCsVA">https://www.youtube.com/watch?v=TSEYb4WCsVA</a>
 
 ### CPU & GPU Performance for comparison
 * OS: Ubuntu 20.04.5 LTS
