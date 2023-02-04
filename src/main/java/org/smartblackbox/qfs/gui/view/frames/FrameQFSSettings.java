@@ -31,11 +31,12 @@ import org.smartblackbox.qfs.settings.QFSSettings.RenderType;
 public class FrameQFSSettings extends AbstractFrame {
 
 	private int width = 300;
-	private int height = 726;
+	private int height = 756;
 	private float leftCol = 0.6f;
 	private float rightCol = 0.4f;
 
 	private QFSProject qfsProject = QFSProject.getInstance();
+	
 	private QFSSettings settings = qfsProject.settings;
 	private StringBuffer bufRadiation = new StringBuffer();
 	
@@ -48,6 +49,7 @@ public class FrameQFSSettings extends AbstractFrame {
 	private StringBuffer bufIntensityAll = new StringBuffer();
 	private StringBuffer bufShininess = new StringBuffer();
 	private StringBuffer bufConstantFrequency = new StringBuffer();
+	private StringBuffer bufSwapInterval = new StringBuffer();
 
 	public FrameQFSSettings(NuklearModel frames) {
 		super(frames);
@@ -126,7 +128,10 @@ public class FrameQFSSettings extends AbstractFrame {
 			qfsProject.setConstantFrequency(nk_slider(ctx, 0, qfsProject.getConstantFrequency(), 1.0, 0.0001));
 			nk_spacer(ctx, spacer1, 1);
 
-			qfsProject.setRadiation(nk_label_edit(ctx, stack, " Radiation:", bufRadiation, qfsProject.getRadiation(), appSettings.getFormatScientific8(), leftCol, rightCol));
+			qfsProject.setConstantRadiation(nk_label_edit(ctx, stack, " Constant Radiation:", bufRadiation, qfsProject.getConstantRadiation(), appSettings.getFormatScientific8(), leftCol, rightCol));
+			nk_spacer(ctx, spacer1, 1);
+			
+			qfsProject.setGlSwapInterval(nk_label_edit(ctx, stack, " GLSwap Interval:", bufSwapInterval, qfsProject.getGlSwapInterval(), leftCol, rightCol));
 			nk_spacer(ctx, spacer1, 1);
 			
 			Nuklear.nk_layout_row_end(ctx);
