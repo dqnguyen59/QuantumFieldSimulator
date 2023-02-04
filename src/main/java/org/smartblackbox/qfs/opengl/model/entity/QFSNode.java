@@ -51,6 +51,8 @@ public class QFSNode extends Entity {
 	private Vector3i index = new Vector3i(-1);
 	private double customScale = -1;
 	private Vector4f customColor;
+	private static double constantWaveSpeed = 1.0;
+	private static double constantRadiation = 1.0;
 
 	public QFSNode(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
 		super(parent, model, position, rotation, scale);
@@ -173,7 +175,7 @@ public class QFSNode extends Entity {
 		customScale = -1;
 	}
 
-	private void setAccelerationColor(Vector3d force) {
+	private synchronized void setAccelerationColor(Vector3d acceleration) {
 		Material m = getMaterial(); 
 		
 		Vector4f color = m.getDiffuseColor();
@@ -221,39 +223,39 @@ public class QFSNode extends Entity {
 		else {
 			switch (settings.getColorMode()) {
 			case zColor:
-				color.x = (float) (Math.max(0, -force.z) * intensity);
-				color.y = (float) (Math.abs(force.y) * intensity);
-				color.z = (float) (Math.max(0, force.z) * intensity);
+				color.x = (float) (Math.max(0, -acceleration.z) * intensity);
+				color.y = (float) (Math.abs(acceleration.y) * intensity);
+				color.z = (float) (Math.max(0, acceleration.z) * intensity);
 				color.w = 0;
 				break;
 			case zColor2:
-				color.x = (float) (Math.max(0, -force.z) * intensity2);
-				color.y = (float) (Math.abs(force.y) * intensity2);
-				color.z = (float) (Math.max(0, force.z) * intensity2);
+				color.x = (float) (Math.max(0, -acceleration.z) * intensity2);
+				color.y = (float) (Math.abs(acceleration.y) * intensity2);
+				color.z = (float) (Math.max(0, acceleration.z) * intensity2);
 				color.w = 0;
 				break;
 			case zColor3:
-				color.x = (float) (Math.max(0, -force.z) * Math.max(0, -force.z) * intensity3);
-				color.y = (float) (Math.abs(force.y * force.y) * intensity3);
-				color.z = (float) (Math.max(0, force.z) * Math.max(0, force.z) * intensity3);
+				color.x = (float) (Math.max(0, -acceleration.z) * Math.max(0, -acceleration.z) * intensity3);
+				color.y = (float) (Math.abs(acceleration.y * acceleration.y) * intensity3);
+				color.z = (float) (Math.max(0, acceleration.z) * Math.max(0, acceleration.z) * intensity3);
 				color.w = 0;
 				break;
 			case xyzColor:
-				color.x = (float) (Math.abs(force.x)) * intensity;
-				color.y = (float) (Math.abs(force.y)) * intensity;
-				color.z = (float) (Math.abs(force.z)) * intensity;
+				color.x = (float) (Math.abs(acceleration.x)) * intensity;
+				color.y = (float) (Math.abs(acceleration.y)) * intensity;
+				color.z = (float) (Math.abs(acceleration.z)) * intensity;
 				color.w = 0;
 				break;
 			case xyzColor2:
-				color.x = (float) (Math.abs(force.x) * intensity2);
-				color.y = (float) (Math.abs(force.y) * intensity2);
-				color.z = (float) (Math.abs(force.z) * intensity2);
+				color.x = (float) (Math.abs(acceleration.x) * intensity2);
+				color.y = (float) (Math.abs(acceleration.y) * intensity2);
+				color.z = (float) (Math.abs(acceleration.z) * intensity2);
 				color.w = 0;
 				break;
 			case xyzColor3:
-				color.x = (float) (force.x * force.x) * intensity3;
-				color.y = (float) (force.y * force.y) * intensity3;
-				color.z = (float) (force.z * force.z) * intensity3;
+				color.x = (float) (acceleration.x * acceleration.x) * intensity3;
+				color.y = (float) (acceleration.y * acceleration.y) * intensity3;
+				color.z = (float) (acceleration.z * acceleration.z) * intensity3;
 				color.w = 0;
 				break;
 			case normal:
@@ -276,61 +278,83 @@ public class QFSNode extends Entity {
 		customColor = null;
 	}
 
+	public static double getConstantWaveSpeed() {
+		return constantWaveSpeed;
+	}
+
+	public static void setConstantWaveSpeed(double constantWaveSpeed) {
+		QFSNode.constantWaveSpeed = constantWaveSpeed / 6.0;
+	}
+
+	public static double getConstantRadiation() {
+		return constantRadiation;
+	}
+
+	public static void setConstantRadiation(double constantRadiation) {
+		QFSNode.constantRadiation = constantRadiation;
+	}
+
 	/**
-	 * Note that this is not the full quantum field formula, only the electric field is simulated. 
-	 * 
-	 * Some definitions:
-	 * 
-	 * 		t = time
-	 * 		a = acceleration
-	 * 		v = node velocity
-	 * 		N = neighbor position array[Right, Up, Front, Left, Down, Back]
-	 * 		p = position (variable positionBuff)
-	 * 		r = radiation (wave will fade when radiation < 1)
-	 * 		k = constant light speed {k ∈ [0..1]}
-	 * 			this constant is responsible for the speed of light.
-	 * 			Meaning, changing this constant would change the speed of light.
-	 * 			Decreasing this constant will result in a lower speed of light.
-	 * 
-	 * The equation of Quantum Field is simply based on motion formula:
-	 * 
-	 * 	   ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N}
-	 * 		a = ∆v / ∆t
-	 * 		v = v + a * t				
-	 * 		x = x0 + v0 * t + 1/2 a * t²				
-	 * 		v = v * r
-	 * 
+	 * Note that this is not the full quantum field formula, only the electric field is simulated.<br/>
+	 * <br/>
+	 * Some definitions:<br/>
+	 * <p style="margin-left: 30px;">
+	 * 		t = time																<br/>
+	 * 		a = acceleration														<br/>
+	 * 		v = node velocity														<br/>
+	 * 		N = neighbor position array[Right, Up, Front, Left, Down, Back]			<br/>
+	 * 		p = position (variable positionBuff)									<br/>
+	 * 		r = radiation (wave will fade when radiation < 1)						<br/>
+	 * 		k = constant light speed {k ∈ [0..1]}									<br/>
+	 * 			this constant is responsible for the speed of light.				<br/>
+	 * 			Meaning, changing this constant would change the speed of light.	<br/>
+	 * 			Decreasing this constant will result in a lower speed of light.		<br/>
+	 * </p>
+	 * <br/>
+	 * The equation of Quantum Field is simply based on motion formula:<br/>
+	 * <p style="margin-left: 30px;">
+	 * 	   ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N}	<br/>
+	 * 		a = ∆v / ∆t									<br/>
+	 * 		v = v + a * t								<br/>
+	 * 		x = x0 + v0 * t + 1/2 a * t²				<br/>
+	 * </p>
+	 * <br/>
 	 * Note that v is not the speed of light, but is actually the speed of the node itself.
 	 * The propagation of the light wave is caused by the motion of the node
-	 * and the variable k determines the speed of light.
+	 * and the variable k determines the speed of light.<br/>
+	 * <br/>
+	 * If ∆t is one frame and one frame is one Planck time unit, then the short formula can be written as:<br/> 
+	 * <p style="margin-left: 30px;">
+	 * 		a = avg(N)        = k² / |N| * ∑(n – p) {n ∈ N}		<br/>
+	 * 		v = nVel(v, a)    = (v + a) * r						<br/>
+	 * 		p = nPos(v, p, a) = p + v + a * 0.5					<br/>
+	 * </p>
+	 * <br/>
+	 * A node can only have six neighbors in the field matrix, then the length of the array |N| is 6.<br/>
+	 * <br/>
+	 * <b>Remarks:</b>
+	 * The higher the k value the higher the speed of light, but k cannot exceed 1. 
+	 * If k is greater than 1, the affected nodes become unstable and eventually fly away.<br/>
+	 * <br/>
 	 * 
-	 * If ∆t is one frame and one frame is one Planck time unit, then the short formula can be written as: 
-	 * 
-	 * 		a = avg(N) = k² / |N| * ∑(n – p) {n ∈ N}
-	 * 		v = (v + a) * r
-	 * 		p = p + v + a * 0.5
-	 * 
-	 * A node can only have six neighbors in the field matrix, then the length of the array |N| is 6.
-	 * 
-	 * Remarks: the higher the k value the higher the speed of light, but k cannot exceed 1.
-	 * If k is greater than 1, the affected nodes become unstable and eventually fly away.
-	 * 
+	 * @param isSimulating If set to false then the node stops updating its position
 	 */
-	public void calcNewPosition(boolean updatePosition) {
+	public void calcNewPosition() {
 		if (!hasNeightbors || isFixed) {
 			setAccelerationColor(new Vector3d(1f, 1f, 1f));
 			return;
 		}
 
 		acceleration.set(0);
-		if (updatePosition) {
+		// If set to false then the node stops updating its position
+		if (isSimulating) {
 			for (QFSNode neighbor : neighbors) {
 				acceleration.add(neighbor.position).sub(position);
 			}
-			
+
 			// Note that the result of the addition or multiplication is stored in the object variable itself.
 			// Fortunately, the formula fits pretty well on one line.
-			positionBuff.add(velocity.add(acceleration.mul(qfsProject.getConstantLightSpeed() / 6.0)).mul(qfsProject.getRadiation())).add(acceleration.mul(0.5));
+			positionBuff.add(velocity.add(acceleration.mul(constantWaveSpeed)).mul(constantRadiation)).add(acceleration.mul(0.5));
 		}
 
 		setAccelerationColor(acceleration);
