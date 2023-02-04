@@ -33,7 +33,7 @@ import org.smartblackbox.qfs.settings.QFSProject;
 public class FrameOscillator extends AbstractFrame {
 
 	private QFSProject qfsProject = QFSProject.getInstance();
-	private QFSModel qfsModel = qfsProject.getQfsModel(); 
+	private QFSModel qfsModel = qfsProject.getQfsModel();
 
 	private int optionsNoScroll = Nuklear.NK_WINDOW_TITLE | Nuklear.NK_WINDOW_NO_SCROLLBAR;
 	private int groupNoScroll = optionsNoScroll | Nuklear.NK_WINDOW_BORDER;
@@ -55,7 +55,8 @@ public class FrameOscillator extends AbstractFrame {
 	private StringBuffer bufAmplitudeX = new StringBuffer();
 	private StringBuffer bufAmplitudeY = new StringBuffer();
 	private StringBuffer bufAmplitudeZ = new StringBuffer();
-	private static int index;
+	private int index;
+	private Oscillator lastSelectedOscillator;
 
 	public FrameOscillator(NuklearModel frames) {
 		super(frames);
@@ -70,6 +71,7 @@ public class FrameOscillator extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 
+		index = qfsProject.oscillators.size();
 		createLayout(ctx, 0, getWindowHeight() - (Constants.STATUS_BAR_HEIGHT + height), width, height);
 	}
 
@@ -102,8 +104,13 @@ public class FrameOscillator extends AbstractFrame {
 				for (Oscillator oscillator : qfsProject.oscillators) {
 					boolean selected = qfsModel.getSelectedOscillator() == oscillator;
 					selected = Nuklear.nk_select_label(ctx, oscillator.getName(), Nuklear.NK_TEXT_ALIGN_LEFT, selected);
-					if (selected)
+					if (selected) {
 						qfsModel.setSelectedOscillator(oscillator);
+						if (lastSelectedOscillator != oscillator) {
+							oscillatorEdit = null;
+						}
+						lastSelectedOscillator = oscillator;
+					}
 				}
 				
 				Nuklear.nk_group_end(ctx);
