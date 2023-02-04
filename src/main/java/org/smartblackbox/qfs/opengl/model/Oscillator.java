@@ -32,7 +32,7 @@ public class Oscillator extends AbstractSettings implements ISettings {
 	private String name = "";
 	private Vector3b active = new Vector3b();
 	private VectorOscillatorType oscillatorType = new VectorOscillatorType(); // Sin or Cos
-	private Vector3d startangle = new Vector3d(); // degree
+	private Vector3d startAngle = new Vector3d(); // degree
 	private Vector3d angle = new Vector3d(); // degree
 	private Vector3d angleIncrement = new Vector3d(); // degree
 	private Vector3d amplitude = new Vector3d();
@@ -53,7 +53,7 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		Oscillator oscillator = new Oscillator(name, nodeIndex);
 		oscillator.active = new Vector3b(active);
 		oscillator.oscillatorType = new VectorOscillatorType(oscillatorType);
-		oscillator.startangle = new Vector3d(startangle);
+		oscillator.startAngle = new Vector3d(startAngle);
 		oscillator.angle = new Vector3d(angle);
 		oscillator.angleIncrement = new Vector3d(angleIncrement);
 		oscillator.amplitude = new Vector3d(amplitude);
@@ -70,41 +70,50 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		
 		if (active.x) {
 			angle.x += angleIncrement.x;
-			if (angle.x > 360) angle.x = angle.x - 360;
-			else if (angle.x < -360) angle.x = angle.x + 360;
+			if (angle.x >= 360) angle.x = 0;
+			else if (angle.x <= -360) angle.x = 0;
 
 			if (oscillatorType.x == OscillatorType.sin)
-				vOscillator.x = Math.sin(Math.toRadians(startangle.x + angle.x));
+				vOscillator.x = Math.sin(Math.toRadians(startAngle.x + angle.x));
 			else if (oscillatorType.x == OscillatorType.cos)
-				vOscillator.x = Math.cos(Math.toRadians(startangle.x + angle.x));
+				vOscillator.x = Math.cos(Math.toRadians(startAngle.x + angle.x));
 		}
 
 		if (active.y) {
 			angle.y += angleIncrement.y;
-			if (angle.y > 360) angle.y = angle.y - 360;
-			else if (angle.y < -360) angle.y = angle.y + 360;
+			if (angle.y >= 360) angle.y = 0;
+			else if (angle.y <= -360) angle.y = 0;
 			
 			if (oscillatorType.y == OscillatorType.sin)
-				vOscillator.y = Math.sin(Math.toRadians(startangle.y + angle.y));
+				vOscillator.y = Math.sin(Math.toRadians(startAngle.y + angle.y));
 			else if (oscillatorType.y == OscillatorType.cos)
-				vOscillator.y = Math.cos(Math.toRadians(startangle.y + angle.y));
+				vOscillator.y = Math.cos(Math.toRadians(startAngle.y + angle.y));
 		}
 
 		if (active.z) {
 			angle.z += angleIncrement.z;
-			if (angle.z > 360) angle.z = angle.z - 360;
-			else if (angle.z < -360) angle.z = angle.z + 360;
+			if (angle.z >= 360) angle.z = 0;
+			else if (angle.z <= -360) angle.z = 0;
 			
 			if (oscillatorType.z == OscillatorType.sin)
-				vOscillator.z = Math.sin(Math.toRadians(startangle.z + angle.z));
+				vOscillator.z = Math.sin(Math.toRadians(startAngle.z + angle.z));
 			else if (oscillatorType.z == OscillatorType.cos)
-				vOscillator.z = Math.cos(Math.toRadians(startangle.z + angle.z));
+				vOscillator.z = Math.cos(Math.toRadians(startAngle.z + angle.z));
 		}
 		
 		if (active.x || active.y || active.z) {
 			return vOscillator.mul(amplitude);
 		}
 		else return null;
+	}
+
+	public void reset() {
+		vOscillator.set(0);
+		angle.set(0);
+	}
+	
+	public boolean isActive() {
+		return active.x || active.y || active.z;
 	}
 
 	@Override
@@ -130,9 +139,9 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		oscillatorType.x = ((s = ini.get(section + index, "OscillatorType.x")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s));
 		oscillatorType.y = ((s = ini.get(section + index, "OscillatorType.y")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s));
 		oscillatorType.z = ((s = ini.get(section + index, "OscillatorType.z")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s));
-		startangle.x = ((s = ini.get(section + index, "startangle.x")).isEmpty()? 0 : Double.parseDouble(s));
-		startangle.y = ((s = ini.get(section + index, "startangle.y")).isEmpty()? 0 : Double.parseDouble(s));
-		startangle.z = ((s = ini.get(section + index, "startangle.z")).isEmpty()? 0 : Double.parseDouble(s));
+		startAngle.x = ((s = ini.get(section + index, "startAngle.x")).isEmpty()? 0 : Double.parseDouble(s));
+		startAngle.y = ((s = ini.get(section + index, "startAngle.y")).isEmpty()? 0 : Double.parseDouble(s));
+		startAngle.z = ((s = ini.get(section + index, "startAngle.z")).isEmpty()? 0 : Double.parseDouble(s));
 		angleIncrement.x = ((s = ini.get(section + index, "angleIncrement.x")).isEmpty()? 0 : Double.parseDouble(s));
 		angleIncrement.y = ((s = ini.get(section + index, "angleIncrement.y")).isEmpty()? 0 : Double.parseDouble(s));
 		angleIncrement.z = ((s = ini.get(section + index, "angleIncrement.z")).isEmpty()? 0 : Double.parseDouble(s));
@@ -153,9 +162,9 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		ini.put(section + index, "OscillatorType.x", oscillatorType.x == null? "" : oscillatorType.x.toString());
 		ini.put(section + index, "OscillatorType.y", oscillatorType.y == null? "" : oscillatorType.y.toString());
 		ini.put(section + index, "OscillatorType.z", oscillatorType.z == null? "" : oscillatorType.z.toString());
-		ini.put(section + index, "startangle.x", startangle.x);
-		ini.put(section + index, "startangle.y", startangle.y);
-		ini.put(section + index, "startangle.z", startangle.z);
+		ini.put(section + index, "startAngle.x", startAngle.x);
+		ini.put(section + index, "startAngle.y", startAngle.y);
+		ini.put(section + index, "startAngle.z", startAngle.z);
 		ini.put(section + index, "angleIncrement.x", angleIncrement.x);
 		ini.put(section + index, "angleIncrement.y", angleIncrement.y);
 		ini.put(section + index, "angleIncrement.z", angleIncrement.z);
@@ -189,11 +198,11 @@ public class Oscillator extends AbstractSettings implements ISettings {
 	}
 
 	public Vector3d getStartangle() {
-		return startangle;
+		return startAngle;
 	}
 
-	public void setStartangle(Vector3d startangle) {
-		this.startangle = startangle;
+	public void setStartangle(Vector3d startAngle) {
+		this.startAngle = startAngle;
 	}
 
 	public Vector3d getAngle() {
@@ -236,6 +245,4 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		this.nodeIndex = nodeIndex;
 	}
 
-	
-	
 }
