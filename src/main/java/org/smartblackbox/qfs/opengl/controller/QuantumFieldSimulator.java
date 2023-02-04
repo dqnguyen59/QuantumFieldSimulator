@@ -18,6 +18,8 @@
  */
 package org.smartblackbox.qfs.opengl.controller;
 
+import java.util.ArrayList;
+
 import org.joml.Vector2d;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
@@ -33,25 +35,26 @@ import org.smartblackbox.qfs.opengl.model.Material;
 import org.smartblackbox.qfs.opengl.model.ObjFileModel;
 import org.smartblackbox.qfs.opengl.model.Oscillator;
 import org.smartblackbox.qfs.opengl.model.QFSModel;
+import org.smartblackbox.qfs.opengl.model.QFSModel.Mode;
+import org.smartblackbox.qfs.opengl.model.QFSModel.NodeSelectionMode;
 import org.smartblackbox.qfs.opengl.model.Scene;
 import org.smartblackbox.qfs.opengl.model.Terrain;
 import org.smartblackbox.qfs.opengl.model.Texture;
-import org.smartblackbox.qfs.opengl.model.QFSModel.Mode;
-import org.smartblackbox.qfs.opengl.model.QFSModel.NodeSelectionMode;
 import org.smartblackbox.qfs.opengl.model.entity.Entity;
 import org.smartblackbox.qfs.opengl.model.entity.QFSNode;
 import org.smartblackbox.qfs.opengl.model.lights.DirectionalLight;
 import org.smartblackbox.qfs.opengl.model.lights.Light;
 import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
+import org.smartblackbox.qfs.opengl.utils.Screenshot;
 import org.smartblackbox.qfs.opengl.view.GLWindow;
 import org.smartblackbox.qfs.opengl.view.renderer.Renderer;
 import org.smartblackbox.qfs.settings.QFSProject;
 import org.smartblackbox.qfs.settings.QFSSettings;
-import org.smartblackbox.qfs.settings.SlitWallSettings;
 import org.smartblackbox.qfs.settings.QFSSettings.RenderType;
+import org.smartblackbox.qfs.settings.SlitWallSettings;
 import org.smartblackbox.utils.PerformanceMonitor;
-import org.smartblackbox.utils.Utils;
 import org.smartblackbox.utils.PerformanceMonitor.Measurement;
+import org.smartblackbox.utils.Utils;
 
 public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEvents {
 
@@ -82,6 +85,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	private boolean isLoadingStarted;
 	private boolean isNodesUpdateRequired;
 	private KeyEvents keyEvents;
+	private ArrayList<QFSNode> customNodeFixed = new ArrayList<QFSNode>();
+	private int waitAfterReset = 0;
 
 	public QuantumFieldSimulator(GLWindow glWindow) {
 		super(glWindow);
@@ -227,7 +232,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			qfsModel.getCurrentMouseNodeIndex().y = qfsProject.getDimensionY() / 2;
 			qfsModel.getCurrentMouseNodeIndex().z = qfsProject.getDimensionZ() / 2;
 			qfsModel.setCurrentMouseNode(scene.getNodeByIndex(qfsModel.getCurrentMouseNodeIndex()));
-			isNodesUpdateRequired = true;
+			//isNodesUpdateRequired = true;
 
 			isLoadingStarted = false;
 		}
@@ -578,6 +583,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				selectedNode.incPosition(new Vector3d(0, 0, qfsProject.rainModel.getForce()));
 			break;
 		}
+		
 
 		return false;
 	}
@@ -585,7 +591,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	@Override
 	public boolean keyCallback(long handle, int key, int scanCode, int action, int mods) {
 		isReleased = action == GLFW.GLFW_RELEASE;
+		
+//		System.out.println("scanCode: " + scanCode);
+//		System.out.println("action: " + action);
+//		System.out.println("mods: " + mods);
 
+		boolean isShiftPressed = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
+		//System.out.println("isShiftPressed: " + isShiftPressed);
+		
 		if (isReleased) {
 			switch (key) {
 			case GLFW.GLFW_KEY_N:
@@ -606,9 +619,31 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				break;
 			case GLFW.GLFW_KEY_F4:
 				scene.toggleAnimation();
+				isAnimating = scene.isAnimated();
 				break;
 			case GLFW.GLFW_KEY_F5:
 				scene.updateWalls();
+				break;
+			case GLFW.GLFW_KEY_F6:
+				if (isShiftPressed) {
+					// Release all nodes that was fixed by the list of customNodeFixed.
+					for (QFSNode qfsNode : customNodeFixed) {
+						qfsNode.setFixed(false);
+					}
+				}
+				else {
+					if (!selectedNode.isFixed()) {
+						// Set the node position and make it fixed.
+						selectedNode.getPositionBuff().z = qfsProject.rainModel.getForce();
+						selectedNode.setFixed(true);
+						// Remember that this node is set fixed.
+						customNodeFixed.add(selectedNode);
+					}
+					else {
+						// Release the node.
+						selectedNode.setFixed(false);
+					}
+				}
 				break;
 			case GLFW.GLFW_KEY_F8:
 				qfsModel.toggleSimulation();
@@ -616,6 +651,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			case GLFW.GLFW_KEY_F10:
 				qfsProject.reset();
 				slitWall.reset();
+				break;
+			case GLFW.GLFW_KEY_F11:
+				Screenshot.prepareScreenshot(4, 4, 0xFF);
 				break;
 			case GLFW.GLFW_KEY_F12:
 				settings.setRenderType(settings.getRenderType() == RenderType.all? RenderType.slice : RenderType.all);
@@ -666,78 +704,44 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			qfsModel.setLoadingReady(false);
 			// Build the Quantum Fields or the Ether.
 			scene.getQfsFields().build();
-		}
-
-		if (qfsProject.isFileSaved()) {
-			setCustomTitle(qfsProject.getCurrentFilename());
+			waitAfterReset = 0;
 		}
 		
-		if (qfsModel.isChanged()) {
-			qfsModel.setChanged(false);
-			isNodesUpdateRequired = true;
-		}
-
-		if (settings.isChanged()) {
-			settings.setChanged(false);
-			updateTerrain();
-			isNodesUpdateRequired = true;
-		}
-
-		if (slitWall.isChanged()) {
-			slitWall.setChanged(false);
-			if (slitWall.isActive()) {
-				scene.drawSlitWall();
+		if (!isLoadingStarted) {
+			if (qfsProject.isFileSaved()) {
+				qfsProject.setFileSaved(false);
+				setCustomTitle(qfsProject.getCurrentFilename());
+			}
+			
+			if (qfsModel.isChanged()) {
+				qfsModel.setChanged(false);
 				isNodesUpdateRequired = true;
 			}
-			else {
-				scene.clearHiLightNodes();
+
+			if (settings.isChanged()) {
+				settings.setChanged(false);
+				updateTerrain();
 				isNodesUpdateRequired = true;
 			}
-		}
 
-		if (slitWall.isUpdated()) {
-			slitWall.setUpdated(false);
-			scene.makeWallFromHiLightNodes();
-			isNodesUpdateRequired = true;
-		}
+			if (slitWall.isChanged()) {
+				slitWall.setChanged(false);
+				if (slitWall.isActive()) scene.drawSlitWall();
+				else scene.clearHiLightNodes();
+				isNodesUpdateRequired = true;
+			}
 
-		if (isNodesUpdateRequired) {
-			updateNodesProperties();
-			isNodesUpdateRequired = false;
-		}
-	}
+			if (slitWall.isUpdated()) {
+				slitWall.setUpdated(false);
+				scene.makeWallFromHiLightNodes();
+				isNodesUpdateRequired = true;
+			}
 
-	@Override
-	public void render() {
-		if (glWindow.isResize()) {
-			GL11.glViewport(0, 0, glWindow.getWidth(), glWindow.getHeight());
+			if (isNodesUpdateRequired) {
+				updateNodesProperties();
+				isNodesUpdateRequired = false;
+			}
 		}
-
-		checkSettingsChanged();
-
-		waitForCalcNextPhysicsReady();
-
-		if (isLoadingStarted) {
-			// Make sure it is not doing any calculation while updating new scene.
-			updateNodesArray();
-		}
-		else {
-			waitForRenderingReady();
-			// In the mean time, start the calculation of the next frame while rendering.
-			calcNextPhysics();
-		}
-		
-		PerformanceMonitor.start(Measurement.sendToGPU);
-		isRenderingReady = false;
-		if (qfsProject.terrain.isVisible())
-			renderer.processTerrain(qfsProject.terrain);
-		renderer.render(qfsProject.camera, scene);
-		isRenderingReady = true;
-		PerformanceMonitor.stop(Measurement.sendToGPU);
-		
-		scene.runAnimation();
-		
-		super.render();
 	}
 
 	private void waitForRenderingReady() {
@@ -746,7 +750,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		}
 	}
 
-	private void calcNextPhysics() {
+	private void calcNextPhysicsFrame() {
 		isCalcNextPhysicsReady = false;
 		// While the GPU is rendering on the current buffer,
 		// swap the buffer to calculate physics on another buffer.
@@ -762,19 +766,24 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					Utils.sleepMS(1);
 				}
 				// Not sure why, but some nodes weren't rendered. Wait at least for 8 ms to fix it.
-				Utils.sleepMS(12);
+				Utils.sleepMS(8);
 
 				PerformanceMonitor.start(Measurement.totalCPURenderTime);
 				scene.resetTasks();
 
 				int numThreads = qfsProject.numThreads;
 				int numNodes = scene.getEntities().size();
-				int segmentSize = numNodes > numThreads * 10? numNodes / numThreads + 1 : numNodes;
+				int segmentSize = numNodes > numThreads? numNodes / numThreads + 1 : numNodes;
 
 				PerformanceMonitor.start(Measurement.physics);
 
-				simulateRain();
-				oscillateSelectedNodes();
+				if (waitAfterReset <= 0) {
+					simulateRain();
+					oscillateSelectedNodes();
+				}
+				else {
+					waitAfterReset--;
+				}
 				detector();
 				scene.processPhysicsTasks(numThreads, segmentSize);
 				scene.waitForAllTasksReady();
@@ -784,10 +793,11 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				else 
 					PerformanceMonitor.reset(Measurement.physics);
 
+				PerformanceMonitor.start(Measurement.updateMatrix);
 				scene.processMatrixUpdateTasks(numThreads, segmentSize);
 				scene.waitForAllTasksReady();
-
 				PerformanceMonitor.stop(Measurement.updateMatrix);
+
 				PerformanceMonitor.stop(Measurement.totalCPURenderTime);
 				isCalcNextPhysicsReady = true;
 			}
@@ -839,8 +849,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 				Vector3d p = oscillator.oscillate();
 
-				if (node != null && p != null)
+				if (node != null && p != null) {
 					node.incPosition(p);
+				}
 			}
 		}
 	}
@@ -862,13 +873,16 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			public void run() {
 				while (glWindow.getWindowHandle() != 0) {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {
 					}
 
-					if (System.currentTimeMillis() - currentTime > 3000) {
+					if (System.currentTimeMillis() - currentTime > 100) {
 						if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
-							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found!");
+							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found! This should never happens!");
+							System.out.println("Status: " + scene.status);
+							scene.taskCompleted();
+							isCalcNextPhysicsReady = true;
 						}
 						currentTime = System.currentTimeMillis();
 						lastNumTask = scene.getNumTask();
@@ -885,6 +899,47 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		renderer.cleanup();
 		loader.cleanup();
 		super.cleanUp();
+	}
+
+	@Override
+	public void render() {
+		if (Screenshot.isTakingScreenShot()) {
+			Screenshot.updateScreenshotViewport();
+		}
+		else if (glWindow.isResize()) {
+			GL11.glViewport(0, 0, glWindow.getWidth(), glWindow.getHeight());
+		}
+
+		waitForCalcNextPhysicsReady();
+
+		checkSettingsChanged();
+
+		if (isLoadingStarted) {
+			// Make sure it is not doing any calculation while updating new scene.
+			updateNodesArray();
+		}
+		else {
+			waitForRenderingReady();
+			// In the mean time, start the calculation of the next frame while rendering.
+			calcNextPhysicsFrame();
+		}
+		
+		PerformanceMonitor.start(Measurement.sendToGPU);
+		isRenderingReady = false;
+		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
+		if (qfsProject.terrain.isVisible())
+			renderer.processTerrain(qfsProject.terrain);
+		renderer.render(qfsProject.camera, scene);
+		isRenderingReady = true;
+		PerformanceMonitor.stop(Measurement.sendToGPU);
+		
+		scene.runAnimation();
+		
+		super.render();
+
+		if (Screenshot.isTakingScreenShot()) {
+			Screenshot.takeScreenShot();
+		}
 	}
 
 }
