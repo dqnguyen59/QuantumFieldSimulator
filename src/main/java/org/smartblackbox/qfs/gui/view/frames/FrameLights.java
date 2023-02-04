@@ -193,6 +193,9 @@ public class FrameLights extends AbstractFrame {
 			light.setExponent(nk_label_edit(ctx, stack, " Exponent:", bufExponent, light.getExponent(), appSettings.getFormatScientific12(), leftCol, rightCol));
 			light.setExponent(nk_slider(ctx, 0, light.getExponent(), 0.0025, 0.000001));
 
+			light.setScale(nk_label_edit(ctx, stack, " Scale:", bufScale, light.getScale(), leftCol, rightCol));
+			light.setScale(nk_slider(ctx, 0, light.getScale(), 5.0, 0.01));
+			
 			nk_spacer(ctx, spacer2, 1);
 
 			light.setSpotLight(nk_check_label(ctx, "Spotlight", light.isSpotLight(), leftCol, rightCol));
@@ -232,10 +235,6 @@ public class FrameLights extends AbstractFrame {
 			m.setSpecularColor(nk_combo_color_picker(ctx, stack, " Specular Color:", m.getSpecularColor(), leftCol, rightCol));
 			m.setSpecularIntensity(nk_label_edit(ctx, stack, " Specular Intensity:", bufSpecularIntensity, m.getSpecularIntensity(), leftCol, rightCol));
 			m.setSpecularIntensity(nk_slider(ctx, 0, m.getSpecularIntensity(), 10.0, 0.01));
-			nk_spacer(ctx, spacer1, 1);
-			
-			light.setScale(nk_label_edit(ctx, stack, " Scale:", bufScale, light.getScale(), leftCol, rightCol));
-			light.setScale(nk_slider(ctx, 0, light.getScale(), 5.0, 0.01));
 			nk_spacer(ctx, spacer1, 1);
 			
 			m.setShininess(nk_label_edit(ctx, stack, " Shininess:", bufScale, m.getShininess(), leftCol, rightCol));
