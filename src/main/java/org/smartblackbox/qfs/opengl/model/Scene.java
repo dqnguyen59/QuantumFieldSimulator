@@ -466,6 +466,7 @@ public class Scene {
 	}
 
 	public void threadCalcPhysics(Object[] nodes, int start, int end) {
+		status  = "threadCalcPhysics(" + start + ", " + end + "); TaskNo.:" + numTask;
 		incTask();
 		Thread thread = new Thread(new Runnable() {
 
