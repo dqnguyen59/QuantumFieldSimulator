@@ -35,8 +35,6 @@ import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 import org.smartblackbox.qfs.settings.QFSSettings;
 import org.smartblackbox.qfs.settings.SlitWallSettings;
-import org.smartblackbox.utils.PerformanceMonitor;
-import org.smartblackbox.utils.PerformanceMonitor.Measurement;
 
 public class Scene {
 
@@ -69,6 +67,8 @@ public class Scene {
 	protected double animateInc;
 
 	private int animateDirection = -1;
+
+	public String status = "";
 	
 	public Scene() {
 		entities = new ArrayList<>();
@@ -451,6 +451,7 @@ public class Scene {
 	
 	public void threadUpdateMatrix(Object[] nodes, int start, int end) {
 		incTask();
+		status  = "threadUpdateMatrix(" + start + ", " + end + "); TaskNo.:" + numTask;
 		Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -472,7 +473,7 @@ public class Scene {
 			public void run() {
 				for (int i = start; i < end; i++) {
 					QFSNode e = (QFSNode) nodes[i];
-					e.calcNewPosition(qfsModel.isSimulating());
+					e.calcNewPosition();
 				}
 				taskCompleted();
 			}
@@ -481,6 +482,10 @@ public class Scene {
 	}
 
 	public void processPhysicsTasks(int numThreads, int segmentSize) {
+		resetTasks();
+		QFSNode.setConstantWaveSpeed(qfsProject.getConstantWaveSpeed());
+		QFSNode.setConstantRadiation(qfsProject.getConstantRadiation());
+		QFSNode.setSimulating(qfsModel.isSimulating());
 		for (int i = 0; i < numThreads; i++) {
 			int start = i * segmentSize;
 			int end = start + segmentSize;
@@ -490,7 +495,7 @@ public class Scene {
 	}
 	
 	public void processMatrixUpdateTasks(int numThreads, int segmentSize) {
-		PerformanceMonitor.start(Measurement.updateMatrix);
+		resetTasks();
 		for (int i = 0; i < numThreads; i++) {
 			int start = i * segmentSize;
 			int end = start + segmentSize;
@@ -555,15 +560,15 @@ public class Scene {
 		if (animated) {
 			double z = getQfsFields().getBaseField().getRotation().z;
 			
-			if (animateDirection == -1 && z <= -160) {
+			if (animateDirection == -1 && z <= -170) {
 				animateDirection = 1;
 			}
-			else if (animateDirection == 1 && z >= -30) {
+			else if (animateDirection == 1 && z >= -10) {
 				animateDirection = -1;
 			}
 			
-			System.out.println(getQfsFields().getBaseField().getRotation().z);
-			getQfsFields().getBaseField().incRotation(0.0f, 0.0f, 0.2 * animateDirection);
+			//System.out.println(getQfsFields().getBaseField().getRotation().z);
+			getQfsFields().getBaseField().incRotation(0.0f, 0.0f, 0.5 * animateDirection);
 		}
 	}
 
