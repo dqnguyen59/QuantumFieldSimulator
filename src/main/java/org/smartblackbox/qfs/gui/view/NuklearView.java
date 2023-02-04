@@ -66,7 +66,7 @@ import org.smartblackbox.utils.Utils;
 
 /**
  * This class is a modified version to fit the needs of this project.
- * The original versioncan be found at https://www.thecodingfox.com/nuklear-usage-guide-lwjgl.
+ * The original version can be found at https://www.thecodingfox.com/nuklear-usage-guide-lwjgl.
  * 
  * @author dqnguyen
  *
@@ -114,9 +114,9 @@ public class NuklearView {
 	public NuklearView(NuklearModel nuklearModel) {
 		this.nuklearModel = nuklearModel;
 		try {
-			ttf = Utils.resourceToByteBuffer(appSettings.getFontFile(), 512 * 1024);
-			ttfItalic = Utils.resourceToByteBuffer(appSettings.getFontFileItalic(), 512 * 1024);
-			ttfBold = Utils.resourceToByteBuffer(appSettings.getFontFileBold(), 512 * 1024);
+			ttf = Utils.resourceToByteBuffer(appSettings.getFontFile());
+			ttfItalic = Utils.resourceToByteBuffer(appSettings.getFontFileItalic());
+			ttfBold = Utils.resourceToByteBuffer(appSettings.getFontFileBold());
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException(e);
 		}
@@ -149,7 +149,7 @@ public class NuklearView {
 		int WINDOW_WIDTH  = 860;
 		int WINDOW_HEIGHT = 640;
 
-		long windowHandle = GLFW.glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "GLFW Nuklear Demo", MemoryUtil.NULL, MemoryUtil.NULL);
+		long windowHandle = GLFW.glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "GLFW Nuklear", MemoryUtil.NULL, MemoryUtil.NULL);
 		if (windowHandle == MemoryUtil.NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
