@@ -592,12 +592,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	public boolean keyCallback(long handle, int key, int scanCode, int action, int mods) {
 		isReleased = action == GLFW.GLFW_RELEASE;
 		
-//		System.out.println("scanCode: " + scanCode);
-//		System.out.println("action: " + action);
-//		System.out.println("mods: " + mods);
-
 		boolean isShiftPressed = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
-		//System.out.println("isShiftPressed: " + isShiftPressed);
 		
 		if (isReleased) {
 			switch (key) {
