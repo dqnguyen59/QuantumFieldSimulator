@@ -23,8 +23,8 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
-import org.smartblackbox.qfs.gui.model.Theme;
 import org.smartblackbox.qfs.gui.model.NuklearModel.Frame;
+import org.smartblackbox.qfs.gui.model.Theme;
 import org.smartblackbox.qfs.opengl.model.QFSModel;
 import org.smartblackbox.qfs.opengl.model.QFSModel.Mode;
 import org.smartblackbox.qfs.settings.QFSProject;
@@ -36,7 +36,7 @@ public class FrameStatusBar extends AbstractFrame {
 
 	private int width;
 	private int height;
-	private float[] col = {230, 90, 60, 10, 50, 40, 40, 40, 40, 40, 40, 40};
+	private float[] col = {230, 90, 60, 60, 10, 50, 40, 40, 40, 40, 40, 40, 40};
 
 	public FrameStatusBar(NuklearModel frames) {
 		super(frames);
@@ -84,6 +84,11 @@ public class FrameStatusBar extends AbstractFrame {
 		Nuklear.nk_layout_row_push(ctx, col[i++] / width);
 		if (nk_button_label(ctx, qfsModel.getBtnSimulatingLabel()))
 			qfsModel.toggleSimulation();
+
+		Nuklear.nk_layout_row_push(ctx, col[i++] / width);
+		if (nk_button_label(ctx, "Reset")) {
+			qfsProject.reset();
+		}
 
 		Nuklear.nk_layout_row_push(ctx, col[i++] / width);
 		Nuklear.nk_label(ctx, String.format(""), Nuklear.NK_TEXT_LEFT);
