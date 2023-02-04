@@ -21,14 +21,14 @@ package org.smartblackbox.qfs.gui.view.frames.dialogs;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.system.MemoryStack;
+import org.smartblackbox.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.qfs.gui.model.DialogDefaultModel;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
-import org.smartblackbox.qfs.gui.model.AbstractDialogModel.ConfirmState;
 
 public class FrameConfirmDialog extends FrameDialog {
 
 	private int width = 500;
-	private int height = 200;
+	private int height = 300;
 	private DialogDefaultModel dlgModel;
 
 	public FrameConfirmDialog(NuklearModel frames) {
