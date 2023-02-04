@@ -53,8 +53,6 @@ public class QFSModel {
 	
 	private boolean isSimulating;
 	
-	private int glSwapInterval = 0;
-
 	private boolean isLoadingReady = false;
 
 	private boolean isWallVisible = false;
@@ -96,14 +94,6 @@ public class QFSModel {
 		isSimulating = !isSimulating; 
 	}
 	
-	public int getGlSwapInterval() {
-		return glSwapInterval;
-	}
-
-	public void setGlSwapInterval(int glSwapInterval) {
-		this.glSwapInterval = glSwapInterval;
-	}
-
 	public boolean isLoadingReady() {
 		return isLoadingReady;
 	}
