@@ -61,8 +61,10 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	private Vector3i dimension = new Vector3i();
 	
 	private double constantFrequency = 0.99;
-	private double constantLightSpeed = 1;
-	private double radiation = 1.0;
+	private double constantWaveSpeed = 1;
+	private double constantRadiation = 1.0;
+
+	private int glSwapInterval = 0;
 
 	private QFSModel qfsModel = new QFSModel();
 	public Camera camera = new Camera();
@@ -103,8 +105,9 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		dimension.y = qfsProject.getDimensionY();
 		dimension.z = qfsProject.getDimensionZ();
 		constantFrequency = qfsProject.constantFrequency;
-		constantLightSpeed = qfsProject.constantLightSpeed;
-		radiation = qfsProject.radiation;
+		constantWaveSpeed = qfsProject.constantWaveSpeed;
+		constantRadiation = qfsProject.constantRadiation;
+		glSwapInterval = qfsProject.glSwapInterval;
 
 		camera.setFieldOfFiew(qfsProject.camera.getFieldOfFiew());
 		camera.setZ_near(qfsProject.camera.getZ_near());
@@ -128,7 +131,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		String s;
 		
 		setConstantFrequency(((s = ini.get("QuantumField", "constantFrequency")) == null? 10 : Double.parseDouble(s)));
-		radiation = ((s = ini.get("QuantumField", "radiation")) == null? 1.0 : Double.parseDouble(s));
+		constantRadiation = ((s = ini.get("QuantumField", "constantRadiation")) == null? 1.0 : Double.parseDouble(s));
+		glSwapInterval = ((s = ini.get("QuantumField", "glSwapInterval")) == null? 2 : Integer.parseInt(s));
 		int x = ((s = ini.get("QuantumField", "dimension.x")) == null? 15 : Integer.parseInt(s));
 		int y = ((s = ini.get("QuantumField", "dimension.y")) == null? 15 : Integer.parseInt(s));
 		int z = ((s = ini.get("QuantumField", "dimension.z")) == null? 15 : Integer.parseInt(s));
@@ -160,7 +164,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		oscillators.clear();
 		for (int i = 0; i < size; i++) {
 			Oscillator oscillator = new Oscillator("", new Vector3i());
-			oscillator.loadFromFile(ini, "Oscillator", index);
+			oscillator.loadFromFile(ini, "Oscillator", i);
 			oscillators.add(oscillator);
 		}
 
@@ -195,7 +199,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		ini.put("Common", "numThreads", numThreads);
 
 		ini.put("QuantumField", "constantFrequency", constantFrequency);
-		ini.put("QuantumField", "radiation", radiation);
+		ini.put("QuantumField", "constantRadiation", constantRadiation);
+		ini.put("QuantumField", "glSwapInterval", glSwapInterval);
 		ini.put("QuantumField", "dimension.x", dimension.x);
 		ini.put("QuantumField", "dimension.y", dimension.y);
 		ini.put("QuantumField", "dimension.z", dimension.z);
@@ -377,6 +382,10 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	public void reset() {
 		isResetting = true;
 		setConstantFrequency(constantFrequency);
+		slitWall.reset();
+		for (Oscillator oscillator : oscillators) {
+			oscillator.reset();
+		}
 	}
 
 	/**
@@ -438,19 +447,27 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		if (value > 1) value = 1;
 		if (value < 0) value = 0;
 		constantFrequency = value;
-		constantLightSpeed = value * value;
+		constantWaveSpeed = value * value;
 	}
 
-	public double getConstantLightSpeed() {
-		return constantLightSpeed;
+	public double getConstantWaveSpeed() {
+		return constantWaveSpeed;
 	}
 
-	public double getRadiation() {
-		return radiation;
+	public double getConstantRadiation() {
+		return constantRadiation;
 	}
 
-	public void setRadiation(double radiation) {
-		this.radiation = radiation;
+	public void setConstantRadiation(double constantRadiation) {
+		this.constantRadiation = constantRadiation;
+	}
+
+	public int getGlSwapInterval() {
+		return glSwapInterval;
+	}
+
+	public void setGlSwapInterval(int glSwapInterval) {
+		this.glSwapInterval = glSwapInterval;
 	}
 
 	public Light createLight(Entity parent, ObjFileModel modelLightBulb, ObjFileModel modelSpotLight, Vector3d position, Vector3d rotation, double scale) {
