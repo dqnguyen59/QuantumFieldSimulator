@@ -37,8 +37,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -201,7 +203,7 @@ public class Utils {
 		}
 	}
 	
-	public static ByteBuffer resourceToByteBuffer(String fileName, int bufferSize) throws IOException, URISyntaxException {
+	public static ByteBuffer resourceToByteBuffer(String fileName) throws IOException, URISyntaxException {
         ClassLoader classLoader = Utils.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if (inputStream == null) {
@@ -223,12 +225,12 @@ public class Utils {
         streamToFile(inputStream, tmpFile);
 
         // Now, the temporary file can be read and put it into MappedByteBuffer.
-        ByteBuffer buffer = fileToByteBuffer(tmpFile, bufferSize);
+        ByteBuffer buffer = fileToByteBuffer(tmpFile);
         
         return buffer;
     }
 
-    public static ByteBuffer fileToByteBuffer(String fileName, int bufferSize) throws IOException {
+    public static ByteBuffer fileToByteBuffer(String fileName) throws IOException {
         FileInputStream fis = new FileInputStream(new File(fileName));
         FileChannel fc = fis.getChannel();
         ByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
@@ -336,4 +338,17 @@ public class Utils {
 		return System.getProperty("user.dir");
 	}
 
+	public static String getDatetimeAsString() {
+		final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
+		final String dateTime = sdf.format(new Date());
+
+		return dateTime;
+	}
+
+	public static String getFileDatetimeAsString() {
+		final SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FILE_FORMAT);
+		final String dateTime = sdf.format(new Date());
+
+		return dateTime;
+	}
 }
