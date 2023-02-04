@@ -81,7 +81,7 @@ public class FrameSlitWall extends AbstractFrame {
 			if (nk_button_label(ctx, "Clear All Walls")) {
 				qfsModel.clearWalls();
 			}
-			if (nk_button_label(ctx, "Apply")) {
+			if (nk_button_label(ctx, "Add")) {
 				slitWall.setUpdated(true);
 			}
 			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
