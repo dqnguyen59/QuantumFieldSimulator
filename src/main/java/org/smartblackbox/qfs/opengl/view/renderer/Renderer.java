@@ -41,7 +41,7 @@ public class Renderer {
 		nodeRenderer.init();
 	}
 	
-	public void render(Camera camera, Scene scene) {
+	public synchronized void render(Camera camera, Scene scene) {
 		clear();
 		terrainRenderer.render(camera, scene);
 		nodeRenderer.render(camera, scene);
