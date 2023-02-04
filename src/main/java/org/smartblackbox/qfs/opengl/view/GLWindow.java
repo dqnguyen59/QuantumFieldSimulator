@@ -24,7 +24,6 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
-import org.smartblackbox.qfs.opengl.model.QFSModel;
 import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 
@@ -33,7 +32,6 @@ public class GLWindow {
 	private AppSettings qfsSettings = AppSettings.getInstance();
 	
 	private QFSProject qfsProject = QFSProject.getInstance();
-	private QFSModel qfsModel = qfsProject.getQfsModel();
 
 	private final String title;
 	private int left, top, width, height;
@@ -104,7 +102,7 @@ public class GLWindow {
 
 		GLFW.glfwMakeContextCurrent(windowHandle);
 
-		GLFW.glfwSwapInterval(qfsModel.getGlSwapInterval());
+		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
 		
 		GLFW.glfwShowWindow(windowHandle);
 		
