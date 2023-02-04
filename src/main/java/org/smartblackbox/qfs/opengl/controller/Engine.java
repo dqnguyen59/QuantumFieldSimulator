@@ -33,6 +33,7 @@ import org.smartblackbox.qfs.gui.model.MouseButtonEvent;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
 import org.smartblackbox.qfs.gui.model.NuklearModel.Frame;
 import org.smartblackbox.qfs.gui.view.NuklearView;
+import org.smartblackbox.qfs.opengl.utils.Screenshot;
 import org.smartblackbox.qfs.opengl.view.GLWindow;
 import org.smartblackbox.utils.PerformanceMonitor;
 import org.smartblackbox.utils.PerformanceMonitor.Measurement;
@@ -64,6 +65,7 @@ public abstract class Engine {
 	private boolean isMenuActive;
 	private long handle;
 	private int renderCounter;
+	protected boolean isAnimating = false;
 	
 	public Engine(GLWindow glWindow) {
 		this.glWindow = glWindow;
@@ -335,7 +337,9 @@ public abstract class Engine {
 
 		checkFrameFocus();
 
-		nuklearView.render();
+		if (!isAnimating && !Screenshot.isTakingScreenShot()) {
+			nuklearView.render();
+		}
 		
 		PerformanceMonitor.stop(Measurement.gui2D);
 
@@ -392,6 +396,14 @@ public abstract class Engine {
 		glWindow.cleanUp();
 		errorCallback.free();
 		GLFW.glfwTerminate();
+	}
+
+	public boolean isAnimating() {
+		return isAnimating;
+	}
+
+	public void setAnimating(boolean isAnimating) {
+		this.isAnimating = isAnimating;
 	}
 	
 }
