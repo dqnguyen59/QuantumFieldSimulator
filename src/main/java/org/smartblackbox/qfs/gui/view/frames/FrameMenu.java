@@ -150,7 +150,7 @@ public class FrameMenu extends AbstractFrame {
 				Nuklear.nk_menu_close(ctx);
 			}
 
-			if (nk_menu_item_label(ctx, "Activate slit wall")) {
+			if (nk_menu_item_label(ctx, "slit wall")) {
 				model.toggleFrame(Frame.slitWall);
 				qfsProject.slitWall.setChanged(true);
 				Nuklear.nk_menu_close(ctx);
@@ -185,7 +185,6 @@ public class FrameMenu extends AbstractFrame {
 			
 			if (nk_menu_item_label(ctx, "Reset")) {
 				qfsProject.reset();
-				qfsProject.slitWall.reset();
 				Nuklear.nk_menu_close(ctx);
 			}
 			
