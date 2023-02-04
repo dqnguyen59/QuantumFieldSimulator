@@ -54,6 +54,7 @@ public class Entity {
 	protected boolean isVisible = true;
 	protected boolean isSelected = false;
 	protected boolean isHiLighted = false;
+	protected static boolean isSimulating;
 	
 	
 	public Entity(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
@@ -298,6 +299,14 @@ public class Entity {
 
 	public void setHiLighted(boolean isHiLighted) {
 		this.isHiLighted = isHiLighted;
+	}
+
+	public static boolean isSimulating() {
+		return isSimulating;
+	}
+
+	public static void setSimulating(boolean isSimulating) {
+		Entity.isSimulating = isSimulating;
 	}
 
 	/**
