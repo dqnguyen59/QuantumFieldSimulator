@@ -30,6 +30,9 @@ public class Constants {
 	public static final String MANIFEST_FILE = "META-INF/MANIFEST.MF";
 	
 	public static final String SEPARATOR = System.getProperty("file.separator");
+
+	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATE_FILE_FORMAT = "yyyyMMddHHmmss";
 	
 	public static final double NANOSECOND = 1000000000;
 	public static final double MILLISECOND = 1000000;
