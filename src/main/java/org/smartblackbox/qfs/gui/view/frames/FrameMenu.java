@@ -171,6 +171,11 @@ public class FrameMenu extends AbstractFrame {
 				Nuklear.nk_menu_close(ctx);
 			}
 
+			if (nk_menu_item_label(ctx, "Preferences")) {
+				model.toggleFrame(Frame.preferences);
+				Nuklear.nk_menu_close(ctx);
+			}
+			
 			Nuklear.nk_menu_end(ctx);
 		}
 		
