@@ -155,13 +155,13 @@ public class FrameOscillator extends AbstractFrame {
 		Nuklear.nk_layout_row_dynamic(ctx, groupHeight, 1);
 		if (Nuklear.nk_group_begin(ctx, "X-Oscillator", optionsNoScroll)) {
 			oscillatorEdit.getActive().x = nk_check_label(ctx, "Active", oscillatorEdit.getActive().x, leftCol, rightCol);
-			oscillatorEdit.getOscillatorType().x = OscillatorType.valueOf(nk_label_Options(ctx,
+			oscillatorEdit.getOscillatorType().x = OscillatorType.valueOf(nk_label_combo_options(ctx, stack,
 					" Type: ",
 					OscillatorType.getValues(),
 					oscillatorEdit.getOscillatorType().x.name(),
-					leftCol, rightCol,
-					2
+					leftCol, rightCol
 			));
+			
 			oscillatorEdit.getStartangle().x = nk_label_edit(ctx, stack, " Start Angle:", bufStartAngleX, oscillatorEdit.getStartangle().x, leftCol, rightCol);
 			oscillatorEdit.getAngleIncrement().x = nk_label_edit(ctx, stack, " Angle Increment:", bufAngleIncX, oscillatorEdit.getAngleIncrement().x, leftCol, rightCol);
 			oscillatorEdit.getAmplitude().x = nk_label_edit(ctx, stack, " Amplitude:", bufAmplitudeX, oscillatorEdit.getAmplitude().x, leftCol, rightCol);
@@ -174,12 +174,11 @@ public class FrameOscillator extends AbstractFrame {
 		Nuklear.nk_layout_row_dynamic(ctx, groupHeight, 1);
 		if (Nuklear.nk_group_begin(ctx, "Y-Oscillator", optionsNoScroll)) {
 			oscillatorEdit.getActive().y = nk_check_label(ctx, "Active", oscillatorEdit.getActive().y, leftCol, rightCol);
-			oscillatorEdit.getOscillatorType().y = OscillatorType.valueOf(nk_label_Options(ctx,
+			oscillatorEdit.getOscillatorType().y = OscillatorType.valueOf(nk_label_combo_options(ctx, stack,
 					" Type: ",
 					OscillatorType.getValues(),
 					oscillatorEdit.getOscillatorType().y.name(),
-					leftCol, rightCol,
-					2
+					leftCol, rightCol
 			));
 			oscillatorEdit.getStartangle().y = nk_label_edit(ctx, stack, " Start Angle:", bufStartAngleY, oscillatorEdit.getStartangle().y, leftCol, rightCol);
 			oscillatorEdit.getAngleIncrement().y = nk_label_edit(ctx, stack, " Angle Increment:", bufAngleIncY, oscillatorEdit.getAngleIncrement().y, leftCol, rightCol);
@@ -193,12 +192,11 @@ public class FrameOscillator extends AbstractFrame {
 		Nuklear.nk_layout_row_dynamic(ctx, groupHeight, 1);
 		if (Nuklear.nk_group_begin(ctx, "Z-Oscillator", optionsNoScroll)) {
 			oscillatorEdit.getActive().z = nk_check_label(ctx, "Active", oscillatorEdit.getActive().z, leftCol, rightCol);
-			oscillatorEdit.getOscillatorType().z = OscillatorType.valueOf(nk_label_Options(ctx,
+			oscillatorEdit.getOscillatorType().z = OscillatorType.valueOf(nk_label_combo_options(ctx, stack,
 					" Type: ",
 					OscillatorType.getValues(),
 					oscillatorEdit.getOscillatorType().z.name(),
-					leftCol, rightCol,
-					2
+					leftCol, rightCol
 			));
 			oscillatorEdit.getStartangle().z = nk_label_edit(ctx, stack, " Start Angle:", bufStartAngleZ, oscillatorEdit.getStartangle().z, leftCol, rightCol);
 			oscillatorEdit.getAngleIncrement().z = nk_label_edit(ctx, stack, " Angle Increment:", bufAngleIncZ, oscillatorEdit.getAngleIncrement().z, leftCol, rightCol);
