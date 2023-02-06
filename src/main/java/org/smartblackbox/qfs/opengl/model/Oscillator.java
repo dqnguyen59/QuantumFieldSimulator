@@ -18,7 +18,6 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
-import org.ini4j.Wini;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.smartblackbox.qfs.opengl.utils.OscillatorType;
@@ -26,6 +25,7 @@ import org.smartblackbox.qfs.opengl.utils.Vector3b;
 import org.smartblackbox.qfs.opengl.utils.VectorOscillatorType;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
+import org.smartblackbox.utils.QWini;
 
 public class Oscillator extends AbstractSettings implements ISettings {
 	
@@ -36,6 +36,7 @@ public class Oscillator extends AbstractSettings implements ISettings {
 	private Vector3d angle = new Vector3d(); // degree
 	private Vector3d angleIncrement = new Vector3d(); // degree
 	private Vector3d amplitude = new Vector3d();
+	private Vector3d nodeInitPosition = new Vector3d();
 	
 	private Vector3d vOscillator = new Vector3d();
 	public Vector3i nodeIndex = new Vector3i(-1, -1, -1);
@@ -45,8 +46,9 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		this.nodeIndex = nodeIndex;
 	}
 	
-	public void setNode(Vector3i index) {
+	public void setNode(Vector3i index, Vector3d nodeInitPosition) {
 		nodeIndex = index;
+		this.nodeInitPosition.set(nodeInitPosition);
 	}
 
 	public Oscillator clone() {
@@ -58,6 +60,7 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		oscillator.angleIncrement = new Vector3d(angleIncrement);
 		oscillator.amplitude = new Vector3d(amplitude);
 		oscillator.vOscillator = new Vector3d(vOscillator);
+		oscillator.nodeInitPosition = new Vector3d(nodeInitPosition);
 		return oscillator;
 	}
 	
@@ -77,6 +80,12 @@ public class Oscillator extends AbstractSettings implements ISettings {
 				vOscillator.x = Math.sin(Math.toRadians(startAngle.x + angle.x));
 			else if (oscillatorType.x == OscillatorType.cos)
 				vOscillator.x = Math.cos(Math.toRadians(startAngle.x + angle.x));
+			else if (oscillatorType.x == OscillatorType.square) {
+				if (startAngle.x + angle.x >= 0 && startAngle.x + angle.x < 180)
+					vOscillator.x = 1;
+				else
+					vOscillator.x = -1;
+			}
 		}
 
 		if (active.y) {
@@ -88,6 +97,12 @@ public class Oscillator extends AbstractSettings implements ISettings {
 				vOscillator.y = Math.sin(Math.toRadians(startAngle.y + angle.y));
 			else if (oscillatorType.y == OscillatorType.cos)
 				vOscillator.y = Math.cos(Math.toRadians(startAngle.y + angle.y));
+			else if (oscillatorType.y == OscillatorType.square) {
+				if (startAngle.y + angle.y >= 0 && startAngle.y + angle.y < 180)
+					vOscillator.y = 1;
+				else
+					vOscillator.y = -1;
+			}
 		}
 
 		if (active.z) {
@@ -99,6 +114,12 @@ public class Oscillator extends AbstractSettings implements ISettings {
 				vOscillator.z = Math.sin(Math.toRadians(startAngle.z + angle.z));
 			else if (oscillatorType.z == OscillatorType.cos)
 				vOscillator.z = Math.cos(Math.toRadians(startAngle.z + angle.z));
+			else if (oscillatorType.z == OscillatorType.square) {
+				if (startAngle.z + angle.z >= 0 && startAngle.z + angle.z < 180)
+					vOscillator.z = 1;
+				else
+					vOscillator.z = -1;
+			}
 		}
 		
 		if (active.x || active.y || active.z) {
@@ -127,35 +148,43 @@ public class Oscillator extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		String s;
-		name = ini.get(section + index, "name");
-		nodeIndex.x = ((s = ini.get(section + index, "nodeIndex.x")).isEmpty()? 0 : Integer.parseInt(s));
-		nodeIndex.y = ((s = ini.get(section + index, "nodeIndex.y")).isEmpty()? 0 : Integer.parseInt(s));
-		nodeIndex.z = ((s = ini.get(section + index, "nodeIndex.z")).isEmpty()? 0 : Integer.parseInt(s));
-		active.x = ((s = ini.get(section + index, "active.x")).isEmpty()? false : Boolean.parseBoolean(s));
-		active.y = ((s = ini.get(section + index, "active.y")).isEmpty()? false : Boolean.parseBoolean(s));
-		active.z = ((s = ini.get(section + index, "active.z")).isEmpty()? false : Boolean.parseBoolean(s));
-		oscillatorType.x = ((s = ini.get(section + index, "OscillatorType.x")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s));
-		oscillatorType.y = ((s = ini.get(section + index, "OscillatorType.y")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s));
-		oscillatorType.z = ((s = ini.get(section + index, "OscillatorType.z")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s));
-		startAngle.x = ((s = ini.get(section + index, "startAngle.x")).isEmpty()? 0 : Double.parseDouble(s));
-		startAngle.y = ((s = ini.get(section + index, "startAngle.y")).isEmpty()? 0 : Double.parseDouble(s));
-		startAngle.z = ((s = ini.get(section + index, "startAngle.z")).isEmpty()? 0 : Double.parseDouble(s));
-		angleIncrement.x = ((s = ini.get(section + index, "angleIncrement.x")).isEmpty()? 0 : Double.parseDouble(s));
-		angleIncrement.y = ((s = ini.get(section + index, "angleIncrement.y")).isEmpty()? 0 : Double.parseDouble(s));
-		angleIncrement.z = ((s = ini.get(section + index, "angleIncrement.z")).isEmpty()? 0 : Double.parseDouble(s));
-		amplitude.x = ((s = ini.get(section + index, "amplitude.x")).isEmpty()? 0 : Double.parseDouble(s));
-		amplitude.y = ((s = ini.get(section + index, "amplitude.y")).isEmpty()? 0 : Double.parseDouble(s));
-		amplitude.z = ((s = ini.get(section + index, "amplitude.z")).isEmpty()? 0 : Double.parseDouble(s));
+		name = iniGet(section + index, "name");
+		nodeIndex.x = ini.getInt(section + index, "nodeIndex.x", 0);
+		nodeIndex.y = ini.getInt(section + index, "nodeIndex.y", 0);
+		nodeIndex.z = ini.getInt(section + index, "nodeIndex.z", 0);
+		nodeInitPosition.x = ini.getDouble(section + index, "nodeInitPosition.x", 0);
+		nodeInitPosition.y = ini.getDouble(section + index, "nodeInitPosition.y", 0);
+		nodeInitPosition.z = ini.getDouble(section + index, "nodeInitPosition.z", 0);
+		active.x = ini.getBool(section + index, "active.x", false);
+		active.y = ini.getBool(section + index, "active.y", false);
+		active.z = ini.getBool(section + index, "active.z", false);
+		oscillatorType.x = (s = ini.getString(section + index, "OscillatorType.x", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
+		oscillatorType.y = (s = ini.getString(section + index, "OscillatorType.y", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
+		oscillatorType.z = (s = ini.getString(section + index, "OscillatorType.z", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
+		startAngle.x = ini.getDouble(section + index, "startAngle.x", 0);
+		startAngle.y = ini.getDouble(section + index, "startAngle.y", 0);
+		startAngle.z = ini.getDouble(section + index, "startAngle.z", 0);
+		angleIncrement.x = ini.getDouble(section + index, "angleIncrement.x", 0);
+		angleIncrement.y = ini.getDouble(section + index, "angleIncrement.y", 0);
+		angleIncrement.z = ini.getDouble(section + index, "angleIncrement.z", 0);
+		amplitude.x = ini.getDouble(section + index, "amplitude.x", 0);
+		amplitude.y = ini.getDouble(section + index, "amplitude.y", 0);
+		amplitude.z = ini.getDouble(section + index, "amplitude.z", 0);
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put(section + index, "name", name);
 		ini.put(section + index, "nodeIndex.x", nodeIndex.x);
 		ini.put(section + index, "nodeIndex.y", nodeIndex.y);
 		ini.put(section + index, "nodeIndex.z", nodeIndex.z);
+		ini.put(section + index, "nodeInitPosition.x", nodeInitPosition.x);
+		ini.put(section + index, "nodeInitPosition.y", nodeInitPosition.y);
+		ini.put(section + index, "nodeInitPosition.z", nodeInitPosition.z);
 		ini.put(section + index, "active.x", active.x);
 		ini.put(section + index, "active.y", active.y);
 		ini.put(section + index, "active.z", active.z);
@@ -245,4 +274,12 @@ public class Oscillator extends AbstractSettings implements ISettings {
 		this.nodeIndex = nodeIndex;
 	}
 
+	public Vector3d getNodeInitPosition() {
+		return nodeInitPosition;
+	}
+
+	public void setNodeInitPosition(Vector3d nodeInitPosition) {
+		this.nodeInitPosition = nodeInitPosition;
+	}
+	
 }
