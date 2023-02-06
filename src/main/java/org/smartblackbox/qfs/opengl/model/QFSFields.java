@@ -130,7 +130,7 @@ public class QFSFields {
 							if ((sizeI > 1 && (i == 0 || i == sizeI - 1)) ||
 									(sizeJ > 1 && (j == 0 || j == sizeJ - 1)) ||
 									(sizeK > 1 && (k == 0 || k == sizeK - 1))) {
-								n.setFixed(true);
+								n.setEdge(true);
 							}
 
 							// experimentalMode, when only the edges are fixed. This creates a cool effect.
