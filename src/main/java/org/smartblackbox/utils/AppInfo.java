@@ -15,9 +15,9 @@ public class AppInfo {
 	private static String builtBy = "SmartBlackBox";
 	private static String contributers = "";
 	private static String version = "";
-	private static String website = "https://www.smartblackbox.nl";
+	private static String website = "https://www.smartblackbox.org";
 	private static String creator = "Duy Quoc Nguyen";
-	private static String email = "d.q.nguyen@smartblackbox.nl";
+	private static String email = "d.q.nguyen@smartblackbox.org";
 	private static String dateTime = "";
 
 	public static void getManifestInfo(String containsName) {
