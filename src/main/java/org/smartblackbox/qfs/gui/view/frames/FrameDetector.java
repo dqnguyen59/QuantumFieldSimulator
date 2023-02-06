@@ -118,6 +118,7 @@ public class FrameDetector extends AbstractFrame {
 			Nuklear.nk_label(ctx, "", Nuklear.NK_TEXT_LEFT);
 	        if (nk_button_label(ctx, "Reset")) {
 	        	detectorModel.reset();
+	        	qfsProject.reset();
 			}
 	        if (nk_button_label(ctx, "Ignite")) {
 	        	detectorModel.ignite();
