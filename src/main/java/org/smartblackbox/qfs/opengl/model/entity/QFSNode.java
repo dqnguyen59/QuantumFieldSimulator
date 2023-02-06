@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023  Duy Quoc Nguyen <d.q.nguyen@smartblackbox.nl> and contributors
+ * Copyright (C) 2023  Duy Quoc Nguyen <d.q.nguyen@smartblackbox.org> and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,8 +43,9 @@ public class QFSNode extends Entity {
 	 */
 	private QFSNode[] neighbors = new QFSNode[6];
 	private boolean hasNeightbors;
-	private boolean isFixed = false;
-	private boolean isWall = false;
+	private boolean isEdge;
+	private boolean isFixed;
+	private boolean isWall;
 	
 	private Vector3d acceleration = new Vector3d();
 	private Vector3d velocity = new Vector3d();
@@ -109,6 +110,15 @@ public class QFSNode extends Entity {
 	@Override
 	public boolean isVisible() {
 		return isVisible || isWall && qfsModel.isWallVisible();
+	}
+
+	public boolean isEdge() {
+		return isEdge;
+	}
+
+	public void setEdge(boolean isEdge) {
+		this.isEdge = isEdge;
+		setFixed(isEdge);
 	}
 
 	public boolean isFixed() {
@@ -273,7 +283,7 @@ public class QFSNode extends Entity {
 		m.setAmbientColor(color);
 		m.getDiffuseColor().w = alpha;
 		m.getAmbientColor().w = m.getDiffuseColor().w;
-		m.setShininess(settings.getShininess());
+		m.setShininess(settings.getShininess() * alpha);
 		
 		customColor = null;
 	}
