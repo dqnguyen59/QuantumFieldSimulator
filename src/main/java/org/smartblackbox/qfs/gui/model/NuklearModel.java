@@ -38,6 +38,7 @@ import org.smartblackbox.qfs.gui.view.frames.FrameKeyboardShortcuts;
 import org.smartblackbox.qfs.gui.view.frames.FrameLights;
 import org.smartblackbox.qfs.gui.view.frames.FrameMenu;
 import org.smartblackbox.qfs.gui.view.frames.FrameOscillator;
+import org.smartblackbox.qfs.gui.view.frames.FramePreferences;
 import org.smartblackbox.qfs.gui.view.frames.FrameProgress;
 import org.smartblackbox.qfs.gui.view.frames.FrameProperties;
 import org.smartblackbox.qfs.gui.view.frames.FrameQFSColors;
@@ -77,6 +78,7 @@ public class NuklearModel {
 		editWall,
 		rain,
 		detector,
+		preferences,
 	}
 	
 	private Map<Frame, AbstractFrame> framesMap = new HashMap<Frame, AbstractFrame>();
@@ -231,6 +233,8 @@ public class NuklearModel {
 			return new FrameCameraSettings(this);
 		case qfsSettings:
 			return new FrameQFSSettings(this);
+		case preferences:
+			return new FramePreferences(this);
 		case qfsTerrainSettings:
 			return new FrameQFSTerrainSettings(this);
 		case oscillator:
