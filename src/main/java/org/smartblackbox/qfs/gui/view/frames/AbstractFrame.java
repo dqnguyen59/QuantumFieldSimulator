@@ -68,8 +68,10 @@ public abstract class AbstractFrame implements IFrame {
 
 	protected long windowHandle;
 	private String _hiddenChar = " ";
-	private int lastWidth;
+	private int lastWindowWidth;
+	private int lastWindowHeight;
 	private int lastHeight;
+	private int lastWidth;
 	protected boolean isDialog;
 	protected int spacer1 = 10;
 	protected int spacer2 = 20;
@@ -116,15 +118,22 @@ public abstract class AbstractFrame implements IFrame {
 	@Override
 	public void render(long windowHandle, NkContext ctx) {
 		this.windowHandle = windowHandle;
-		windowSizeChanged = lastWidth != appSettings.getWindowWidth() || lastHeight != appSettings.getWindowHeight();
+		windowSizeChanged = lastWindowWidth != appSettings.getWindowWidth() || lastWindowHeight != appSettings.getWindowHeight();
 		if (windowSizeChanged) {
-			_hiddenChar = "" + (_hiddenChar.contains(" ")? ((char) 13) : " ");
+			update();
 		}
 
-		lastWidth = appSettings.getWindowWidth();
-		lastHeight = appSettings.getWindowHeight();
+		lastWindowWidth = appSettings.getWindowWidth();
+		lastWindowHeight = appSettings.getWindowHeight();
 	}
 
+	/**
+	 * Trick to force dimension change.
+	 */
+	private void update() {
+		_hiddenChar = "" + (_hiddenChar.contains(" ")? ((char) 13) : " ");
+	}
+	
 	/**
 	 * 
 	 * Bug: unable to change the frame position!!!
@@ -140,10 +149,6 @@ public abstract class AbstractFrame implements IFrame {
 
 	abstract public String getTitle();
 	
-	protected String getTitleId() {
-		return getTitle() + _hiddenChar; 
-	}
-
 	protected int getWindowWidth() {
 		return appSettings.getWindowWidth();
 	}
@@ -153,6 +158,12 @@ public abstract class AbstractFrame implements IFrame {
 	}
 
 	private void _createLayout(NkContext ctx, int x, int y, int width, int height, boolean centered) {
+		if (lastHeight != height || lastWidth != height) {
+			update();
+			lastHeight = height;
+			lastWidth = height;
+		}
+		
 		if (centered) {
 			if (windowRect == null) {
 				x = (getWindowWidth() - width) / 2;
@@ -166,11 +177,9 @@ public abstract class AbstractFrame implements IFrame {
 			}
 		}
 		
-		if (windowRect == null || windowSizeChanged) {
-			// Create the rectangle that represents
-			windowRect = NkRect.create();
-			Nuklear.nk_rect(x, y, width, height, windowRect);
-		}
+		// Create the rectangle that represents
+		windowRect = NkRect.create();
+		Nuklear.nk_rect(x, y, width, height, windowRect);
 		
 		if (model.getFocusedFrame() == this) {
 			ctx.style().window().header().label_normal(Theme.colorHeaderTextActive);
@@ -219,6 +228,7 @@ public abstract class AbstractFrame implements IFrame {
 			
 			focusCount = 0;
 			layout(ctx, x, y, width, height);
+			
 			tabKeyPressed = false;
 			focusChanged = false;
 		}
@@ -825,6 +835,15 @@ public abstract class AbstractFrame implements IFrame {
 			Nuklear.nk_group_end(ctx);
 		}
 		return isDoubleClicked;
+	}
+
+	public void nk_layout_row_dynamic(NkContext ctx, int rowHeight, int cols) {
+		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, cols);
+	}
+
+	public void nk_spacer(NkContext ctx, int spaceHeight) {
+		Nuklear.nk_layout_row_dynamic(ctx, spaceHeight, 1);
+		Nuklear.nk_spacer(ctx);
 	}
 
 }
