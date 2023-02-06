@@ -167,7 +167,6 @@ public class Terrain extends AbstractSettings {
 	@Override
 	public void loadFromFile(QWini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
-		String s;
 		
 		terrainTexturePath = ini.getString(section, "texturePath", Constants.TEXTURE_FILE_PATH);
 		terrainTextureFile = ini.getString(section, "textureFile", "default2.jpg");

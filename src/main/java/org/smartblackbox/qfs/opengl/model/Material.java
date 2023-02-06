@@ -185,7 +185,6 @@ public class Material extends AbstractSettings {
 	@Override
 	public void loadFromFile(QWini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
-		String s;
 		
 		ambientColor.x = ini.getFloat(section, "material.ambientColor.x", 1);
 		ambientColor.y = ini.getFloat(section, "material.ambientColor.y", 1);
