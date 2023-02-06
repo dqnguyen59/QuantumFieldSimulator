@@ -2,11 +2,13 @@
 numThreads = 32
 
 [QuantumField]
-constantFrequency = 62.5
+constantFrequency = 1.0
 radiation = 1.0
 dimension.x = 201
 dimension.y = 201
 dimension.z = 1
+constantRadiation = 1.0
+glSwapInterval = 2
 
 [Lights]
 numLights = 3
@@ -27,8 +29,8 @@ color.y = 0.79919034
 color.z = 0.9747899
 intensity = 6.2799997
 constant = 1.0
-linear = 0.001
-exponent = 6.0E-4
+linear = 0.0010000000474974513
+exponent = 6.000000284984708E-4
 scale = 1.0
 spotlight = false
 cutOff = 90.0
@@ -62,8 +64,8 @@ color.y = 1.0
 color.z = 0.0
 intensity = 2.930001
 constant = 0.0
-linear = 0.01
-exponent = 7.0E-4
+linear = 0.009999999776482582
+exponent = 6.99999975040555E-4
 scale = 2.930000066757202
 spotlight = true
 cutOff = 37.29001
@@ -96,9 +98,9 @@ color.x = 1.0
 color.y = 0.019417465
 color.z = 0.019417465
 intensity = 2.79
-constant = 0.05000019
-linear = 0.01
-exponent = 0.005
+constant = 0.05000019073486328
+linear = 0.009999999776482582
+exponent = 0.004999999888241291
 scale = 1.0
 spotlight = false
 cutOff = 60.0
@@ -134,6 +136,22 @@ rotation.z = 37.600000485777855
 visible = true
 texturePath = resources/textures/terrains/
 textureFile = default2.jpg
+scale = 1.0
+depthVisibility = 1.0
+material.ambientColor.x = 1.0
+material.ambientColor.y = 1.0
+material.ambientColor.z = 1.0
+material.diffuseColor.x = 1.0
+material.diffuseColor.y = 1.0
+material.diffuseColor.z = 1.0
+material.specularColor.x = 1.0
+material.specularColor.y = 1.0
+material.specularColor.z = 1.0
+material.ambientIntensity = 1.0
+material.diffuseIntensity = 1.0
+material.specularIntensity = 1.0
+material.shininess = 1.0
+material.disableCulling = false
 
 [QFSSettings]
 defaultNodeColor.x = 0.5940559
@@ -156,7 +174,7 @@ hiLightColor.x = 1.0
 hiLightColor.y = 1.0
 hiLightColor.z = 1.0
 hiLightColor.w = 1.0
-depthFadingOffset = 2.0
+depthFadingOffset = 1.0
 colorMode = normal
 renderType = slice
 visibleIndexZ = 0
@@ -165,6 +183,10 @@ alphaIntensiityAll = 0.5
 intensitySlice = 167.0
 intensiityAll = 100.0
 shininess = 0.65000015
+scale = 1.0
+sliceType = sliceZ
+visibleIndexX = 100
+visibleIndexY = 100
 
 [SlitWall]
 active = false
@@ -176,31 +198,22 @@ slitDistance = 51
 position = 0.25
 
 [Oscillators]
-Size = 1
+Size = 0
 
 [Rain]
 active = false
 force = -500.0
 iterations = 2
 
-[Oscillator0]
-name = Oscillator 0
-nodeIndex.x = 60
-nodeIndex.y = 141
-nodeIndex.z = 0
-active.x = false
-active.y = false
-active.z = false
-OscillatorType.x = sin
-OscillatorType.y = cos
-OscillatorType.z = sin
-startAngle.x = 0.0
-startAngle.y = 0.0
-startAngle.z = 0.0
-angleIncrement.x = 0.0
-angleIncrement.y = 0.0
-angleIncrement.z = 4.0
-amplitude.x = 0.0
-amplitude.y = 0.0
-amplitude.z = 40.0
+[Walls]
+numWalls = 0
+
+[Detector]
+ignitorNode.x = 80
+ignitorNode.y = 80
+ignitorNode.z = 0
+detectorNode.x = 80
+detectorNode.y = 1
+detectorNode.z = 0
+detectionVelocity = 5.0E-5
 
