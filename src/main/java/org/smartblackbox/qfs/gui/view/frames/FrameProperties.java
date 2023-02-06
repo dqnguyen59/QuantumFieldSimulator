@@ -18,6 +18,7 @@
  */
 package org.smartblackbox.qfs.gui.view.frames;
 
+import org.joml.Vector3d;
 import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
@@ -28,6 +29,9 @@ public class FrameProperties extends AbstractFrame {
 
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSModel qfsModel = qfsProject.getQfsModel(); 
+
+	private float leftCol = 0.6f;
+	private float rightCol = 0.4f;
 
 	public FrameProperties(NuklearModel frames) {
 		super(frames);
@@ -56,37 +60,32 @@ public class FrameProperties extends AbstractFrame {
 
 	@Override
     public void layout(NkContext ctx, int x, int y, int width, int height) {
-		Nuklear.nk_layout_row_static(ctx, 30, width / 2 - 16, 2);
-        Nuklear.nk_label(ctx, " Width:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + getWindowWidth(), Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " Height:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + getWindowHeight(), Nuklear.NK_TEXT_LEFT);
-        
-        Nuklear.nk_label(ctx, " Mouse.X:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, String.format("%.0f", qfsModel.getMousePos().x), Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " Mouse.Y:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, String.format("%.0f", qfsModel.getMousePos().y), Nuklear.NK_TEXT_LEFT);
-        
-        Nuklear.nk_label(ctx, " CameraPos.x:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsProject.camera.getPosition().x, Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " CameraPos.y:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsProject.camera.getPosition().y, Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " CameraPos.z:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsProject.camera.getPosition().z, Nuklear.NK_TEXT_LEFT);
-        
-        Nuklear.nk_label(ctx, " CameraRot.x:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsProject.camera.getRotation().x, Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " CameraRot.y:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsProject.camera.getRotation().y, Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " CameraRot.z:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsProject.camera.getRotation().z, Nuklear.NK_TEXT_LEFT);
-        
-        Nuklear.nk_label(ctx, " NodeSelector.x:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsModel.getCurrentMouseNodeIndex().x, Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " NodeSelector.y:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsModel.getCurrentMouseNodeIndex().y, Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, " NodeSelector.z:", Nuklear.NK_TEXT_LEFT);
-        Nuklear.nk_label(ctx, "" + qfsModel.getCurrentMouseNodeIndex().z, Nuklear.NK_TEXT_LEFT);
-    }
+		nk_label_value(ctx, " Width:", String.format("%d", getWindowWidth()), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " Height", String.format("%d", getWindowHeight()), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_spacer(ctx, spacer1);
+
+        nk_label_value(ctx, " Mouse.X", String.format("%.0f", qfsModel.getMousePos().x), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " Mouse.Y", String.format("%.0f", qfsModel.getMousePos().y), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_spacer(ctx, spacer1);
+
+		nk_label_value(ctx, " CameraPos.x", String.format("%.2f", qfsProject.camera.getPosition().x), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " CameraPos.y", String.format("%.2f", qfsProject.camera.getPosition().y), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " CameraPos.z", String.format("%.2f", qfsProject.camera.getPosition().z), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " CameraRot.x", String.format("%.2f", qfsProject.camera.getRotation().x), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " CameraRot.y", String.format("%.2f", qfsProject.camera.getRotation().y), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " CameraRot.z", String.format("%.2f", qfsProject.camera.getRotation().z), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_spacer(ctx, spacer1);
+
+        nk_label_value(ctx, " NodeSelector.x", String.format("%d", qfsModel.getCurrentMouseNodeIndex().x), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " NodeSelector.y", String.format("%d", qfsModel.getCurrentMouseNodeIndex().y), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " NodeSelector.z", String.format("%d", qfsModel.getCurrentMouseNodeIndex().z), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_spacer(ctx, spacer1);
+		
+        Vector3d p = qfsModel.getCurrentMouseNode().getPosition();
+        nk_label_value(ctx, " NodePos.x", String.format("%.8f", p.x), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " NodePos.y", String.format("%.8f", p.y), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_label_value(ctx, " NodePos.z", String.format("%.8f", p.z), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
+		nk_spacer(ctx, spacer1);
+	}
 
 }
