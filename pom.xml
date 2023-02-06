@@ -539,8 +539,8 @@
 	                	<Author>${project.name}</Author>
 	                	<Contributers>${project.name}</Contributers>
 	                	<Version>${project.version}.${buildNumber}</Version>
-	                	<Website>https://www.smartblackbox.nl</Website>
-	                	<Email>d.q.nguyen@smartblackbox.nl</Email>
+	                	<Website>https://www.smartblackbox.org</Website>
+	                	<Email>d.q.nguyen@smartblackbox.org</Email>
 	                </manifestEntries>
 	            </archive>
 	            <outputDirectory>../QFSLauncher/binary/QuantumFieldSimulator/</outputDirectory>
