@@ -48,9 +48,10 @@ import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
 import org.smartblackbox.qfs.opengl.utils.Screenshot;
 import org.smartblackbox.qfs.opengl.view.GLWindow;
 import org.smartblackbox.qfs.opengl.view.renderer.Renderer;
+import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 import org.smartblackbox.qfs.settings.QFSSettings;
-import org.smartblackbox.qfs.settings.QFSSettings.RenderType;
+import org.smartblackbox.qfs.settings.QFSSettings.SliceType;
 import org.smartblackbox.qfs.settings.SlitWallSettings;
 import org.smartblackbox.utils.PerformanceMonitor;
 import org.smartblackbox.utils.PerformanceMonitor.Measurement;
@@ -60,6 +61,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 	//////////////////////////////////////////////////////////////////////////////////
 	/// Project Settings /////////////////////////////////////////////////////////////
+	private AppSettings appSettings = AppSettings.getInstance();
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSModel qfsModel = qfsProject.getQfsModel(); 
 	private Scene scene = qfsProject.scene;
@@ -87,6 +89,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	private KeyEvents keyEvents;
 	private ArrayList<QFSNode> customNodeFixed = new ArrayList<QFSNode>();
 	private int waitAfterReset = 0;
+	private QFSNode lastSelectedNode;
+	protected long currentTime;
 
 	public QuantumFieldSimulator(GLWindow glWindow) {
 		super(glWindow);
@@ -204,13 +208,26 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 							j == qfsProject.getDimensionY() - 1	&& k == qfsProject.getDimensionZ() - 1
 							;
 
-					boolean isVisible = isBoundingLine
-							|| 
-							(settings.getRenderType() == RenderType.all?
-									i > 0 && i < dimX - 1 && j > 0 && j < dimY - 1 && k >  0 && k < dimZ - 1
-									:
-										k == settings.getVisibleIndexZ()
-									);
+					boolean isVisible = false;
+					
+					switch (settings.getSliceType()) {
+					case none:
+						isVisible = isBoundingLine || (i > 0 && i < dimX - 1 && j > 0 && j < dimY - 1 && k >  0 && k < dimZ - 1);
+						break;
+					case sliceX:
+						isVisible = isBoundingLine || (i == settings.getVisibleIndexX());
+						break;
+					case sliceY:
+						isVisible = isBoundingLine || (j == settings.getVisibleIndexY());
+						break;
+					case sliceZ:
+						isVisible = isBoundingLine || (k == settings.getVisibleIndexZ());
+						break;
+					case sliceYZ:
+						isVisible = isBoundingLine || (j == settings.getVisibleIndexY() && k == settings.getVisibleIndexZ());
+						break;
+					}
+					
 					node.setVisible(isVisible || node.isHiLighted());
 
 				}
@@ -226,6 +243,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			scene.update();
 			nuklearModel.closeFrame(Frame.progress);
 
+			settings.setVisibleIndexX(qfsProject.getDimensionX() / 2);
+			settings.setVisibleIndexY(qfsProject.getDimensionY() / 2);
 			settings.setVisibleIndexZ(qfsProject.getDimensionZ() / 2);
 
 			qfsModel.getCurrentMouseNodeIndex().x = qfsProject.getDimensionX() / 2;
@@ -363,10 +382,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 						break;
 					case oscillator:
 						qfsModel.setNodeSelectionMode(NodeSelectionMode.none);
-						qfsModel.selectedOscillator.setNode(node.getIndex());
+						qfsModel.selectedOscillator.setNode(node.getIndex(), node.getPosition());
 						nuklearModel.showFrame(Frame.oscillator);
-						if (qfsModel.isSimulating() && selectedNode != null)
-							selectedNode.incPosition(new Vector3d(0, 0, qfsProject.rainModel.getForce()));
 						break;
 					case ignitionNode:
 						qfsModel.setNodeSelectionMode(NodeSelectionMode.none);
@@ -651,8 +668,20 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				Screenshot.prepareScreenshot(4, 4, 0xFF);
 				break;
 			case GLFW.GLFW_KEY_F12:
-				settings.setRenderType(settings.getRenderType() == RenderType.all? RenderType.slice : RenderType.all);
+				settings.setSliceType(settings.getSliceType() == SliceType.none? SliceType.sliceZ : SliceType.none);
 				updateNodesProperties();
+				break;
+			case GLFW.GLFW_KEY_F7:
+				if (lastSelectedNode != null) {
+					lastSelectedNode.setFixed(false);
+					lastSelectedNode = null;
+				}
+				else if (qfsModel.isSimulating() && selectedNode != null) {
+					Vector3d p = selectedNode.getPosition();
+					selectedNode.setPosition(new Vector3d(p.x, p.y, qfsProject.rainModel.getForce()));
+					selectedNode.setFixed(true);
+					lastSelectedNode = selectedNode;
+				}
 				break;
 			}
 		}
@@ -766,7 +795,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				PerformanceMonitor.start(Measurement.totalCPURenderTime);
 				scene.resetTasks();
 
-				int numThreads = qfsProject.numThreads;
+				int numThreads = appSettings.getNumThreads();
 				int numNodes = scene.getEntities().size();
 				int segmentSize = numNodes > numThreads? numNodes / numThreads + 1 : numNodes;
 
@@ -842,10 +871,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			for (Oscillator oscillator : qfsProject.oscillators) {
 				QFSNode node = scene.getNodeByIndex(oscillator.nodeIndex);
 
-				Vector3d p = oscillator.oscillate();
+				Vector3d o = oscillator.oscillate();
 
-				if (node != null && p != null) {
-					node.incPosition(p);
+				if (node != null && o != null) {
+					//node.incPosition(p);
+					//node.setFixed(false);
+					node.setPosition(oscillator.getNodeInitPosition());
+					node.getPositionBuff().add(o);
+					node.setFixed(true);
 				}
 			}
 		}
@@ -857,10 +890,13 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		}
 	}
 
+	public void resetMonitoringDeadThreads() {
+		currentTime = System.currentTimeMillis();
+	}
+	
 	public void startMonitoringDeadThreads() {
 		new Thread(new Runnable() {
 
-			private long currentTime;
 			private int lastNumTask;
 			private int lastNumTask2;
 
@@ -868,18 +904,18 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			public void run() {
 				while (glWindow.getWindowHandle() != 0) {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 					}
 
-					if (System.currentTimeMillis() - currentTime > 100) {
+					if (System.currentTimeMillis() - currentTime > 1000) {
 						if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
 							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found! This should never happens!");
 							System.out.println("Status: " + scene.status);
 							scene.taskCompleted();
 							isCalcNextPhysicsReady = true;
 						}
-						currentTime = System.currentTimeMillis();
+						resetMonitoringDeadThreads();
 						lastNumTask = scene.getNumTask();
 						lastNumTask2 = lastNumTask;
 					}
@@ -915,6 +951,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		}
 		else {
 			waitForRenderingReady();
+			resetMonitoringDeadThreads();
 			// In the mean time, start the calculation of the next frame while rendering.
 			calcNextPhysicsFrame();
 		}
