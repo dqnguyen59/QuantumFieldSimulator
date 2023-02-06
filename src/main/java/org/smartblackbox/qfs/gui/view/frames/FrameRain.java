@@ -30,7 +30,7 @@ public class FrameRain extends AbstractFrame {
 	private RainModel rainModel = qfsProject.rainModel;
 
 	private int width = 300;
-	private int height = 270;
+	private int height = 290;
 	private double leftCol = 0.50;
 	private double rightCol = 0.50;
 
