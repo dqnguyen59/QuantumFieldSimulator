@@ -50,7 +50,7 @@ public class Constants {
             .r((byte) 0x70)
             .g((byte) 0x70)
             .b((byte) 0xB0)
-            .a((byte) 0x70);
+            .a((byte) 0xD0);
 
 	public static final String TITLE = "Quantum Field Simulator";
 
