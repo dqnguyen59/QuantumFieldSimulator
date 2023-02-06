@@ -20,7 +20,9 @@ package org.smartblackbox.qfs.opengl.utils;
 
 public enum OscillatorType {
 	sin,
-	cos;
+	cos,
+	square,
+	;
 
 	private static String[] strEnums;
 
