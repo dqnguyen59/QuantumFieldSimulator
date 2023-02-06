@@ -20,16 +20,19 @@ package org.smartblackbox.qfs.settings;
 
 import java.text.DecimalFormat;
 
-import org.ini4j.Wini;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
+import org.smartblackbox.utils.QWini;
 import org.smartblackbox.utils.Utils;
 
 public class AppSettings extends AbstractSettings implements ISettings {
 
 	private static AppSettings instance;
 	
+	public static int MAX_NUM_THREADS = Runtime.getRuntime().availableProcessors();
+	private int numThreads = MAX_NUM_THREADS;
+
 	private String projectFilePath = Constants.PROJECT_FILE_PATH;
 
 	private String fontFile = Constants.DEFAULT_FONT_FILE;
@@ -83,23 +86,29 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		String s;
 		
-		setProjectFilePath((s = ini.get("System", "projectFilePath")) == null? Constants.PROJECT_FILE_PATH : s);
-		setFontFile((s = ini.get("System", "fontFile")) == null? Constants.DEFAULT_FONT_FILE : s);
-		setFontFileBold((s = ini.get("System", "fontFileBold")) == null? Constants.DEFAULT_FONT_FILE_BOLD : s);
-		setFontFileItalic((s = ini.get("System", "fontFileItalic")) == null? Constants.DEFAULT_FONT_FILE_ITALIC : s);
-		setFontSize((s = ini.get("System", "fontSize")) == null? Constants.DEFAULT_FONT_SIZE : Integer.parseInt(s));
-		setWindowLeft((s = ini.get("Window", "left")) == null? -9999 : Integer.parseInt(s));
-		setWindowTop((s = ini.get("Window", "top")) == null? -9999 : Integer.parseInt(s));
-		setWindowWidth((s = ini.get("Window", "width")) == null? 860 : Integer.parseInt(s));
-		setWindowHeight((s = ini.get("Window", "height")) == null? 640 : Integer.parseInt(s));
-		setMaximized((s = ini.get("Window", "maximized")) == null? 0 : Integer.parseInt(s));
+		numThreads = ((s = iniGet("System", "numThreads")) == null? MAX_NUM_THREADS : Integer.parseInt(s));
+		if (numThreads >= MAX_NUM_THREADS) numThreads = MAX_NUM_THREADS;
+
+		setProjectFilePath((s = iniGet("System", "projectFilePath")) == null? Constants.PROJECT_FILE_PATH : s);
+		setFontFile((s = iniGet("System", "fontFile")) == null? Constants.DEFAULT_FONT_FILE : s);
+		setFontFileBold((s = iniGet("System", "fontFileBold")) == null? Constants.DEFAULT_FONT_FILE_BOLD : s);
+		setFontFileItalic((s = iniGet("System", "fontFileItalic")) == null? Constants.DEFAULT_FONT_FILE_ITALIC : s);
+		setFontSize((s = iniGet("System", "fontSize")) == null? Constants.DEFAULT_FONT_SIZE : Integer.parseInt(s));
+		setWindowLeft((s = iniGet("Window", "left")) == null? -9999 : Integer.parseInt(s));
+		setWindowTop((s = iniGet("Window", "top")) == null? -9999 : Integer.parseInt(s));
+		setWindowWidth((s = iniGet("Window", "width")) == null? 860 : Integer.parseInt(s));
+		setWindowHeight((s = iniGet("Window", "height")) == null? 640 : Integer.parseInt(s));
+		setMaximized((s = iniGet("Window", "maximized")) == null? 0 : Integer.parseInt(s));
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
+		ini.put("System", "numThreads", numThreads);
 		ini.put("System", "projectFilePath", projectFilePath);
 		ini.put("System", "fontFile", fontFile);
 		ini.put("System", "fontFileBold", fontFileBold);
@@ -112,6 +121,15 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		ini.put("Window", "maximized", maximized);
 	}
 	
+	public int getNumThreads() {
+		return numThreads;
+	}
+
+	public void setNumThreads(int numThreads) {
+		this.numThreads = numThreads;
+		saveToFile();
+	}
+
 	public String getProjectFilePath() {
 		return projectFilePath;
 	}

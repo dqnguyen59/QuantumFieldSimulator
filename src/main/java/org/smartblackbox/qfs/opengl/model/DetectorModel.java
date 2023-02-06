@@ -18,12 +18,12 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
-import org.ini4j.Wini;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.smartblackbox.qfs.opengl.model.entity.QFSNode;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.PerformanceMonitor;
+import org.smartblackbox.utils.QWini;
 
 public class DetectorModel extends AbstractSettings {
 
@@ -202,20 +202,21 @@ public class DetectorModel extends AbstractSettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
-		String s;
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 
-		ignitorNode.x = ((s = ini.get("Detector", "ignitorNode.x")) == null? 1 : Integer.parseInt(s));
-		ignitorNode.y = ((s = ini.get("Detector", "ignitorNode.y")) == null? 1 : Integer.parseInt(s));
-		ignitorNode.z = ((s = ini.get("Detector", "ignitorNode.z")) == null? 1 : Integer.parseInt(s));
-		detectorNode.x = ((s = ini.get("Detector", "detectorNode.x")) == null? 1 : Integer.parseInt(s));
-		detectorNode.y = ((s = ini.get("Detector", "detectorNode.y")) == null? 1 : Integer.parseInt(s));
-		detectorNode.z = ((s = ini.get("Detector", "detectorNode.z")) == null? 1 : Integer.parseInt(s));
-		detectionVelocity = ((s = ini.get("Detector", "detectVelocity")) == null? 0.00005 : Double.parseDouble(s));
+		ignitorNode.x = ini.getInt("Detector", "ignitorNode.x", 1);
+		ignitorNode.y = ini.getInt("Detector", "ignitorNode.y", 1);
+		ignitorNode.z = ini.getInt("Detector", "ignitorNode.z", 1);
+		detectorNode.x = ini.getInt("Detector", "detectorNode.x", 1);
+		detectorNode.y = ini.getInt("Detector", "detectorNode.y", 1);
+		detectorNode.z = ini.getInt("Detector", "detectorNode.z", 1);
+		detectionVelocity = ini.getDouble("Detector", "detectVelocity", 0.00005);
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put("Detector", "ignitorNode.x", ignitorNode.x);
 		ini.put("Detector", "ignitorNode.y", ignitorNode.y);
 		ini.put("Detector", "ignitorNode.z", ignitorNode.z);

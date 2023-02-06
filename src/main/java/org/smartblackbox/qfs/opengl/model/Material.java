@@ -18,10 +18,10 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
-import org.ini4j.Wini;
 import org.joml.Vector4f;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.utils.AbstractSettings;
+import org.smartblackbox.utils.QWini;
 
 public class Material extends AbstractSettings {
 
@@ -183,27 +183,29 @@ public class Material extends AbstractSettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		String s;
 		
-		ambientColor.x = ((s = ini.get(section, "material.ambientColor.x")) == null? 1 : Float.parseFloat(s));
-		ambientColor.y = ((s = ini.get(section, "material.ambientColor.y")) == null? 1 : Float.parseFloat(s));
-		ambientColor.z = ((s = ini.get(section, "material.ambientColor.z")) == null? 1 : Float.parseFloat(s));
-		diffuseColor.x = ((s = ini.get(section, "material.diffuseColor.x")) == null? 1 : Float.parseFloat(s));
-		diffuseColor.y = ((s = ini.get(section, "material.diffuseColor.y")) == null? 1 : Float.parseFloat(s));
-		diffuseColor.z = ((s = ini.get(section, "material.diffuseColor.z")) == null? 1 : Float.parseFloat(s));
-		specularColor.x = ((s = ini.get(section, "material.specularColor.x")) == null? 1 : Float.parseFloat(s));
-		specularColor.y = ((s = ini.get(section, "material.specularColor.y")) == null? 1 : Float.parseFloat(s));
-		specularColor.z = ((s = ini.get(section, "material.specularColor.z")) == null? 1 : Float.parseFloat(s));
-		ambientIntensity = ((s = ini.get(section, "material.ambientIntensity")) == null? 1 : Float.parseFloat(s));
-		diffuseIntensity = ((s = ini.get(section, "material.diffuseIntensity")) == null? 1 : Float.parseFloat(s));
-		specularIntensity = ((s = ini.get(section, "material.specularIntensity")) == null? 1 : Float.parseFloat(s));
-		shininess = ((s = ini.get(section, "material.shininess")) == null? 1 : Float.parseFloat(s));
-		disableCulling = ((s = ini.get(section, "material.disableCulling")) == null? false : Boolean.parseBoolean(s));
+		ambientColor.x = ini.getFloat(section, "material.ambientColor.x", 1);
+		ambientColor.y = ini.getFloat(section, "material.ambientColor.y", 1);
+		ambientColor.z = ini.getFloat(section, "material.ambientColor.z", 1);
+		diffuseColor.x = ini.getFloat(section, "material.diffuseColor.x", 1);
+		diffuseColor.y = ini.getFloat(section, "material.diffuseColor.y", 1);
+		diffuseColor.z = ini.getFloat(section, "material.diffuseColor.z", 1);
+		specularColor.x = ini.getFloat(section, "material.specularColor.x", 1);
+		specularColor.y = ini.getFloat(section, "material.specularColor.y", 1);
+		specularColor.z = ini.getFloat(section, "material.specularColor.z", 1);
+		ambientIntensity = ini.getFloat(section, "material.ambientIntensity", 1);
+		diffuseIntensity = ini.getFloat(section, "material.diffuseIntensity", 1);
+		specularIntensity = ini.getFloat(section, "material.specularIntensity", 1);
+		shininess = ini.getFloat(section, "material.shininess", 1);
+		disableCulling = ini.getBool(section, "material.disableCulling", false);
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put(section, "material.ambientColor.x", ambientColor.x);
 		ini.put(section, "material.ambientColor.y", ambientColor.y);
 		ini.put(section, "material.ambientColor.z", ambientColor.z);

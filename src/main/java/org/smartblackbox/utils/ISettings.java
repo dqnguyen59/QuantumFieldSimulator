@@ -18,15 +18,13 @@
  */
 package org.smartblackbox.utils;
 
-import org.ini4j.Wini;
-
 public interface ISettings {
 
 	public AbstractSettings clone();
 
-	public void loadFromFile(Wini ini, String section, int index);
+	public void loadFromFile(QWini ini, String section, int index);
 	
-	public void saveToFile(Wini ini, String section, int index);
+	public void saveToFile(QWini ini, String section, int index);
 	
 }
 

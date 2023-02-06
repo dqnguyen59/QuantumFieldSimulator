@@ -18,12 +18,12 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
-import org.ini4j.Wini;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
 import org.smartblackbox.utils.AbstractSettings;
+import org.smartblackbox.utils.QWini;
 
 public class Terrain extends AbstractSettings {
 
@@ -165,20 +165,22 @@ public class Terrain extends AbstractSettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		String s;
 		
-		terrainTexturePath = ((s = ini.get(section, "texturePath")) == null? Constants.TEXTURE_FILE_PATH : s);
-		terrainTextureFile = ((s = ini.get(section, "textureFile")) == null? "default2.jpg" : s);
-		isVisible = ((s = ini.get(section, "visible")) == null? false : Boolean.parseBoolean(s));
-		scale = ((s = ini.get(section, "scale")) == null? 1.0f : Float.parseFloat(s));
-		depthVisibility = ((s = ini.get(section, "depthVisibility")) == null? 1.0f : Float.parseFloat(s));
+		terrainTexturePath = ini.getString(section, "texturePath", Constants.TEXTURE_FILE_PATH);
+		terrainTextureFile = ini.getString(section, "textureFile", "default2.jpg");
+		isVisible = ini.getBool(section, "visible", false);
+		scale = ini.getFloat(section, "scale", 1);
+		depthVisibility = ini.getFloat(section, "depthVisibility", 1);
 		getMaterial().loadFromFile(ini, section, 0);
 		updateTransformationMatrix();
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put(section, "visible", isVisible);
 		ini.put(section, "texturePath", terrainTexturePath);
 		ini.put(section, "textureFile", "" + terrainTextureFile);

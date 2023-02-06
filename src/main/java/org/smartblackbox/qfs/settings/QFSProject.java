@@ -41,13 +41,11 @@ import org.smartblackbox.qfs.opengl.model.lights.Light;
 import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
+import org.smartblackbox.utils.QWini;
 
 public class QFSProject extends AbstractSettings implements ISettings {
 
 	private static QFSProject instance;
-
-	public static int MAX_NUM_THREADS = Runtime.getRuntime().availableProcessors();
-	public int numThreads = MAX_NUM_THREADS;
 
 	private boolean isResetting;
 	private boolean isFileSaved;
@@ -127,30 +125,27 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
-		String s;
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		
-		setConstantFrequency(((s = ini.get("QuantumField", "constantFrequency")) == null? 10 : Double.parseDouble(s)));
-		constantRadiation = ((s = ini.get("QuantumField", "constantRadiation")) == null? 1.0 : Double.parseDouble(s));
-		glSwapInterval = ((s = ini.get("QuantumField", "glSwapInterval")) == null? 2 : Integer.parseInt(s));
-		int x = ((s = ini.get("QuantumField", "dimension.x")) == null? 15 : Integer.parseInt(s));
-		int y = ((s = ini.get("QuantumField", "dimension.y")) == null? 15 : Integer.parseInt(s));
-		int z = ((s = ini.get("QuantumField", "dimension.z")) == null? 15 : Integer.parseInt(s));
+		setConstantFrequency(ini.getDouble("QuantumField", "constantFrequency", 1.0));
+		setConstantRadiation(ini.getDouble("QuantumField", "constantRadiation", 1.0));
+		setGlSwapInterval(ini.getInt("QuantumField", "glSwapInterval", 2));
+		int x = ini.getInt("QuantumField", "dimension.x", 15);
+		int y = ini.getInt("QuantumField", "dimension.y", 15);
+		int z = ini.getInt("QuantumField", "dimension.z", 15);
 		setDimension(x, y, z);
 
-		numThreads = ((s = ini.get("Common", "numThreads")) == null? MAX_NUM_THREADS : Integer.parseInt(s));
-		if (numThreads >= MAX_NUM_THREADS) numThreads = MAX_NUM_THREADS;
-
-		camera.setFieldOfFiew(((s = ini.get("Camera", "fieldOfFiew")) == null? 45 : Float.parseFloat(s)));
-		camera.getPosition().x = ((s = ini.get("Camera", "position.x")) == null? 0   : Float.parseFloat(s));
-		camera.getPosition().y = ((s = ini.get("Camera", "position.y")) == null? 0   : Float.parseFloat(s));
-		camera.getPosition().z = ((s = ini.get("Camera", "position.z")) == null? 120 : Float.parseFloat(s));
-		camera.getRotation().x = ((s = ini.get("Camera", "rotation.x")) == null? 0   : Float.parseFloat(s));
-		camera.getRotation().y = ((s = ini.get("Camera", "rotation.y")) == null? 0   : Float.parseFloat(s));
-		camera.getRotation().z = ((s = ini.get("Camera", "rotation.z")) == null? 1   : Float.parseFloat(s));
-		baseRotation.x = ((s = ini.get("Base", "rotation.x")) == null? 0 : Double.parseDouble(s));
-		baseRotation.y = ((s = ini.get("Base", "rotation.y")) == null? 0 : Double.parseDouble(s));
-		baseRotation.z = ((s = ini.get("Base", "rotation.z")) == null? 0 : Double.parseDouble(s));
+		camera.setFieldOfFiew(ini.getFloat("Camera", "fieldOfFiew", 45));
+		camera.getPosition().x = ini.getFloat("Camera", "position.x", 0);
+		camera.getPosition().y = ini.getFloat("Camera", "position.y", 0);
+		camera.getPosition().z = ini.getFloat("Camera", "position.z", 120);
+		camera.getRotation().x = ini.getFloat("Camera", "rotation.x", 0);
+		camera.getRotation().y = ini.getFloat("Camera", "rotation.y", 0);
+		camera.getRotation().z = ini.getFloat("Camera", "rotation.z", 1);
+		baseRotation.x = ini.getDouble("Base", "rotation.x", 0.0);
+		baseRotation.y = ini.getDouble("Base", "rotation.y", 0.0);
+		baseRotation.z = ini.getDouble("Base", "rotation.z", 0.0);
 		
 		terrain.loadFromFile(ini, "Terrain", index);
 
@@ -159,8 +154,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		settings.loadFromFile(ini, "QFSSettings",  0);
 		slitWall.loadFromFile(ini, "SlitWall", 0);
 		
-		String value = ini.get("Oscillators", "Size");
-		int size = value.isEmpty()? 0 : Integer.parseInt(value);
+		int size = ini.getInt("Oscillators", "Size", 0);
 		oscillators.clear();
 		for (int i = 0; i < size; i++) {
 			Oscillator oscillator = new Oscillator("", new Vector3i());
@@ -169,6 +163,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		}
 
 		rainModel.loadFromFile(ini, "Rain", index);
+		detectorModel.loadFromFile(ini, "Detector", index);
 		
 		new Thread(new Runnable() {
 			
@@ -183,6 +178,14 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		if (oscillators.size() > 0)
 			qfsModel.selectedOscillator = oscillators.get(0);
 		
+		if (settings.getVisibleIndexX() >= dimension.x) {
+			settings.setVisibleIndexX(dimension.x / 2);
+		}
+		
+		if (settings.getVisibleIndexY() >= dimension.y) {
+			settings.setVisibleIndexY(dimension.y / 2);
+		}
+		
 		if (settings.getVisibleIndexZ() >= dimension.z) {
 			settings.setVisibleIndexZ(dimension.z / 2);
 		}
@@ -195,9 +198,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
-		ini.put("Common", "numThreads", numThreads);
-
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put("QuantumField", "constantFrequency", constantFrequency);
 		ini.put("QuantumField", "constantRadiation", constantRadiation);
 		ini.put("QuantumField", "glSwapInterval", glSwapInterval);
@@ -225,7 +227,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		settings.saveToFile(ini, "QFSSettings",  0);
 		slitWall.saveToFile(ini, "SlitWall", 0);
 		
-		String value = ini.get("Oscillators", "Size");
+		String value = iniGet("Oscillators", "Size");
 		int oldSize = value == null || value.isEmpty()? 0 : Integer.parseInt(value);
 		for (int i = 0; i < oldSize; i++) {
 			ini.remove("Oscillator" + i);
@@ -238,23 +240,23 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		}
 
 		rainModel.saveToFile(ini, "Rain", index);
+		detectorModel.saveToFile(ini, "Detector", index);
 		
 		saveWalls(ini);
 		isFileSaved = true;
 	}
 
-	private void loadWalls(Wini ini) {
-		String s;
+	private void loadWalls(QWini ini) {
 		Vector3i nodeIndex;
 		
 		scene.getWallNodeIndexList().clear();
 		
-		int numWalls = (s = ini.get("Walls", "numWalls")) == null? 0   : Integer.parseInt(s);
+		int numWalls = ini.getInt("Walls", "numWalls", 0);
 		for (int i = 0; i < numWalls; i++) {
 			nodeIndex = new Vector3i();
-			nodeIndex.x = (s = ini.get("Wall" + i, "index.x")) == null? -1   : Integer.parseInt(s);
-			nodeIndex.y = (s = ini.get("Wall" + i, "index.y")) == null? -1   : Integer.parseInt(s);
-			nodeIndex.z = (s = ini.get("Wall" + i, "index.z")) == null? -1   : Integer.parseInt(s);
+			nodeIndex.x = ini.getInt("Wall" + i, "index.x", -1);
+			nodeIndex.y = ini.getInt("Wall" + i, "index.y", -1);
+			nodeIndex.z = ini.getInt("Wall" + i, "index.z", -1);
 			QFSNode node = scene.getNodeByIndex(nodeIndex);
 			if (node != null) {
 				scene.getWallNodeIndexList().add(nodeIndex);
@@ -274,59 +276,58 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		}
 	}
 
-	public void loadLights(Wini ini) {
-		String s;
+	public void loadLights(QWini ini) {
 		Vector3f vec3f;
 		Vector3d vec3d;
 		
 		lights.clear();
 		
-		int numLights = (s = ini.get("Lights", "numLights")) == null? 0   : Integer.parseInt(s);
+		int numLights = ini.getInt("Lights", "numLights", 0);
 		
 		for (int i = 0; i < numLights; i++) {
 			Light light = createLight();
-			light.setName((s = ini.get("Lights" + i, "name")) == null? "" : s);
+			light.setName(ini.getString("Lights" + i, "name", ""));
 			vec3d = light.getPosition();
-			vec3d.x = (s = ini.get("Lights" + i, "position.x")) == null? 0   : Float.parseFloat(s);
-			vec3d.y = (s = ini.get("Lights" + i, "position.y")) == null? 10  : Float.parseFloat(s);
-			vec3d.z = (s = ini.get("Lights" + i, "position.z")) == null? 0   : Float.parseFloat(s);
+			vec3d.x = ini.getFloat("Lights" + i, "position.x", 0);
+			vec3d.y = ini.getFloat("Lights" + i, "position.y", 10);
+			vec3d.z = ini.getFloat("Lights" + i, "position.z", 0);
 			light.setPosition(vec3d);
 			vec3d = light.getRotation();
-			vec3d.x = (s = ini.get("Lights" + i, "rotation.x")) == null? 0   : Float.parseFloat(s);
-			vec3d.y = (s = ini.get("Lights" + i, "rotation.y")) == null? 0   : Float.parseFloat(s);
-			vec3d.z = (s = ini.get("Lights" + i, "rotation.z")) == null? 0   : Float.parseFloat(s);
+			vec3d.x = ini.getFloat("Lights" + i, "rotation.x", 0);
+			vec3d.y = ini.getFloat("Lights" + i, "rotation.y", 0);
+			vec3d.z = ini.getFloat("Lights" + i, "rotation.z", 0);
 			vec3d = light.getDirection();
-			vec3d.x = (s = ini.get("Lights" + i, "direction.x")) == null? 0   : Float.parseFloat(s);
-			vec3d.y = (s = ini.get("Lights" + i, "direction.y")) == null? -1  : Float.parseFloat(s);
-			vec3d.z = (s = ini.get("Lights" + i, "direction.z")) == null? 0   : Float.parseFloat(s);
+			vec3d.x = ini.getFloat("Lights" + i, "direction.x", 0);
+			vec3d.y = ini.getFloat("Lights" + i, "direction.y", -1);
+			vec3d.z = ini.getFloat("Lights" + i, "direction.z", 0);
 			vec3f = light.getColor();
-			vec3f.x = (s = ini.get("Lights" + i, "color.x")) == null? 1   : Float.parseFloat(s);
-			vec3f.y = (s = ini.get("Lights" + i, "color.y")) == null? 1   : Float.parseFloat(s);
-			vec3f.z = (s = ini.get("Lights" + i, "color.z")) == null? 1   : Float.parseFloat(s);
+			vec3f.x = ini.getFloat("Lights" + i, "color.x", 1);
+			vec3f.y = ini.getFloat("Lights" + i, "color.y", 1);
+			vec3f.z = ini.getFloat("Lights" + i, "color.z", 1);
 			light.setColor(vec3f);
 
-			light.setIntensity((s = ini.get("Lights" + i, "intensity")) == null? 1 : Float.parseFloat(s));
-			light.setConstant((s = ini.get("Lights" + i, "constant")) == null? 1 : Double.parseDouble(s));
-			light.setLinear((s = ini.get("Lights" + i, "linear")) == null? 1 : Double.parseDouble(s));
-			light.setExponent((s = ini.get("Lights" + i, "exponent")) == null? 1 : Double.parseDouble(s));
-			light.setScale((s = ini.get("Lights" + i, "scale")) == null? 1 : Float.parseFloat(s));
-			light.setSpotLight((s = ini.get("Lights" + i, "spotlight")) == null? false : Boolean.parseBoolean(s));
-			light.setCutOff((s = ini.get("Lights" + i, "cutOff")) == null? 1 : Float.parseFloat(s));
+			light.setIntensity(ini.getFloat("Lights" + i, "intensity", 1));
+			light.setConstant(ini.getFloat("Lights" + i, "constant", 1));
+			light.setLinear(ini.getFloat("Lights" + i, "linear", 1));
+			light.setExponent(ini.getFloat("Lights" + i, "exponent", 1));
+			light.setScale(ini.getFloat("Lights" + i, "scale", 1));
+			light.setSpotLight(ini.getBool("Lights" + i, "spotlight", false));
+			light.setCutOff(ini.getFloat("Lights" + i, "cutOff", 1));
 
 			Material m = light.getSpotLightHolder().getMaterial();
-			m.getAmbientColor().x = (s = ini.get("Lights" + i, "spotLight.ambient.x")) == null? 1 : Float.parseFloat(s);
-			m.getAmbientColor().y = (s = ini.get("Lights" + i, "spotLight.ambient.y")) == null? 1 : Float.parseFloat(s);
-			m.getAmbientColor().z = (s = ini.get("Lights" + i, "spotLight.ambient.z")) == null? 1 : Float.parseFloat(s);
-			m.setAmbientIntensity((s = ini.get("Lights" + i, "spotLight.ambientIntensity")) == null? 1 : Float.parseFloat(s));
-			m.getDiffuseColor().x = (s = ini.get("Lights" + i, "spotLight.diffuse.x")) == null? 1 : Float.parseFloat(s);
-			m.getDiffuseColor().y = (s = ini.get("Lights" + i, "spotLight.diffuse.y")) == null? 1 : Float.parseFloat(s);
-			m.getDiffuseColor().z = (s = ini.get("Lights" + i, "spotLight.ambient.z")) == null? 1 : Float.parseFloat(s);
-			m.setDiffuseIntensity((s = ini.get("Lights" + i, "spotLight.diffuseIntensity")) == null? 1 : Float.parseFloat(s));
-			m.getSpecularColor().x = (s = ini.get("Lights" + i, "spotLight.specular.x")) == null? 1 : Float.parseFloat(s);
-			m.getSpecularColor().y = (s = ini.get("Lights" + i, "spotLight.specular.y")) == null? 1 : Float.parseFloat(s);
-			m.getSpecularColor().z = (s = ini.get("Lights" + i, "spotLight.specular.z")) == null? 1 : Float.parseFloat(s);
-			m.setSpecularIntensity((s = ini.get("Lights" + i, "spotLight.specularIntensity")) == null? 1 : Float.parseFloat(s));
-			m.setShininess((s = ini.get("Lights" + i, "spotLight.shininess")) == null? 1 : Float.parseFloat(s));
+			m.getAmbientColor().x = ini.getFloat("Lights" + i, "spotLight.ambient.x", 1);
+			m.getAmbientColor().y = ini.getFloat("Lights" + i, "spotLight.ambient.y", 1);
+			m.getAmbientColor().z = ini.getFloat("Lights" + i, "spotLight.ambient.z", 1);
+			m.setAmbientIntensity(ini.getFloat("Lights" + i, "spotLight.ambientIntensity", 1));
+			m.getDiffuseColor().x = ini.getFloat("Lights" + i, "spotLight.diffuse.x", 1);
+			m.getDiffuseColor().y = ini.getFloat("Lights" + i, "spotLight.diffuse.y", 1);
+			m.getDiffuseColor().z = ini.getFloat("Lights" + i, "spotLight.ambient.z", 1);
+			m.setDiffuseIntensity(ini.getFloat("Lights" + i, "spotLight.diffuseIntensity", 1));
+			m.getSpecularColor().x = ini.getFloat("Lights" + i, "spotLight.specular.x", 1);
+			m.getSpecularColor().y = ini.getFloat("Lights" + i, "spotLight.specular.y", 1);
+			m.getSpecularColor().z = ini.getFloat("Lights" + i, "spotLight.specular.z", 1);
+			m.setSpecularIntensity(ini.getFloat("Lights" + i, "spotLight.specularIntensity", 1));
+			m.setShininess(ini.getFloat("Lights" + i, "spotLight.shininess", 1));
 		}
 		
 	}

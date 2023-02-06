@@ -18,9 +18,9 @@
  */
 package org.smartblackbox.qfs.settings;
 
-import org.ini4j.Wini;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
+import org.smartblackbox.utils.QWini;
 
 public class SlitWallSettings extends AbstractSettings implements ISettings {
 
@@ -189,20 +189,22 @@ public class SlitWallSettings extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		String s;
-		direction = ((s = ini.get(section, "direction")) == null? SlitDirection.x : SlitDirection.valueOf(s));
-		active = ((s = ini.get(section, "active")) == null? false : Boolean.parseBoolean(s));
-		numSlits = ((s = ini.get(section, "numSlits")) == null? 2 : Integer.parseInt(s));
-		slitWidth = ((s = ini.get(section, "slitWidth")) == null? 3 : Integer.parseInt(s));
-		slitHeight = ((s = ini.get(section, "slitHeight")) == null? 10 : Integer.parseInt(s));
-		slitDistance = ((s = ini.get(section, "slitDistance")) == null? 51 : Integer.parseInt(s));
-		position = ((s = ini.get(section, "position")) == null? 0.25f : Float.parseFloat(s));
+		direction = (s = ini.getString(section, "direction")).isEmpty()? SlitDirection.x : SlitDirection.valueOf(s);
+		active = ini.getBool(section, "active", false);
+		numSlits = ini.getInt(section, "numSlits", 2);
+		slitWidth = ini.getInt(section, "slitWidth", 3);
+		slitHeight = ini.getInt(section, "slitHeight", 10);
+		slitDistance = ini.getInt(section, "slitDistance", 51);
+		position = ini.getFloat(section, "position", 0.25f);
 		reset();
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put(section, "active", active);
 		ini.put(section, "direction", direction == null? "" : direction.toString());
 		ini.put(section, "numSlits", numSlits);

@@ -18,11 +18,11 @@
  */
 package org.smartblackbox.qfs.settings;
 
-import org.ini4j.Wini;
 import org.joml.Vector4f;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
+import org.smartblackbox.utils.QWini;
 
 /**
  * To increase the performance, some have public variables to avoid calling getters and setters.
@@ -34,22 +34,32 @@ import org.smartblackbox.utils.ISettings;
  */
 public class QFSSettings extends AbstractSettings implements ISettings {
 	
-	public enum RenderType {
-		slice,
-		all,
+	public enum SliceType {
+		sliceX,
+		sliceY,
+		sliceZ,
+		sliceYZ,
+		none,
 		;
 		
 		private static String[] strEnums;
 
 		public static String[] getValues() {
 			if (strEnums == null) {
-				RenderType[] v = values();
+				SliceType[] v = values();
 				strEnums = new String[v.length];
 				for (int i = 0; i < v.length; i++) {
 					strEnums[i] = v[i].name();
 				}
 			}
 			return strEnums;
+		}
+		
+		public static boolean contains(String value) {
+			for (String item : getValues()) {
+				if (item.equals(value)) return true;
+			}
+			return false;
 		}
 	}
 
@@ -93,10 +103,12 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	private float intensitySlice = 150f;
 	private float intensityAll = 130f;
 	private float shininess = 0.5f;
-	private RenderType renderType = RenderType.slice;
-	private RenderType lastRenderType = RenderType.slice;
+	private SliceType sliceType = SliceType.sliceZ;
+	private SliceType lastSliceType = SliceType.sliceZ;
 	private ColorMode colorMode = ColorMode.normal;
 	private ColorMode lastColorMode = ColorMode.normal;
+	private int visibleIndexX;
+	private int visibleIndexY;
 	private int visibleIndexZ;
 
 	public QFSSettings() {
@@ -153,17 +165,16 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	}
 
 	public float getAlpha() {
-		switch (renderType) {
-		case all:
+		switch (sliceType) {
+		case none:
 			return getAlphaAll();
-		case slice:
 		default:
 			return getAlphaSlice();
 		}
 	}
 
 	public void incAlpha() {
-		if (getRenderType() == RenderType.all) {
+		if (getSliceType() == SliceType.none) {
 			setAlphaAll(Math.min(1, getAlphaAll() + 0.01f));
 		}
 		else {
@@ -172,7 +183,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	}
 
 	public void decAlpha() {
-		if (getRenderType() == RenderType.all) {
+		if (getSliceType() == SliceType.none) {
 			setAlphaAll(Math.max(0, getAlphaAll() - 0.01f));
 		}
 		else {
@@ -197,17 +208,16 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	}
 
 	public float getIntensity() {
-		switch (renderType) {
-		case all:
+		switch (sliceType) {
+		case none:
 			return getIntensityAll();
-		case slice:
 		default:
 			return getIntensitySlice();
 		}
 	}
 
 	public void incIntensity() {
-		if (getRenderType() == RenderType.all) {
+		if (getSliceType() == SliceType.none) {
 			setIntensityAll(Math.min(Constants.MAX_INTENSITY, getIntensityAll() + 10.0f));
 		}
 		else {
@@ -216,7 +226,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	}
 
 	public void decIntensity() {
-		if (getRenderType() == RenderType.all) {
+		if (getSliceType() == SliceType.none) {
 			setIntensityAll(Math.max(0, getIntensityAll() - 10.0f));
 		}
 		else {
@@ -232,15 +242,15 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		this.shininess = shininess;
 	}
 
-	public RenderType getRenderType() {
-		return renderType;
+	public SliceType getSliceType() {
+		return sliceType;
 	}
 
-	public void setRenderType(RenderType renderType) {
-		if (lastRenderType != renderType)
+	public void setSliceType(SliceType sliceType) {
+		if (lastSliceType != sliceType)
 			isChanged = true;
-		this.renderType = renderType;
-		lastRenderType  = renderType; 
+		this.sliceType = sliceType;
+		lastSliceType  = sliceType; 
 	}
 
 	public ColorMode getColorMode() {
@@ -254,6 +264,36 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		lastColorMode = colorMode; 
 	}
 
+	public int getVisibleIndexX() {
+		return visibleIndexX;
+	}
+
+	public void setVisibleIndexX(int visibleIndexX) {
+		if (visibleIndexX < 0)
+			visibleIndexX = 0;
+		else if (visibleIndexX > QFSProject.getInstance().getDimensionX() - 1)
+			visibleIndexX = QFSProject.getInstance().getDimensionX() - 1;
+		if (this.visibleIndexX != visibleIndexX) {
+			this.visibleIndexX = visibleIndexX;
+			isChanged = true;
+		}
+	}
+
+	public int getVisibleIndexY() {
+		return visibleIndexY;
+	}
+
+	public void setVisibleIndexY(int visibleIndexY) {
+		if (visibleIndexY < 0)
+			visibleIndexY = 0;
+		else if (visibleIndexY > QFSProject.getInstance().getDimensionY() - 1)
+			visibleIndexY = QFSProject.getInstance().getDimensionY() - 1;
+		if (this.visibleIndexY != visibleIndexY) {
+			this.visibleIndexY = visibleIndexY;
+			isChanged = true;
+		}
+	}
+
 	public int getVisibleIndexZ() {
 		return visibleIndexZ;
 	}
@@ -263,7 +303,10 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 			visibleIndexZ = 0;
 		else if (visibleIndexZ > QFSProject.getInstance().getDimensionZ() - 1)
 			visibleIndexZ = QFSProject.getInstance().getDimensionZ() - 1;
-		this.visibleIndexZ = visibleIndexZ;
+		if (this.visibleIndexZ != visibleIndexZ) {
+			this.visibleIndexZ = visibleIndexZ;
+			isChanged = true;
+		}
 	}
 
 	public boolean isChanged() {
@@ -275,43 +318,47 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(Wini ini, String section, int index) {
+	public void loadFromFile(QWini ini, String section, int index) {
+		super.loadFromFile(ini, section, index);
 		String s;
-		defaultNodeColor.x = ((s = ini.get(section, "defaultNodeColor.x")) == null? 1 : Float.parseFloat(s));
-		defaultNodeColor.y = ((s = ini.get(section, "defaultNodeColor.y")) == null? 1 : Float.parseFloat(s));
-		defaultNodeColor.z = ((s = ini.get(section, "defaultNodeColor.z")) == null? 1 : Float.parseFloat(s));
-		defaultNodeColor.w = ((s = ini.get(section, "defaultNodeColor.w")) == null? 1 : Float.parseFloat(s));
-		fixedColor.x = ((s = ini.get(section, "fixedColor.x")) == null? 1 : Float.parseFloat(s));
-		fixedColor.y = ((s = ini.get(section, "fixefixedColordNodeColor.y")) == null? 1 : Float.parseFloat(s));
-		fixedColor.z = ((s = ini.get(section, "fixedColor.z")) == null? 1 : Float.parseFloat(s));
-		fixedColor.w = ((s = ini.get(section, "fixedColor.w")) == null? 1 : Float.parseFloat(s));
-		wallColor.x = ((s = ini.get(section, "wallColor.x")) == null? 1 : Float.parseFloat(s));
-		wallColor.y = ((s = ini.get(section, "wallColor.y")) == null? 1 : Float.parseFloat(s));
-		wallColor.z = ((s = ini.get(section, "wallColor.z")) == null? 1 : Float.parseFloat(s));
-		wallColor.w = ((s = ini.get(section, "wallColor.w")) == null? 1 : Float.parseFloat(s));
-		selectedColor.x = ((s = ini.get(section, "selectedColor.x")) == null? 1 : Float.parseFloat(s));
-		selectedColor.y = ((s = ini.get(section, "selectedColor.y")) == null? 1 : Float.parseFloat(s));
-		selectedColor.z = ((s = ini.get(section, "selectedColor.z")) == null? 1 : Float.parseFloat(s));
-		selectedColor.w = ((s = ini.get(section, "selectedColor.w")) == null? 1 : Float.parseFloat(s));
-		hiLightColor.x = ((s = ini.get(section, "hiLightColor.x")) == null? 1 : Float.parseFloat(s));
-		hiLightColor.y = ((s = ini.get(section, "hiLightColor.y")) == null? 1 : Float.parseFloat(s));
-		hiLightColor.z = ((s = ini.get(section, "hiLightColor.z")) == null? 1 : Float.parseFloat(s));
-		hiLightColor.w = ((s = ini.get(section, "hiLightColor.w")) == null? 1 : Float.parseFloat(s));
+		defaultNodeColor.x = ini.getFloat(section, "defaultNodeColor.x", 1);
+		defaultNodeColor.y = ini.getFloat(section, "defaultNodeColor.y", 1);
+		defaultNodeColor.z = ini.getFloat(section, "defaultNodeColor.z", 1);
+		defaultNodeColor.w = ini.getFloat(section, "defaultNodeColor.w", 1);
+		fixedColor.x = ini.getFloat(section, "fixedColor.x", 1);
+		fixedColor.y = ini.getFloat(section, "fixedColor.y", 1);
+		fixedColor.z = ini.getFloat(section, "fixedColor.z", 1);
+		fixedColor.w = ini.getFloat(section, "fixedColor.w", 1);
+		wallColor.x = ini.getFloat(section, "wallColor.x", 1);
+		wallColor.y = ini.getFloat(section, "wallColor.y", 1);
+		wallColor.z = ini.getFloat(section, "wallColor.z", 1);
+		wallColor.w = ini.getFloat(section, "wallColor.w", 1);
+		selectedColor.x = ini.getFloat(section, "selectedColor.x", 1);
+		selectedColor.y = ini.getFloat(section, "selectedColor.y", 1);
+		selectedColor.z = ini.getFloat(section, "selectedColor.z", 1);
+		selectedColor.w = ini.getFloat(section, "selectedColor.w", 1);
+		hiLightColor.x = ini.getFloat(section, "hiLightColor.x", 1);
+		hiLightColor.y = ini.getFloat(section, "hiLightColor.y", 1);
+		hiLightColor.z = ini.getFloat(section, "hiLightColor.z", 1);
+		hiLightColor.w = ini.getFloat(section, "hiLightColor.w", 1);
 
-		scale = ((s = ini.get(section, "scale")) == null? 1.0f : Float.parseFloat(s));
-		depthVisibility = ((s = ini.get(section, "depthFadingOffset")) == null? 0.8f : Float.parseFloat(s));
-		colorMode = ((s = ini.get(section, "colorMode")) == null? ColorMode.normal : ColorMode.valueOf(s));
-		setRenderType((s = ini.get(section, "renderType")) == null? RenderType.slice : RenderType.valueOf(s));
-		visibleIndexZ = ((s = ini.get(section, "visibleIndexZ")) == null? 15 : Integer.parseInt(s));
-		alphaSlice = ((s = ini.get(section, "alphaIntensitySlice")) == null? 1 : Float.parseFloat(s));
-		alphaAll = ((s = ini.get(section, "alphaIntensiityAll")) == null? 0.5f : Float.parseFloat(s));
-		intensitySlice = ((s = ini.get(section, "intensitySlice")) == null? 100 : Float.parseFloat(s));
-		intensityAll = ((s = ini.get(section, "intensiityAll")) == null? 100 : Float.parseFloat(s));
-		shininess = ((s = ini.get(section, "shininess")) == null? 0 : Float.parseFloat(s));
+		scale = ini.getFloat(section, "scale", 1);
+		depthVisibility = ini.getFloat(section, "depthFadingOffset", 0.8f);
+		colorMode = (s = ini.getString(section, "colorMode", "")).isEmpty()? ColorMode.normal : ColorMode.valueOf(s);
+		setSliceType((s = ini.getString(section, "sliceType", "")).isEmpty()? SliceType.sliceZ : SliceType.valueOf(s));
+		visibleIndexX = ini.getInt(section, "visibleIndexX", 15);
+		visibleIndexY = ini.getInt(section, "visibleIndexY", 15);
+		visibleIndexZ = ini.getInt(section, "visibleIndexZ", 15);
+		alphaSlice = ini.getFloat(section, "alphaIntensitySlice", 1);
+		alphaAll = ini.getFloat(section, "alphaIntensiityAll", 0.5f);
+		intensitySlice = ini.getFloat(section, "intensitySlice", 100);
+		intensityAll = ini.getFloat(section, "intensiityAll", 100);
+		shininess = ini.getFloat(section, "shininess", 0.5f);
 	}
 
 	@Override
-	public void saveToFile(Wini ini, String section, int index) {
+	public void saveToFile(QWini ini, String section, int index) {
+		super.saveToFile(ini, section, index);
 		ini.put(section, "defaultNodeColor.x", defaultNodeColor.x);
 		ini.put(section, "defaultNodeColor.y", defaultNodeColor.y);
 		ini.put(section, "defaultNodeColor.z", defaultNodeColor.z);
@@ -335,8 +382,10 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 
 		ini.put(section, "scale", scale);
 		ini.put(section, "depthFadingOffset", depthVisibility);
-		ini.put(section, "colorMode", colorMode == null? "" : colorMode.toString());
-		ini.put(section, "renderType", renderType == null? "" : renderType.toString());
+		ini.put(section, "colorMode", colorMode.toString());
+		ini.put(section, "sliceType", sliceType.toString());
+		ini.put(section, "visibleIndexX", visibleIndexX);
+		ini.put(section, "visibleIndexY", visibleIndexY);
 		ini.put(section, "visibleIndexZ", visibleIndexZ);
 		ini.put(section, "alphaIntensitySlice", alphaSlice);
 		ini.put(section, "alphaIntensiityAll", alphaAll);

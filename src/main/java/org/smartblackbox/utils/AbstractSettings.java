@@ -21,11 +21,10 @@ package org.smartblackbox.utils;
 import java.io.File;
 import java.io.IOException;
 
-import org.ini4j.Wini;
-
 public abstract class AbstractSettings implements ISettings {
 	
 	protected String currentFilename = "";
+	private QWini ini;
 
 	public AbstractSettings() {
 	}
@@ -38,14 +37,18 @@ public abstract class AbstractSettings implements ISettings {
 			File f = new File(filename);
 			
 			if (f.exists()) {
-				Wini ini = new Wini(f);
-				loadFromFile(ini, "", 0);
+				loadFromFile(new QWini(f), "", 0);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Override
+	public void loadFromFile(QWini ini, String section, int index) {
+		this.ini = ini;
+	}
+	
 	public void loadFromFile() {
 		if (!currentFilename.isEmpty())
 			loadFromFile(currentFilename);
@@ -58,14 +61,18 @@ public abstract class AbstractSettings implements ISettings {
 			if (!f.exists()) f.createNewFile();
 			currentFilename = filename;
 			
-			Wini ini = new Wini(f);
-			saveToFile(ini, "", 0);
+			saveToFile(new QWini(f), "", 0);
 			ini.store();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Override
+	public void saveToFile(QWini ini, String section, int index) {
+		this.ini = ini;
+	}
+	
 	public void saveToFile() {
 		if (!currentFilename.isEmpty())
 			saveToFile(currentFilename);
@@ -75,4 +82,14 @@ public abstract class AbstractSettings implements ISettings {
 		return currentFilename;
 	}
 
+	public String iniGet(Object sectionName, Object optionName) {
+		String s = ini.get(sectionName, optionName);
+		return s == null? "" : s;
+	}
+	
+	public String iniGet(Object sectionName, Object optionName, String defaultValue) {
+		String s = ini.get(sectionName, optionName);
+		return s == null? defaultValue : s;
+	}
+	
 }
