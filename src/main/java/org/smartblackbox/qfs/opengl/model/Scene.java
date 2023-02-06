@@ -429,7 +429,7 @@ public class Scene {
         // TODO: use BSP to improve performance.
         for (int i = iMin; i >= 0 && i < iMax && i < nodeArray.length; i++) {
         	QFSNode node = (QFSNode) nodeArray[i];
-	    	if (node.isVisible() && (!node.isFixed() || node.isWall())) {
+	    	if (node.isVisible() && (!node.isEdge() || node.isWall())) {
 	    		node.getTransformMatrixf().transform(0, 0, 0, 1, nodePos);
 				node.getTransformMatrixf().getScale(scale);
 	    		
