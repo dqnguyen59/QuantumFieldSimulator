@@ -71,7 +71,9 @@ public class FrameQFSSettings extends AbstractFrame {
 		case none:
 			heightAdjust = -80;
 			break;
+		case sliceXZ:
 		case sliceYZ:
+		case sliceXY:
 			heightAdjust = 70;
 			break;
 		default:
@@ -104,6 +106,7 @@ public class FrameQFSSettings extends AbstractFrame {
 			}
 			
 			nk_spacer(ctx, spacer1, 1);
+			
 			switch (settings.getSliceType()) {
 			case none:
 				settings.setAlphaAll(nk_label_edit(ctx, stack, " Alpha Color:", bufAlphaAll, settings.getAlphaAll(), leftCol, rightCol));
@@ -113,8 +116,9 @@ public class FrameQFSSettings extends AbstractFrame {
 				settings.setIntensityAll(nk_label_edit(ctx, stack, " Intensity Color:", bufIntensityAll, settings.getIntensityAll(), leftCol, rightCol));
 				settings.setIntensityAll(nk_slider(ctx, 0.0, settings.getIntensityAll(), Constants.MAX_INTENSITY, 1.0));
 				nk_spacer(ctx, spacer1, 1);
+
 				break;
-			case sliceX:
+			default:
 				settings.setAlphaSlice(nk_label_edit(ctx, stack, " Alpha Color:", bufAlphaSlice, settings.getAlphaSlice(), leftCol, rightCol));
 				settings.setAlphaSlice(nk_slider(ctx, 0.0, settings.getAlphaSlice(), 1.0, 0.01));
 				nk_spacer(ctx, spacer1, 1);
@@ -123,58 +127,54 @@ public class FrameQFSSettings extends AbstractFrame {
 				settings.setIntensitySlice(nk_slider(ctx, 0.0, settings.getIntensitySlice(), Constants.MAX_INTENSITY, 1.0));
 				nk_spacer(ctx, spacer1, 1);
 
+				break;
+			}
+			
+			switch (settings.getSliceType()) {
+			case sliceX:
+				settings.setVisibleIndexX(nk_label_edit(ctx, stack, " Visible X:", bufVisibleIndexX, settings.getVisibleIndexX(), leftCol, rightCol));
+				settings.setVisibleIndexX((int) nk_slider(ctx, 1, settings.getVisibleIndexX(), qfsProject.getDimensionX() - 2, 1.0));
+				break;
+			case sliceY:
+				settings.setVisibleIndexY(nk_label_edit(ctx, stack, " Visible Y:", bufVisibleIndexY, settings.getVisibleIndexY(), leftCol, rightCol));
+				settings.setVisibleIndexY((int) nk_slider(ctx, 1, settings.getVisibleIndexY(), qfsProject.getDimensionY() - 2, 1.0));
+				break;
+			case sliceZ:
+				settings.setVisibleIndexZ(nk_label_edit(ctx, stack, " Visible Z:", bufVisibleIndexZ, settings.getVisibleIndexZ(), leftCol, rightCol));
+				settings.setVisibleIndexZ((int) nk_slider(ctx, 1, settings.getVisibleIndexZ(), qfsProject.getDimensionZ() - 2, 1.0));
+				break;
+			case sliceXZ:
+				height = 786;
 				settings.setVisibleIndexX(nk_label_edit(ctx, stack, " Visible X:", bufVisibleIndexX, settings.getVisibleIndexX(), leftCol, rightCol));
 				settings.setVisibleIndexX((int) nk_slider(ctx, 1, settings.getVisibleIndexX(), qfsProject.getDimensionX() - 2, 1.0));
 				nk_spacer(ctx, spacer1, 1);
-				break;
-			case sliceY:
-				settings.setAlphaSlice(nk_label_edit(ctx, stack, " Alpha Color:", bufAlphaSlice, settings.getAlphaSlice(), leftCol, rightCol));
-				settings.setAlphaSlice(nk_slider(ctx, 0.0, settings.getAlphaSlice(), 1.0, 0.01));
-				nk_spacer(ctx, spacer1, 1);
 
-				settings.setIntensitySlice(nk_label_edit(ctx, stack, " Intensity Color:", bufIntensitySlice, settings.getIntensitySlice(), leftCol, rightCol));
-				settings.setIntensitySlice(nk_slider(ctx, 0.0, settings.getIntensitySlice(), Constants.MAX_INTENSITY, 1.0));
-				nk_spacer(ctx, spacer1, 1);
-
-				settings.setVisibleIndexY(nk_label_edit(ctx, stack, " Visible Y:", bufVisibleIndexY, settings.getVisibleIndexY(), leftCol, rightCol));
-				settings.setVisibleIndexY((int) nk_slider(ctx, 1, settings.getVisibleIndexY(), qfsProject.getDimensionY() - 2, 1.0));
-				nk_spacer(ctx, spacer1, 1);
+				settings.setVisibleIndexZ(nk_label_edit(ctx, stack, " Visible Z:", bufVisibleIndexZ, settings.getVisibleIndexZ(), leftCol, rightCol));
+				settings.setVisibleIndexZ((int) nk_slider(ctx, 1, settings.getVisibleIndexZ(), qfsProject.getDimensionZ() - 2, 1.0));
 				break;
 			case sliceYZ:
 				height = 786;
-				settings.setAlphaSlice(nk_label_edit(ctx, stack, " Alpha Color:", bufAlphaSlice, settings.getAlphaSlice(), leftCol, rightCol));
-				settings.setAlphaSlice(nk_slider(ctx, 0.0, settings.getAlphaSlice(), 1.0, 0.01));
-				nk_spacer(ctx, spacer1, 1);
-
-				settings.setIntensitySlice(nk_label_edit(ctx, stack, " Intensity Color:", bufIntensitySlice, settings.getIntensitySlice(), leftCol, rightCol));
-				settings.setIntensitySlice(nk_slider(ctx, 0.0, settings.getIntensitySlice(), Constants.MAX_INTENSITY, 1.0));
-				nk_spacer(ctx, spacer1, 1);
-
 				settings.setVisibleIndexY(nk_label_edit(ctx, stack, " Visible Y:", bufVisibleIndexY, settings.getVisibleIndexY(), leftCol, rightCol));
 				settings.setVisibleIndexY((int) nk_slider(ctx, 1, settings.getVisibleIndexY(), qfsProject.getDimensionY() - 2, 1.0));
 				nk_spacer(ctx, spacer1, 1);
 
 				settings.setVisibleIndexZ(nk_label_edit(ctx, stack, " Visible Z:", bufVisibleIndexZ, settings.getVisibleIndexZ(), leftCol, rightCol));
 				settings.setVisibleIndexZ((int) nk_slider(ctx, 1, settings.getVisibleIndexZ(), qfsProject.getDimensionZ() - 2, 1.0));
-				nk_spacer(ctx, spacer1, 1);
 				break;
-			case sliceZ:
-				settings.setAlphaSlice(nk_label_edit(ctx, stack, " Alpha Color:", bufAlphaSlice, settings.getAlphaSlice(), leftCol, rightCol));
-				settings.setAlphaSlice(nk_slider(ctx, 0.0, settings.getAlphaSlice(), 1.0, 0.01));
+			case sliceXY:
+				height = 786;
+				settings.setVisibleIndexX(nk_label_edit(ctx, stack, " Visible X:", bufVisibleIndexX, settings.getVisibleIndexX(), leftCol, rightCol));
+				settings.setVisibleIndexX((int) nk_slider(ctx, 1, settings.getVisibleIndexX(), qfsProject.getDimensionX() - 2, 1.0));
 				nk_spacer(ctx, spacer1, 1);
 
-				settings.setIntensitySlice(nk_label_edit(ctx, stack, " Intensity Color:", bufIntensitySlice, settings.getIntensitySlice(), leftCol, rightCol));
-				settings.setIntensitySlice(nk_slider(ctx, 0.0, settings.getIntensitySlice(), Constants.MAX_INTENSITY, 1.0));
-				nk_spacer(ctx, spacer1, 1);
-
-				settings.setVisibleIndexZ(nk_label_edit(ctx, stack, " Visible Z:", bufVisibleIndexZ, settings.getVisibleIndexZ(), leftCol, rightCol));
-				settings.setVisibleIndexZ((int) nk_slider(ctx, 1, settings.getVisibleIndexZ(), qfsProject.getDimensionZ() - 2, 1.0));
-				nk_spacer(ctx, spacer1, 1);
+				settings.setVisibleIndexY(nk_label_edit(ctx, stack, " Visible Y:", bufVisibleIndexY, settings.getVisibleIndexY(), leftCol, rightCol));
+				settings.setVisibleIndexY((int) nk_slider(ctx, 1, settings.getVisibleIndexY(), qfsProject.getDimensionY() - 2, 1.0));
 				break;
 			default:
 				break;
 			
 			}
+			nk_spacer(ctx, spacer1, 1);
 			
 			settings.setShininess(nk_label_edit(ctx, stack, " Shininess:", bufShininess, settings.getShininess(), leftCol, rightCol));
 			settings.setShininess(nk_slider(ctx, 0, settings.getShininess(), 1.0, 0.01));

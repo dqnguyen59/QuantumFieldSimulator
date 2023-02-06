@@ -38,7 +38,9 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		sliceX,
 		sliceY,
 		sliceZ,
+		sliceXZ,
 		sliceYZ,
+		sliceXY,
 		none,
 		;
 		

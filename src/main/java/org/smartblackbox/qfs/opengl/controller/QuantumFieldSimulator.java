@@ -223,8 +223,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					case sliceZ:
 						isVisible = isBoundingLine || (k == settings.getVisibleIndexZ());
 						break;
+					case sliceXZ:
+						isVisible = isBoundingLine || (i == settings.getVisibleIndexX() && k == settings.getVisibleIndexZ());
+						break;
 					case sliceYZ:
 						isVisible = isBoundingLine || (j == settings.getVisibleIndexY() && k == settings.getVisibleIndexZ());
+						break;
+					case sliceXY:
+						isVisible = isBoundingLine || (i == settings.getVisibleIndexX() && j == settings.getVisibleIndexY());
 						break;
 					}
 					
