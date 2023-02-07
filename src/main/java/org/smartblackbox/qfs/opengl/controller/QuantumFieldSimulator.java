@@ -257,7 +257,6 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			qfsModel.getCurrentMouseNodeIndex().y = qfsProject.getDimensionY() / 2;
 			qfsModel.getCurrentMouseNodeIndex().z = qfsProject.getDimensionZ() / 2;
 			qfsModel.setCurrentMouseNode(scene.getNodeByIndex(qfsModel.getCurrentMouseNodeIndex()));
-			//isNodesUpdateRequired = true;
 
 			isLoadingStarted = false;
 		}
@@ -880,8 +879,6 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				Vector3d o = oscillator.oscillate();
 
 				if (node != null && o != null) {
-					//node.incPosition(p);
-					//node.setFixed(false);
 					node.setPosition(oscillator.getNodeInitPosition());
 					node.getPositionBuff().add(o);
 					node.setFixed(true);
@@ -915,11 +912,13 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					}
 
 					if (System.currentTimeMillis() - currentTime > 1000) {
-						if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
+						//if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
+						if (scene.getNumTask() == lastNumTask2) {
 							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found! This should never happens!");
 							System.out.println("Status: " + scene.status);
 							scene.taskCompleted();
 							isCalcNextPhysicsReady = true;
+							isRenderingReady = false;
 						}
 						resetMonitoringDeadThreads();
 						lastNumTask = scene.getNumTask();
