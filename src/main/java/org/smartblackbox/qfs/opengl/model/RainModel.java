@@ -18,8 +18,8 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
+import org.ini4j.Wini;
 import org.smartblackbox.utils.AbstractSettings;
-import org.smartblackbox.utils.QWini;
 
 public class RainModel extends AbstractSettings  {
 	
@@ -70,20 +70,20 @@ public class RainModel extends AbstractSettings  {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		
-		isActive = ini.getBool(section, "active", false);
-		force = ini.getDouble(section, "force", -25);
-		iterations = ini.getInt(section, "iterations", 2);
+		isActive = getBool(section, "active", false);
+		force = getDouble(section, "force", -25);
+		iterations = getInt(section, "iterations", 2);
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put(section, "active", isActive);
-		ini.put(section, "force", force);
-		ini.put(section, "iterations", iterations);
+		put(section, "active", isActive);
+		put(section, "force", force);
+		put(section, "iterations", iterations);
 	}
 
 	

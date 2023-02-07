@@ -41,7 +41,6 @@ import org.smartblackbox.qfs.opengl.model.lights.Light;
 import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
-import org.smartblackbox.utils.QWini;
 
 public class QFSProject extends AbstractSettings implements ISettings {
 
@@ -125,27 +124,27 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		
-		setConstantFrequency(ini.getDouble("QuantumField", "constantFrequency", 1.0));
-		setConstantRadiation(ini.getDouble("QuantumField", "constantRadiation", 1.0));
-		setGlSwapInterval(ini.getInt("QuantumField", "glSwapInterval", 2));
-		int x = ini.getInt("QuantumField", "dimension.x", 15);
-		int y = ini.getInt("QuantumField", "dimension.y", 15);
-		int z = ini.getInt("QuantumField", "dimension.z", 15);
+		setConstantFrequency(getDouble("QuantumField", "constantFrequency", 1.0));
+		setConstantRadiation(getDouble("QuantumField", "constantRadiation", 1.0));
+		setGlSwapInterval(getInt("QuantumField", "glSwapInterval", 2));
+		int x = getInt("QuantumField", "dimension.x", 15);
+		int y = getInt("QuantumField", "dimension.y", 15);
+		int z = getInt("QuantumField", "dimension.z", 15);
 		setDimension(x, y, z);
 
-		camera.setFieldOfFiew(ini.getFloat("Camera", "fieldOfFiew", 45));
-		camera.getPosition().x = ini.getFloat("Camera", "position.x", 0);
-		camera.getPosition().y = ini.getFloat("Camera", "position.y", 0);
-		camera.getPosition().z = ini.getFloat("Camera", "position.z", 120);
-		camera.getRotation().x = ini.getFloat("Camera", "rotation.x", 0);
-		camera.getRotation().y = ini.getFloat("Camera", "rotation.y", 0);
-		camera.getRotation().z = ini.getFloat("Camera", "rotation.z", 1);
-		baseRotation.x = ini.getDouble("Base", "rotation.x", 0.0);
-		baseRotation.y = ini.getDouble("Base", "rotation.y", 0.0);
-		baseRotation.z = ini.getDouble("Base", "rotation.z", 0.0);
+		camera.setFieldOfFiew(getFloat("Camera", "fieldOfFiew", 45));
+		camera.getPosition().x = getFloat("Camera", "position.x", 0);
+		camera.getPosition().y = getFloat("Camera", "position.y", 0);
+		camera.getPosition().z = getFloat("Camera", "position.z", 120);
+		camera.getRotation().x = getFloat("Camera", "rotation.x", 0);
+		camera.getRotation().y = getFloat("Camera", "rotation.y", 0);
+		camera.getRotation().z = getFloat("Camera", "rotation.z", 1);
+		baseRotation.x = getDouble("Base", "rotation.x", 0.0);
+		baseRotation.y = getDouble("Base", "rotation.y", 0.0);
+		baseRotation.z = getDouble("Base", "rotation.z", 0.0);
 		
 		terrain.loadFromFile(ini, "Terrain", index);
 
@@ -154,7 +153,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		settings.loadFromFile(ini, "QFSSettings",  0);
 		slitWall.loadFromFile(ini, "SlitWall", 0);
 		
-		int size = ini.getInt("Oscillators", "Size", 0);
+		int size = getInt("Oscillators", "Size", 0);
 		oscillators.clear();
 		for (int i = 0; i < size; i++) {
 			Oscillator oscillator = new Oscillator("", new Vector3i());
@@ -198,43 +197,43 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put("QuantumField", "constantFrequency", constantFrequency);
-		ini.put("QuantumField", "constantRadiation", constantRadiation);
-		ini.put("QuantumField", "glSwapInterval", glSwapInterval);
-		ini.put("QuantumField", "dimension.x", dimension.x);
-		ini.put("QuantumField", "dimension.y", dimension.y);
-		ini.put("QuantumField", "dimension.z", dimension.z);
+		put("QuantumField", "constantFrequency", constantFrequency);
+		put("QuantumField", "constantRadiation", constantRadiation);
+		put("QuantumField", "glSwapInterval", glSwapInterval);
+		put("QuantumField", "dimension.x", dimension.x);
+		put("QuantumField", "dimension.y", dimension.y);
+		put("QuantumField", "dimension.z", dimension.z);
 
 		saveLights(ini);
 		
 		baseRotation = scene.getQfsFields().getBaseField().getRotation();
 
-		ini.put("Camera", "fieldOfFiew", camera.getFieldOfFiew());
-		ini.put("Camera", "position.x", camera.getPosition().x);
-		ini.put("Camera", "position.y", camera.getPosition().y);
-		ini.put("Camera", "position.z", camera.getPosition().z);
-		ini.put("Camera", "rotation.x", camera.getRotation().x);
-		ini.put("Camera", "rotation.y", camera.getRotation().y);
-		ini.put("Camera", "rotation.z", camera.getRotation().z);
-		ini.put("Base", "rotation.x", baseRotation.x);
-		ini.put("Base", "rotation.y", baseRotation.y);
-		ini.put("Base", "rotation.z", baseRotation.z);
+		put("Camera", "fieldOfFiew", camera.getFieldOfFiew());
+		put("Camera", "position.x", camera.getPosition().x);
+		put("Camera", "position.y", camera.getPosition().y);
+		put("Camera", "position.z", camera.getPosition().z);
+		put("Camera", "rotation.x", camera.getRotation().x);
+		put("Camera", "rotation.y", camera.getRotation().y);
+		put("Camera", "rotation.z", camera.getRotation().z);
+		put("Base", "rotation.x", baseRotation.x);
+		put("Base", "rotation.y", baseRotation.y);
+		put("Base", "rotation.z", baseRotation.z);
 		
 		terrain.saveToFile(ini, "Terrain", index);
 		
 		settings.saveToFile(ini, "QFSSettings",  0);
 		slitWall.saveToFile(ini, "SlitWall", 0);
 		
-		String value = iniGet("Oscillators", "Size");
+		String value = get("Oscillators", "Size");
 		int oldSize = value == null || value.isEmpty()? 0 : Integer.parseInt(value);
 		for (int i = 0; i < oldSize; i++) {
 			ini.remove("Oscillator" + i);
 		}
 
 		int size = oscillators.size();
-		ini.put("Oscillators", "Size", size);
+		put("Oscillators", "Size", size);
 		for (int i = 0; i < size; i++) {
 			oscillators.get(i).saveToFile(ini, "Oscillator", i);
 		}
@@ -246,17 +245,17 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		isFileSaved = true;
 	}
 
-	private void loadWalls(QWini ini) {
+	private void loadWalls(Wini ini) {
 		Vector3i nodeIndex;
 		
 		scene.getWallNodeIndexList().clear();
 		
-		int numWalls = ini.getInt("Walls", "numWalls", 0);
+		int numWalls = getInt("Walls", "numWalls", 0);
 		for (int i = 0; i < numWalls; i++) {
 			nodeIndex = new Vector3i();
-			nodeIndex.x = ini.getInt("Wall" + i, "index.x", -1);
-			nodeIndex.y = ini.getInt("Wall" + i, "index.y", -1);
-			nodeIndex.z = ini.getInt("Wall" + i, "index.z", -1);
+			nodeIndex.x = getInt("Wall" + i, "index.x", -1);
+			nodeIndex.y = getInt("Wall" + i, "index.y", -1);
+			nodeIndex.z = getInt("Wall" + i, "index.z", -1);
 			QFSNode node = scene.getNodeByIndex(nodeIndex);
 			if (node != null) {
 				scene.getWallNodeIndexList().add(nodeIndex);
@@ -267,109 +266,109 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	private void saveWalls(Wini ini) {
 		List<Vector3i> walls = scene.getWallNodeIndexList();
 		int i = 0;
-		ini.put("Walls", "numWalls", walls.size());
+		put("Walls", "numWalls", walls.size());
 		for (Vector3i nodeIndex : walls) {
-			ini.put("Wall" + i, "index.x", nodeIndex.x);
-			ini.put("Wall" + i, "index.y", nodeIndex.y);
-			ini.put("Wall" + i, "index.z", nodeIndex.z);
+			put("Wall" + i, "index.x", nodeIndex.x);
+			put("Wall" + i, "index.y", nodeIndex.y);
+			put("Wall" + i, "index.z", nodeIndex.z);
 			i++;
 		}
 	}
 
-	public void loadLights(QWini ini) {
+	public void loadLights(Wini ini) {
 		Vector3f vec3f;
 		Vector3d vec3d;
 		
 		lights.clear();
 		
-		int numLights = ini.getInt("Lights", "numLights", 0);
+		int numLights = getInt("Lights", "numLights", 0);
 		
 		for (int i = 0; i < numLights; i++) {
 			Light light = createLight();
-			light.setName(ini.getString("Lights" + i, "name", ""));
+			light.setName(getString("Lights" + i, "name", ""));
 			vec3d = light.getPosition();
-			vec3d.x = ini.getFloat("Lights" + i, "position.x", 0);
-			vec3d.y = ini.getFloat("Lights" + i, "position.y", 10);
-			vec3d.z = ini.getFloat("Lights" + i, "position.z", 0);
+			vec3d.x = getFloat("Lights" + i, "position.x", 0);
+			vec3d.y = getFloat("Lights" + i, "position.y", 10);
+			vec3d.z = getFloat("Lights" + i, "position.z", 0);
 			light.setPosition(vec3d);
 			vec3d = light.getRotation();
-			vec3d.x = ini.getFloat("Lights" + i, "rotation.x", 0);
-			vec3d.y = ini.getFloat("Lights" + i, "rotation.y", 0);
-			vec3d.z = ini.getFloat("Lights" + i, "rotation.z", 0);
+			vec3d.x = getFloat("Lights" + i, "rotation.x", 0);
+			vec3d.y = getFloat("Lights" + i, "rotation.y", 0);
+			vec3d.z = getFloat("Lights" + i, "rotation.z", 0);
 			vec3d = light.getDirection();
-			vec3d.x = ini.getFloat("Lights" + i, "direction.x", 0);
-			vec3d.y = ini.getFloat("Lights" + i, "direction.y", -1);
-			vec3d.z = ini.getFloat("Lights" + i, "direction.z", 0);
+			vec3d.x = getFloat("Lights" + i, "direction.x", 0);
+			vec3d.y = getFloat("Lights" + i, "direction.y", -1);
+			vec3d.z = getFloat("Lights" + i, "direction.z", 0);
 			vec3f = light.getColor();
-			vec3f.x = ini.getFloat("Lights" + i, "color.x", 1);
-			vec3f.y = ini.getFloat("Lights" + i, "color.y", 1);
-			vec3f.z = ini.getFloat("Lights" + i, "color.z", 1);
+			vec3f.x = getFloat("Lights" + i, "color.x", 1);
+			vec3f.y = getFloat("Lights" + i, "color.y", 1);
+			vec3f.z = getFloat("Lights" + i, "color.z", 1);
 			light.setColor(vec3f);
 
-			light.setIntensity(ini.getFloat("Lights" + i, "intensity", 1));
-			light.setConstant(ini.getFloat("Lights" + i, "constant", 1));
-			light.setLinear(ini.getFloat("Lights" + i, "linear", 1));
-			light.setExponent(ini.getFloat("Lights" + i, "exponent", 1));
-			light.setScale(ini.getFloat("Lights" + i, "scale", 1));
-			light.setSpotLight(ini.getBool("Lights" + i, "spotlight", false));
-			light.setCutOff(ini.getFloat("Lights" + i, "cutOff", 1));
+			light.setIntensity(getFloat("Lights" + i, "intensity", 1));
+			light.setConstant(getFloat("Lights" + i, "constant", 1));
+			light.setLinear(getFloat("Lights" + i, "linear", 1));
+			light.setExponent(getFloat("Lights" + i, "exponent", 1));
+			light.setScale(getFloat("Lights" + i, "scale", 1));
+			light.setSpotLight(getBool("Lights" + i, "spotlight", false));
+			light.setCutOff(getFloat("Lights" + i, "cutOff", 1));
 
 			Material m = light.getSpotLightHolder().getMaterial();
-			m.getAmbientColor().x = ini.getFloat("Lights" + i, "spotLight.ambient.x", 1);
-			m.getAmbientColor().y = ini.getFloat("Lights" + i, "spotLight.ambient.y", 1);
-			m.getAmbientColor().z = ini.getFloat("Lights" + i, "spotLight.ambient.z", 1);
-			m.setAmbientIntensity(ini.getFloat("Lights" + i, "spotLight.ambientIntensity", 1));
-			m.getDiffuseColor().x = ini.getFloat("Lights" + i, "spotLight.diffuse.x", 1);
-			m.getDiffuseColor().y = ini.getFloat("Lights" + i, "spotLight.diffuse.y", 1);
-			m.getDiffuseColor().z = ini.getFloat("Lights" + i, "spotLight.ambient.z", 1);
-			m.setDiffuseIntensity(ini.getFloat("Lights" + i, "spotLight.diffuseIntensity", 1));
-			m.getSpecularColor().x = ini.getFloat("Lights" + i, "spotLight.specular.x", 1);
-			m.getSpecularColor().y = ini.getFloat("Lights" + i, "spotLight.specular.y", 1);
-			m.getSpecularColor().z = ini.getFloat("Lights" + i, "spotLight.specular.z", 1);
-			m.setSpecularIntensity(ini.getFloat("Lights" + i, "spotLight.specularIntensity", 1));
-			m.setShininess(ini.getFloat("Lights" + i, "spotLight.shininess", 1));
+			m.getAmbientColor().x = getFloat("Lights" + i, "spotLight.ambient.x", 1);
+			m.getAmbientColor().y = getFloat("Lights" + i, "spotLight.ambient.y", 1);
+			m.getAmbientColor().z = getFloat("Lights" + i, "spotLight.ambient.z", 1);
+			m.setAmbientIntensity(getFloat("Lights" + i, "spotLight.ambientIntensity", 1));
+			m.getDiffuseColor().x = getFloat("Lights" + i, "spotLight.diffuse.x", 1);
+			m.getDiffuseColor().y = getFloat("Lights" + i, "spotLight.diffuse.y", 1);
+			m.getDiffuseColor().z = getFloat("Lights" + i, "spotLight.ambient.z", 1);
+			m.setDiffuseIntensity(getFloat("Lights" + i, "spotLight.diffuseIntensity", 1));
+			m.getSpecularColor().x = getFloat("Lights" + i, "spotLight.specular.x", 1);
+			m.getSpecularColor().y = getFloat("Lights" + i, "spotLight.specular.y", 1);
+			m.getSpecularColor().z = getFloat("Lights" + i, "spotLight.specular.z", 1);
+			m.setSpecularIntensity(getFloat("Lights" + i, "spotLight.specularIntensity", 1));
+			m.setShininess(getFloat("Lights" + i, "spotLight.shininess", 1));
 		}
 		
 	}
 	
 	public void saveLights(Wini ini) {
 		int i = 0;
-		ini.put("Lights", "numLights", lights.size());
+		put("Lights", "numLights", lights.size());
 		for (Light light : lights) {
-			ini.put("Lights" + i, "name", light.getName());
-			ini.put("Lights" + i, "position.x", light.getPosition().x);
-			ini.put("Lights" + i, "position.y", light.getPosition().y);
-			ini.put("Lights" + i, "position.z", light.getPosition().z);
-			ini.put("Lights" + i, "rotation.x", light.getRotation().x);
-			ini.put("Lights" + i, "rotation.y", light.getRotation().y);
-			ini.put("Lights" + i, "rotation.z", light.getRotation().z);
-			ini.put("Lights" + i, "direction.x", light.getDirection().x);
-			ini.put("Lights" + i, "direction.y", light.getDirection().y);
-			ini.put("Lights" + i, "direction.z", light.getDirection().z);
-			ini.put("Lights" + i, "color.x", light.getColor().x);
-			ini.put("Lights" + i, "color.y", light.getColor().y);
-			ini.put("Lights" + i, "color.z", light.getColor().z);
-			ini.put("Lights" + i, "intensity", light.getIntensity());
-			ini.put("Lights" + i, "constant", light.getConstant());
-			ini.put("Lights" + i, "linear", light.getLinear());
-			ini.put("Lights" + i, "exponent", light.getExponent());
-			ini.put("Lights" + i, "scale", light.getScale());
-			ini.put("Lights" + i, "spotlight", light.isSpotLight());
-			ini.put("Lights" + i, "cutOff", light.getCutOff());
+			put("Lights" + i, "name", light.getName());
+			put("Lights" + i, "position.x", light.getPosition().x);
+			put("Lights" + i, "position.y", light.getPosition().y);
+			put("Lights" + i, "position.z", light.getPosition().z);
+			put("Lights" + i, "rotation.x", light.getRotation().x);
+			put("Lights" + i, "rotation.y", light.getRotation().y);
+			put("Lights" + i, "rotation.z", light.getRotation().z);
+			put("Lights" + i, "direction.x", light.getDirection().x);
+			put("Lights" + i, "direction.y", light.getDirection().y);
+			put("Lights" + i, "direction.z", light.getDirection().z);
+			put("Lights" + i, "color.x", light.getColor().x);
+			put("Lights" + i, "color.y", light.getColor().y);
+			put("Lights" + i, "color.z", light.getColor().z);
+			put("Lights" + i, "intensity", light.getIntensity());
+			put("Lights" + i, "constant", light.getConstant());
+			put("Lights" + i, "linear", light.getLinear());
+			put("Lights" + i, "exponent", light.getExponent());
+			put("Lights" + i, "scale", light.getScale());
+			put("Lights" + i, "spotlight", light.isSpotLight());
+			put("Lights" + i, "cutOff", light.getCutOff());
 			Material m = light.getSpotLightHolder().getMaterial();
-			ini.put("Lights" + i, "spotLight.ambient.x", m.getAmbientColor().x);
-			ini.put("Lights" + i, "spotLight.ambient.y", m.getAmbientColor().y);
-			ini.put("Lights" + i, "spotLight.ambient.z", m.getAmbientColor().z);
-			ini.put("Lights" + i, "spotLight.ambientIntensity", m.getAmbientIntensity());
-			ini.put("Lights" + i, "spotLight.diffuse.x", m.getDiffuseColor().x);
-			ini.put("Lights" + i, "spotLight.diffuse.y", m.getDiffuseColor().y);
-			ini.put("Lights" + i, "spotLight.diffuse.z", m.getDiffuseColor().z);
-			ini.put("Lights" + i, "spotLight.diffuseIntensity", m.getDiffuseIntensity());
-			ini.put("Lights" + i, "spotLight.specular.x", m.getSpecularColor().x);
-			ini.put("Lights" + i, "spotLight.specular.y", m.getSpecularColor().y);
-			ini.put("Lights" + i, "spotLight.specular.z", m.getSpecularColor().z);
-			ini.put("Lights" + i, "spotLight.specularIntensity", m.getSpecularIntensity());
-			ini.put("Lights" + i, "spotLight.shininess", m.getShininess());
+			put("Lights" + i, "spotLight.ambient.x", m.getAmbientColor().x);
+			put("Lights" + i, "spotLight.ambient.y", m.getAmbientColor().y);
+			put("Lights" + i, "spotLight.ambient.z", m.getAmbientColor().z);
+			put("Lights" + i, "spotLight.ambientIntensity", m.getAmbientIntensity());
+			put("Lights" + i, "spotLight.diffuse.x", m.getDiffuseColor().x);
+			put("Lights" + i, "spotLight.diffuse.y", m.getDiffuseColor().y);
+			put("Lights" + i, "spotLight.diffuse.z", m.getDiffuseColor().z);
+			put("Lights" + i, "spotLight.diffuseIntensity", m.getDiffuseIntensity());
+			put("Lights" + i, "spotLight.specular.x", m.getSpecularColor().x);
+			put("Lights" + i, "spotLight.specular.y", m.getSpecularColor().y);
+			put("Lights" + i, "spotLight.specular.z", m.getSpecularColor().z);
+			put("Lights" + i, "spotLight.specularIntensity", m.getSpecularIntensity());
+			put("Lights" + i, "spotLight.shininess", m.getShininess());
 			i++;
 		}
 	}

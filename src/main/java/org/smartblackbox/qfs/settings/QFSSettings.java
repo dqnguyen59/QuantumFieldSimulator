@@ -18,11 +18,11 @@
  */
 package org.smartblackbox.qfs.settings;
 
+import org.ini4j.Wini;
 import org.joml.Vector4f;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
-import org.smartblackbox.utils.QWini;
 
 /**
  * To increase the performance, some have public variables to avoid calling getters and setters.
@@ -320,80 +320,80 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		String s;
-		defaultNodeColor.x = ini.getFloat(section, "defaultNodeColor.x", 1);
-		defaultNodeColor.y = ini.getFloat(section, "defaultNodeColor.y", 1);
-		defaultNodeColor.z = ini.getFloat(section, "defaultNodeColor.z", 1);
-		defaultNodeColor.w = ini.getFloat(section, "defaultNodeColor.w", 1);
-		fixedColor.x = ini.getFloat(section, "fixedColor.x", 1);
-		fixedColor.y = ini.getFloat(section, "fixedColor.y", 1);
-		fixedColor.z = ini.getFloat(section, "fixedColor.z", 1);
-		fixedColor.w = ini.getFloat(section, "fixedColor.w", 1);
-		wallColor.x = ini.getFloat(section, "wallColor.x", 1);
-		wallColor.y = ini.getFloat(section, "wallColor.y", 1);
-		wallColor.z = ini.getFloat(section, "wallColor.z", 1);
-		wallColor.w = ini.getFloat(section, "wallColor.w", 1);
-		selectedColor.x = ini.getFloat(section, "selectedColor.x", 1);
-		selectedColor.y = ini.getFloat(section, "selectedColor.y", 1);
-		selectedColor.z = ini.getFloat(section, "selectedColor.z", 1);
-		selectedColor.w = ini.getFloat(section, "selectedColor.w", 1);
-		hiLightColor.x = ini.getFloat(section, "hiLightColor.x", 1);
-		hiLightColor.y = ini.getFloat(section, "hiLightColor.y", 1);
-		hiLightColor.z = ini.getFloat(section, "hiLightColor.z", 1);
-		hiLightColor.w = ini.getFloat(section, "hiLightColor.w", 1);
+		defaultNodeColor.x = getFloat(section, "defaultNodeColor.x", 1);
+		defaultNodeColor.y = getFloat(section, "defaultNodeColor.y", 1);
+		defaultNodeColor.z = getFloat(section, "defaultNodeColor.z", 1);
+		defaultNodeColor.w = getFloat(section, "defaultNodeColor.w", 1);
+		fixedColor.x = getFloat(section, "fixedColor.x", 1);
+		fixedColor.y = getFloat(section, "fixedColor.y", 1);
+		fixedColor.z = getFloat(section, "fixedColor.z", 1);
+		fixedColor.w = getFloat(section, "fixedColor.w", 1);
+		wallColor.x = getFloat(section, "wallColor.x", 1);
+		wallColor.y = getFloat(section, "wallColor.y", 1);
+		wallColor.z = getFloat(section, "wallColor.z", 1);
+		wallColor.w = getFloat(section, "wallColor.w", 1);
+		selectedColor.x = getFloat(section, "selectedColor.x", 1);
+		selectedColor.y = getFloat(section, "selectedColor.y", 1);
+		selectedColor.z = getFloat(section, "selectedColor.z", 1);
+		selectedColor.w = getFloat(section, "selectedColor.w", 1);
+		hiLightColor.x = getFloat(section, "hiLightColor.x", 1);
+		hiLightColor.y = getFloat(section, "hiLightColor.y", 1);
+		hiLightColor.z = getFloat(section, "hiLightColor.z", 1);
+		hiLightColor.w = getFloat(section, "hiLightColor.w", 1);
 
-		scale = ini.getFloat(section, "scale", 1);
-		depthVisibility = ini.getFloat(section, "depthFadingOffset", 0.8f);
-		colorMode = (s = ini.getString(section, "colorMode", "")).isEmpty()? ColorMode.normal : ColorMode.valueOf(s);
-		setSliceType((s = ini.getString(section, "sliceType", "")).isEmpty()? SliceType.sliceZ : SliceType.valueOf(s));
-		visibleIndexX = ini.getInt(section, "visibleIndexX", 15);
-		visibleIndexY = ini.getInt(section, "visibleIndexY", 15);
-		visibleIndexZ = ini.getInt(section, "visibleIndexZ", 15);
-		alphaSlice = ini.getFloat(section, "alphaIntensitySlice", 1);
-		alphaAll = ini.getFloat(section, "alphaIntensiityAll", 0.5f);
-		intensitySlice = ini.getFloat(section, "intensitySlice", 100);
-		intensityAll = ini.getFloat(section, "intensiityAll", 100);
-		shininess = ini.getFloat(section, "shininess", 0.5f);
+		scale = getFloat(section, "scale", 1);
+		depthVisibility = getFloat(section, "depthFadingOffset", 0.8f);
+		colorMode = (s = getString(section, "colorMode", "")).isEmpty()? ColorMode.normal : ColorMode.valueOf(s);
+		setSliceType((s = getString(section, "sliceType", "")).isEmpty()? SliceType.sliceZ : SliceType.valueOf(s));
+		visibleIndexX = getInt(section, "visibleIndexX", 15);
+		visibleIndexY = getInt(section, "visibleIndexY", 15);
+		visibleIndexZ = getInt(section, "visibleIndexZ", 15);
+		alphaSlice = getFloat(section, "alphaIntensitySlice", 1);
+		alphaAll = getFloat(section, "alphaIntensiityAll", 0.5f);
+		intensitySlice = getFloat(section, "intensitySlice", 100);
+		intensityAll = getFloat(section, "intensiityAll", 100);
+		shininess = getFloat(section, "shininess", 0.5f);
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put(section, "defaultNodeColor.x", defaultNodeColor.x);
-		ini.put(section, "defaultNodeColor.y", defaultNodeColor.y);
-		ini.put(section, "defaultNodeColor.z", defaultNodeColor.z);
-		ini.put(section, "defaultNodeColor.w", defaultNodeColor.w);
-		ini.put(section, "fixedColor.x", fixedColor.x);
-		ini.put(section, "fixedColor.y", fixedColor.y);
-		ini.put(section, "fixedColor.z", fixedColor.z);
-		ini.put(section, "fixedColor.w", fixedColor.w);
-		ini.put(section, "wallColor.x", wallColor.x);
-		ini.put(section, "wallColor.y", wallColor.y);
-		ini.put(section, "wallColor.z", wallColor.z);
-		ini.put(section, "wallColor.w", wallColor.w);
-		ini.put(section, "selectedColor.x", selectedColor.x);
-		ini.put(section, "selectedColor.y", selectedColor.y);
-		ini.put(section, "selectedColor.z", selectedColor.z);
-		ini.put(section, "selectedColor.w", selectedColor.w);
-		ini.put(section, "hiLightColor.x", hiLightColor.x);
-		ini.put(section, "hiLightColor.y", hiLightColor.y);
-		ini.put(section, "hiLightColor.z", hiLightColor.z);
-		ini.put(section, "hiLightColor.w", hiLightColor.w);
+		put(section, "defaultNodeColor.x", defaultNodeColor.x);
+		put(section, "defaultNodeColor.y", defaultNodeColor.y);
+		put(section, "defaultNodeColor.z", defaultNodeColor.z);
+		put(section, "defaultNodeColor.w", defaultNodeColor.w);
+		put(section, "fixedColor.x", fixedColor.x);
+		put(section, "fixedColor.y", fixedColor.y);
+		put(section, "fixedColor.z", fixedColor.z);
+		put(section, "fixedColor.w", fixedColor.w);
+		put(section, "wallColor.x", wallColor.x);
+		put(section, "wallColor.y", wallColor.y);
+		put(section, "wallColor.z", wallColor.z);
+		put(section, "wallColor.w", wallColor.w);
+		put(section, "selectedColor.x", selectedColor.x);
+		put(section, "selectedColor.y", selectedColor.y);
+		put(section, "selectedColor.z", selectedColor.z);
+		put(section, "selectedColor.w", selectedColor.w);
+		put(section, "hiLightColor.x", hiLightColor.x);
+		put(section, "hiLightColor.y", hiLightColor.y);
+		put(section, "hiLightColor.z", hiLightColor.z);
+		put(section, "hiLightColor.w", hiLightColor.w);
 
-		ini.put(section, "scale", scale);
-		ini.put(section, "depthFadingOffset", depthVisibility);
-		ini.put(section, "colorMode", colorMode.toString());
-		ini.put(section, "sliceType", sliceType.toString());
-		ini.put(section, "visibleIndexX", visibleIndexX);
-		ini.put(section, "visibleIndexY", visibleIndexY);
-		ini.put(section, "visibleIndexZ", visibleIndexZ);
-		ini.put(section, "alphaIntensitySlice", alphaSlice);
-		ini.put(section, "alphaIntensiityAll", alphaAll);
-		ini.put(section, "intensitySlice", intensitySlice);
-		ini.put(section, "intensiityAll", intensityAll);
-		ini.put(section, "shininess", shininess);
+		put(section, "scale", scale);
+		put(section, "depthFadingOffset", depthVisibility);
+		put(section, "colorMode", colorMode.toString());
+		put(section, "sliceType", sliceType.toString());
+		put(section, "visibleIndexX", visibleIndexX);
+		put(section, "visibleIndexY", visibleIndexY);
+		put(section, "visibleIndexZ", visibleIndexZ);
+		put(section, "alphaIntensitySlice", alphaSlice);
+		put(section, "alphaIntensiityAll", alphaAll);
+		put(section, "intensitySlice", intensitySlice);
+		put(section, "intensiityAll", intensityAll);
+		put(section, "shininess", shininess);
 	}
 
 }

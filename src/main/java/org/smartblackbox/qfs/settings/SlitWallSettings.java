@@ -18,9 +18,9 @@
  */
 package org.smartblackbox.qfs.settings;
 
+import org.ini4j.Wini;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
-import org.smartblackbox.utils.QWini;
 
 public class SlitWallSettings extends AbstractSettings implements ISettings {
 
@@ -189,29 +189,29 @@ public class SlitWallSettings extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		String s;
-		direction = (s = ini.getString(section, "direction")).isEmpty()? SlitDirection.x : SlitDirection.valueOf(s);
-		active = ini.getBool(section, "active", false);
-		numSlits = ini.getInt(section, "numSlits", 2);
-		slitWidth = ini.getInt(section, "slitWidth", 3);
-		slitHeight = ini.getInt(section, "slitHeight", 10);
-		slitDistance = ini.getInt(section, "slitDistance", 51);
-		position = ini.getFloat(section, "position", 0.25f);
+		direction = (s = getString(section, "direction")).isEmpty()? SlitDirection.x : SlitDirection.valueOf(s);
+		active = getBool(section, "active", false);
+		numSlits = getInt(section, "numSlits", 2);
+		slitWidth = getInt(section, "slitWidth", 3);
+		slitHeight = getInt(section, "slitHeight", 10);
+		slitDistance = getInt(section, "slitDistance", 51);
+		position = getFloat(section, "position", 0.25f);
 		reset();
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put(section, "active", active);
-		ini.put(section, "direction", direction == null? "" : direction.toString());
-		ini.put(section, "numSlits", numSlits);
-		ini.put(section, "slitWidth", slitWidth);
-		ini.put(section, "slitHeight", slitHeight);
-		ini.put(section, "slitDistance", slitDistance);
-		ini.put(section, "position", position);
+		put(section, "active", active);
+		put(section, "direction", direction == null? "" : direction.toString());
+		put(section, "numSlits", numSlits);
+		put(section, "slitWidth", slitWidth);
+		put(section, "slitHeight", slitHeight);
+		put(section, "slitDistance", slitDistance);
+		put(section, "position", position);
 	}
 
 }

@@ -18,6 +18,7 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
+import org.ini4j.Wini;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import org.smartblackbox.qfs.opengl.utils.OscillatorType;
@@ -25,7 +26,6 @@ import org.smartblackbox.qfs.opengl.utils.Vector3b;
 import org.smartblackbox.qfs.opengl.utils.VectorOscillatorType;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
-import org.smartblackbox.utils.QWini;
 
 public class Oscillator extends AbstractSettings implements ISettings {
 	
@@ -148,58 +148,58 @@ public class Oscillator extends AbstractSettings implements ISettings {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		String s;
-		name = iniGet(section + index, "name");
-		nodeIndex.x = ini.getInt(section + index, "nodeIndex.x", 0);
-		nodeIndex.y = ini.getInt(section + index, "nodeIndex.y", 0);
-		nodeIndex.z = ini.getInt(section + index, "nodeIndex.z", 0);
-		nodeInitPosition.x = ini.getDouble(section + index, "nodeInitPosition.x", 0);
-		nodeInitPosition.y = ini.getDouble(section + index, "nodeInitPosition.y", 0);
-		nodeInitPosition.z = ini.getDouble(section + index, "nodeInitPosition.z", 0);
-		active.x = ini.getBool(section + index, "active.x", false);
-		active.y = ini.getBool(section + index, "active.y", false);
-		active.z = ini.getBool(section + index, "active.z", false);
-		oscillatorType.x = (s = ini.getString(section + index, "OscillatorType.x", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
-		oscillatorType.y = (s = ini.getString(section + index, "OscillatorType.y", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
-		oscillatorType.z = (s = ini.getString(section + index, "OscillatorType.z", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
-		startAngle.x = ini.getDouble(section + index, "startAngle.x", 0);
-		startAngle.y = ini.getDouble(section + index, "startAngle.y", 0);
-		startAngle.z = ini.getDouble(section + index, "startAngle.z", 0);
-		angleIncrement.x = ini.getDouble(section + index, "angleIncrement.x", 0);
-		angleIncrement.y = ini.getDouble(section + index, "angleIncrement.y", 0);
-		angleIncrement.z = ini.getDouble(section + index, "angleIncrement.z", 0);
-		amplitude.x = ini.getDouble(section + index, "amplitude.x", 0);
-		amplitude.y = ini.getDouble(section + index, "amplitude.y", 0);
-		amplitude.z = ini.getDouble(section + index, "amplitude.z", 0);
+		name = ini.get(section + index, "name");
+		nodeIndex.x = getInt(section + index, "nodeIndex.x", 0);
+		nodeIndex.y = getInt(section + index, "nodeIndex.y", 0);
+		nodeIndex.z = getInt(section + index, "nodeIndex.z", 0);
+		nodeInitPosition.x = getDouble(section + index, "nodeInitPosition.x", 0);
+		nodeInitPosition.y = getDouble(section + index, "nodeInitPosition.y", 0);
+		nodeInitPosition.z = getDouble(section + index, "nodeInitPosition.z", 0);
+		active.x = getBool(section + index, "active.x", false);
+		active.y = getBool(section + index, "active.y", false);
+		active.z = getBool(section + index, "active.z", false);
+		oscillatorType.x = (s = getString(section + index, "OscillatorType.x", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
+		oscillatorType.y = (s = getString(section + index, "OscillatorType.y", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
+		oscillatorType.z = (s = getString(section + index, "OscillatorType.z", "")).isEmpty()? OscillatorType.sin : OscillatorType.valueOf(s);
+		startAngle.x = getDouble(section + index, "startAngle.x", 0);
+		startAngle.y = getDouble(section + index, "startAngle.y", 0);
+		startAngle.z = getDouble(section + index, "startAngle.z", 0);
+		angleIncrement.x = getDouble(section + index, "angleIncrement.x", 0);
+		angleIncrement.y = getDouble(section + index, "angleIncrement.y", 0);
+		angleIncrement.z = getDouble(section + index, "angleIncrement.z", 0);
+		amplitude.x = getDouble(section + index, "amplitude.x", 0);
+		amplitude.y = getDouble(section + index, "amplitude.y", 0);
+		amplitude.z = getDouble(section + index, "amplitude.z", 0);
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put(section + index, "name", name);
-		ini.put(section + index, "nodeIndex.x", nodeIndex.x);
-		ini.put(section + index, "nodeIndex.y", nodeIndex.y);
-		ini.put(section + index, "nodeIndex.z", nodeIndex.z);
-		ini.put(section + index, "nodeInitPosition.x", nodeInitPosition.x);
-		ini.put(section + index, "nodeInitPosition.y", nodeInitPosition.y);
-		ini.put(section + index, "nodeInitPosition.z", nodeInitPosition.z);
-		ini.put(section + index, "active.x", active.x);
-		ini.put(section + index, "active.y", active.y);
-		ini.put(section + index, "active.z", active.z);
-		ini.put(section + index, "OscillatorType.x", oscillatorType.x == null? "" : oscillatorType.x.toString());
-		ini.put(section + index, "OscillatorType.y", oscillatorType.y == null? "" : oscillatorType.y.toString());
-		ini.put(section + index, "OscillatorType.z", oscillatorType.z == null? "" : oscillatorType.z.toString());
-		ini.put(section + index, "startAngle.x", startAngle.x);
-		ini.put(section + index, "startAngle.y", startAngle.y);
-		ini.put(section + index, "startAngle.z", startAngle.z);
-		ini.put(section + index, "angleIncrement.x", angleIncrement.x);
-		ini.put(section + index, "angleIncrement.y", angleIncrement.y);
-		ini.put(section + index, "angleIncrement.z", angleIncrement.z);
-		ini.put(section + index, "amplitude.x", amplitude.x);
-		ini.put(section + index, "amplitude.y", amplitude.y);
-		ini.put(section + index, "amplitude.z", amplitude.z);
+		put(section + index, "name", name);
+		put(section + index, "nodeIndex.x", nodeIndex.x);
+		put(section + index, "nodeIndex.y", nodeIndex.y);
+		put(section + index, "nodeIndex.z", nodeIndex.z);
+		put(section + index, "nodeInitPosition.x", nodeInitPosition.x);
+		put(section + index, "nodeInitPosition.y", nodeInitPosition.y);
+		put(section + index, "nodeInitPosition.z", nodeInitPosition.z);
+		put(section + index, "active.x", active.x);
+		put(section + index, "active.y", active.y);
+		put(section + index, "active.z", active.z);
+		put(section + index, "OscillatorType.x", oscillatorType.x == null? "" : oscillatorType.x.toString());
+		put(section + index, "OscillatorType.y", oscillatorType.y == null? "" : oscillatorType.y.toString());
+		put(section + index, "OscillatorType.z", oscillatorType.z == null? "" : oscillatorType.z.toString());
+		put(section + index, "startAngle.x", startAngle.x);
+		put(section + index, "startAngle.y", startAngle.y);
+		put(section + index, "startAngle.z", startAngle.z);
+		put(section + index, "angleIncrement.x", angleIncrement.x);
+		put(section + index, "angleIncrement.y", angleIncrement.y);
+		put(section + index, "angleIncrement.z", angleIncrement.z);
+		put(section + index, "amplitude.x", amplitude.x);
+		put(section + index, "amplitude.y", amplitude.y);
+		put(section + index, "amplitude.z", amplitude.z);
 	}
 
 	public String getName() {

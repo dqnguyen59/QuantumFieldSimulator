@@ -18,10 +18,10 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
+import org.ini4j.Wini;
 import org.joml.Vector4f;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.utils.AbstractSettings;
-import org.smartblackbox.utils.QWini;
 
 public class Material extends AbstractSettings {
 
@@ -183,42 +183,42 @@ public class Material extends AbstractSettings {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		
-		ambientColor.x = ini.getFloat(section, "material.ambientColor.x", 1);
-		ambientColor.y = ini.getFloat(section, "material.ambientColor.y", 1);
-		ambientColor.z = ini.getFloat(section, "material.ambientColor.z", 1);
-		diffuseColor.x = ini.getFloat(section, "material.diffuseColor.x", 1);
-		diffuseColor.y = ini.getFloat(section, "material.diffuseColor.y", 1);
-		diffuseColor.z = ini.getFloat(section, "material.diffuseColor.z", 1);
-		specularColor.x = ini.getFloat(section, "material.specularColor.x", 1);
-		specularColor.y = ini.getFloat(section, "material.specularColor.y", 1);
-		specularColor.z = ini.getFloat(section, "material.specularColor.z", 1);
-		ambientIntensity = ini.getFloat(section, "material.ambientIntensity", 1);
-		diffuseIntensity = ini.getFloat(section, "material.diffuseIntensity", 1);
-		specularIntensity = ini.getFloat(section, "material.specularIntensity", 1);
-		shininess = ini.getFloat(section, "material.shininess", 1);
-		disableCulling = ini.getBool(section, "material.disableCulling", false);
+		ambientColor.x = getFloat(section, "material.ambientColor.x", 1);
+		ambientColor.y = getFloat(section, "material.ambientColor.y", 1);
+		ambientColor.z = getFloat(section, "material.ambientColor.z", 1);
+		diffuseColor.x = getFloat(section, "material.diffuseColor.x", 1);
+		diffuseColor.y = getFloat(section, "material.diffuseColor.y", 1);
+		diffuseColor.z = getFloat(section, "material.diffuseColor.z", 1);
+		specularColor.x = getFloat(section, "material.specularColor.x", 1);
+		specularColor.y = getFloat(section, "material.specularColor.y", 1);
+		specularColor.z = getFloat(section, "material.specularColor.z", 1);
+		ambientIntensity = getFloat(section, "material.ambientIntensity", 1);
+		diffuseIntensity = getFloat(section, "material.diffuseIntensity", 1);
+		specularIntensity = getFloat(section, "material.specularIntensity", 1);
+		shininess = getFloat(section, "material.shininess", 1);
+		disableCulling = getBool(section, "material.disableCulling", false);
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put(section, "material.ambientColor.x", ambientColor.x);
-		ini.put(section, "material.ambientColor.y", ambientColor.y);
-		ini.put(section, "material.ambientColor.z", ambientColor.z);
-		ini.put(section, "material.diffuseColor.x", diffuseColor.x);
-		ini.put(section, "material.diffuseColor.y", diffuseColor.y);
-		ini.put(section, "material.diffuseColor.z", diffuseColor.z);
-		ini.put(section, "material.specularColor.x", specularColor.x);
-		ini.put(section, "material.specularColor.y", specularColor.y);
-		ini.put(section, "material.specularColor.z", specularColor.z);
-		ini.put(section, "material.ambientIntensity", ambientIntensity);
-		ini.put(section, "material.diffuseIntensity", diffuseIntensity);
-		ini.put(section, "material.specularIntensity", specularIntensity);
-		ini.put(section, "material.shininess", shininess);
-		ini.put(section, "material.disableCulling", disableCulling);
+		put(section, "material.ambientColor.x", ambientColor.x);
+		put(section, "material.ambientColor.y", ambientColor.y);
+		put(section, "material.ambientColor.z", ambientColor.z);
+		put(section, "material.diffuseColor.x", diffuseColor.x);
+		put(section, "material.diffuseColor.y", diffuseColor.y);
+		put(section, "material.diffuseColor.z", diffuseColor.z);
+		put(section, "material.specularColor.x", specularColor.x);
+		put(section, "material.specularColor.y", specularColor.y);
+		put(section, "material.specularColor.z", specularColor.z);
+		put(section, "material.ambientIntensity", ambientIntensity);
+		put(section, "material.diffuseIntensity", diffuseIntensity);
+		put(section, "material.specularIntensity", specularIntensity);
+		put(section, "material.shininess", shininess);
+		put(section, "material.disableCulling", disableCulling);
 	}
 
 }

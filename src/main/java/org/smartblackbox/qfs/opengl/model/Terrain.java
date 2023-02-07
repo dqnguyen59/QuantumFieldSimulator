@@ -18,12 +18,12 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
+import org.ini4j.Wini;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
 import org.smartblackbox.utils.AbstractSettings;
-import org.smartblackbox.utils.QWini;
 
 public class Terrain extends AbstractSettings {
 
@@ -165,27 +165,27 @@ public class Terrain extends AbstractSettings {
 	}
 
 	@Override
-	public void loadFromFile(QWini ini, String section, int index) {
+	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
 		
-		terrainTexturePath = ini.getString(section, "texturePath", Constants.TEXTURE_FILE_PATH);
-		terrainTextureFile = ini.getString(section, "textureFile", "default2.jpg");
-		isVisible = ini.getBool(section, "visible", false);
-		scale = ini.getFloat(section, "scale", 1);
-		depthVisibility = ini.getFloat(section, "depthVisibility", 1);
+		terrainTexturePath = getString(section, "texturePath", Constants.TEXTURE_FILE_PATH);
+		terrainTextureFile = getString(section, "textureFile", "default2.jpg");
+		isVisible = getBool(section, "visible", false);
+		scale = getFloat(section, "scale", 1);
+		depthVisibility = getFloat(section, "depthVisibility", 1);
 		getMaterial().loadFromFile(ini, section, 0);
 		updateTransformationMatrix();
 	}
 
 	@Override
-	public void saveToFile(QWini ini, String section, int index) {
+	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put(section, "visible", isVisible);
-		ini.put(section, "texturePath", terrainTexturePath);
-		ini.put(section, "textureFile", "" + terrainTextureFile);
-		ini.put(section, "visible", isVisible);
-		ini.put(section, "scale", scale);
-		ini.put(section, "depthVisibility", depthVisibility);
+		put(section, "visible", isVisible);
+		put(section, "texturePath", terrainTexturePath);
+		put(section, "textureFile", "" + terrainTextureFile);
+		put(section, "visible", isVisible);
+		put(section, "scale", scale);
+		put(section, "depthVisibility", depthVisibility);
 		getMaterial().saveToFile(ini, section, 0);
 	}
 
