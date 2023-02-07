@@ -29,7 +29,7 @@ import org.smartblackbox.utils.PerformanceMonitor.Measurement;
 
 public class FrameStatistics extends AbstractFrame {
 
-	private int width = 250;
+	private int width = 300;
 	private int height = 420;
 	private float leftCol = 0.7f;
 	private float rightCol = 0.3f;
