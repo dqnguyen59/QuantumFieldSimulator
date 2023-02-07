@@ -84,8 +84,8 @@ public abstract class AbstractSettings implements ISettings {
 		return currentFilename;
 	}
 
-	protected void put(String section, String string, Object value) {
-		ini.put(section, section, value);
+	protected void put(String sectionName, String optionName, Object value) {
+		ini.put(sectionName, optionName, value);
 	}
 
 	private void printParseError(String parsedString, Object optionName, Object defaultValue) {

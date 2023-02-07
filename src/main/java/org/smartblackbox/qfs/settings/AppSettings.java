@@ -56,6 +56,8 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	private DecimalFormat formatScientific8 = Utils.setFormat(8, 8, decimalSeperator, false, false); 
 	private DecimalFormat formatScientific12 = Utils.setFormat(12, 12, decimalSeperator, false, false);
 	
+	private int antiAliasing = 1;
+	
 	public static AppSettings getInstance() {
 		if (instance == null) {
 			instance = new AppSettings();
@@ -102,6 +104,7 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		setWindowWidth(getInt("Window", "width", 860));
 		setWindowHeight(getInt("Window", "height", 640));
 		setMaximized(getInt("Window", "maximized", 0));
+		setAntiAliasing(getInt("OpenGL", "antiAliasing", 1));
 	}
 
 	@Override
@@ -118,6 +121,7 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		put("Window", "width", windowWidth);
 		put("Window", "height", windowHeight);
 		put("Window", "maximized", maximized);
+		put("OpenGL", "antiAliasing", antiAliasing);
 	}
 	
 	public int getNumThreads() {
@@ -285,6 +289,14 @@ public class AppSettings extends AbstractSettings implements ISettings {
 
 	public void setFormatScientific12(DecimalFormat formatScientific12) {
 		this.formatScientific12 = formatScientific12;
+	}
+
+	public int getAntiAliasing() {
+		return antiAliasing;
+	}
+
+	public void setAntiAliasing(int antiAliasing) {
+		this.antiAliasing = antiAliasing;
 	}
 
 }

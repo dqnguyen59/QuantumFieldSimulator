@@ -23,13 +23,14 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.MemoryUtil;
 import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 
 public class GLWindow {
 
-	private AppSettings qfsSettings = AppSettings.getInstance();
+	private AppSettings appSettings = AppSettings.getInstance();
 	
 	private QFSProject qfsProject = QFSProject.getInstance();
 
@@ -41,10 +42,10 @@ public class GLWindow {
 	public GLWindow(String title) {
 		this.title = title;
 		
-		this.left = qfsSettings.getWindowLeft();
-		this.top = qfsSettings.getWindowTop();
-		this.width = qfsSettings.getWindowWidth();
-		this.height = qfsSettings.getWindowHeight();
+		this.left = appSettings.getWindowLeft();
+		this.top = appSettings.getWindowTop();
+		this.width = appSettings.getWindowWidth();
+		this.height = appSettings.getWindowHeight();
 	}
 
 	public void init() {
@@ -62,10 +63,9 @@ public class GLWindow {
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 
-		// Anti-Aliasing
-		GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 16);
+		GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, appSettings.getAntiAliasing());
 		
-		boolean maximized = qfsSettings.getMaximized() == 1;
+		boolean maximized = appSettings.getMaximized() == 1;
 
 		if (maximized) {
 			GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GL11.GL_TRUE);
@@ -102,18 +102,24 @@ public class GLWindow {
 
 		GLFW.glfwMakeContextCurrent(windowHandle);
 
-		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
-		
 		GLFW.glfwShowWindow(windowHandle);
 		
 		GL.createCapabilities();
         GL11.glClearColor(0.0f,  0.0f, 0.0f, 0.0f);
 		
+		if (appSettings.getAntiAliasing() > 0) 
+			GL11.glEnable(GL30.GL_MULTISAMPLE);
+		else
+			GL11.glDisable(GL30.GL_MULTISAMPLE);
+
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	public void update() {
+		//GL11.glFinish();
 		GLFW.glfwSwapBuffers(windowHandle);
+		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	
 	public void cleanUp() {

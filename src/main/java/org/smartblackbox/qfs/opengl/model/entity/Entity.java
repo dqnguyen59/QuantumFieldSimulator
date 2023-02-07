@@ -54,8 +54,6 @@ public class Entity {
 	protected boolean isVisible = true;
 	protected boolean isSelected = false;
 	protected boolean isHiLighted = false;
-	protected static boolean isSimulating;
-	
 	
 	public Entity(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
 		this.parent = parent;
@@ -230,7 +228,7 @@ public class Entity {
 		this.rotationRad = rotationRad;
 	}
 
-	protected void updateRotation() {
+	protected synchronized void updateRotation() {
 		rotationRad.x = (double) Math.toRadians(rotation.x);
 		rotationRad.y = (double) Math.toRadians(rotation.y);
 		rotationRad.z = (double) Math.toRadians(rotation.z);
@@ -301,14 +299,6 @@ public class Entity {
 		this.isHiLighted = isHiLighted;
 	}
 
-	public static boolean isSimulating() {
-		return isSimulating;
-	}
-
-	public static void setSimulating(boolean isSimulating) {
-		Entity.isSimulating = isSimulating;
-	}
-
 	/**
 	 * See {@link #getTransformMatrixf()}.
 	 */
@@ -328,15 +318,15 @@ public class Entity {
 		updatePosition();
 		updateRotation();
 		
-		getTransformMatrix()
+		transformMatrix
 		.identity()
 		.translate(position)
 		.setRotationXYZ(rotationRad.x, rotationRad.y, rotationRad.z)
 		.scale(scale);
 		
 		if (parent != null)
-			parent.getTransformMatrix().mul(getTransformMatrix(), getTransformMatrix());
-		transformMatrixf[swapBufIndex].set(getTransformMatrix());
+			parent.transformMatrix.mul(transformMatrix, transformMatrix);
+		transformMatrixf[swapBufIndex].set(transformMatrix);
 	}
 	
 	public Matrix4d getTransformMatrixd() {

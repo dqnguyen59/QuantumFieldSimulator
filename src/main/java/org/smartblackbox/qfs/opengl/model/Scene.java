@@ -41,7 +41,6 @@ public class Scene {
 	private AppSettings appSettings = AppSettings.getInstance();
 
 	private QFSProject qfsProject = QFSProject.getInstance();
-	private QFSModel qfsModel = qfsProject.getQfsModel();
 	private QFSSettings settings = qfsProject.settings;
 	private SlitWallSettings slitWall = qfsProject.slitWall;
 
@@ -449,71 +448,71 @@ public class Scene {
         return null;
 	}
 	
-	public void threadUpdateMatrix(Object[] nodes, int start, int end) {
+	public void threadUpdateMatrix(final int start, final int end) {
 		incTask();
-		status  = "threadUpdateMatrix(" + start + ", " + end + "); TaskNo.:" + numTask;
-		Thread thread = new Thread(new Runnable() {
+		status = "threadUpdateMatrix(" + start + ", " + end + "); TaskNo.:" + numTask;
+		new Thread(new Runnable() {
+
+			volatile int i = start;
 
 			@Override
 			public void run() {
-				for (int i = start; i < end; i++) {
-					((Entity) nodes[i]).updateMatrix();
+				while (i < end) {
+					((Entity) entityArray[i++]).updateMatrix();
 				}
 				taskCompleted();
 			}
-		});
-		thread.start();
+		}).start();
 	}
 
-	public void threadCalcPhysics(Object[] nodes, int start, int end) {
-		status  = "threadCalcPhysics(" + start + ", " + end + "); TaskNo.:" + numTask;
-		incTask();
-		Thread thread = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				for (int i = start; i < end; i++) {
-					QFSNode e = (QFSNode) nodes[i];
-					e.calcNewPosition();
-				}
-				taskCompleted();
-			}
-		});
-		thread.start();
-	}
-
-	public void processPhysicsTasks(int numThreads, int segmentSize) {
-		resetTasks();
-		QFSNode.setConstantWaveSpeed(qfsProject.getConstantWaveSpeed());
-		QFSNode.setConstantRadiation(qfsProject.getConstantRadiation());
-		QFSNode.setSimulating(qfsModel.isSimulating());
-		for (int i = 0; i < numThreads; i++) {
-			int start = i * segmentSize;
-			int end = start + segmentSize;
-			end = end >= nodeArray.length? nodeArray.length : end;
-			threadCalcPhysics(nodeArray, start, end);
-		}
-	}
-	
 	public void processMatrixUpdateTasks(int numThreads, int segmentSize) {
 		resetTasks();
+		
 		for (int i = 0; i < numThreads; i++) {
 			int start = i * segmentSize;
 			int end = start + segmentSize;
 			end = end >= entityArray.length? entityArray.length : end;
-			threadUpdateMatrix(entityArray, start, end);
+			threadUpdateMatrix(start, end);
 		}
 	}
 
+	public void threadCalcPhysics(final int start, final int end) {
+		incTask();
+		status = "threadCalcPhysics(" + start + ", " + end + "); TaskNo.:" + numTask;
+		new Thread(new Runnable() {
+
+			volatile int i = start;
+			
+			@Override
+			public void run() {
+				while (i < end) {
+					((QFSNode) nodeArray[i++]).calcNewPosition();
+				}
+				taskCompleted();
+			}
+		}).start();
+	}
+
+	public void processPhysicsTasks(int numThreads, int segmentSize) {
+		resetTasks();
+		
+		for (int i = 0; i < numThreads; i++) {
+			int start = i * segmentSize;
+			int end = start + segmentSize;
+			end = end >= nodeArray.length? nodeArray.length : end;
+			threadCalcPhysics(start, end);
+		}
+	}
+	
 	public int getNumTask() {
 		return numTask;
 	}
 
-	public void setNumTask(int numTask) {
+	public synchronized void setNumTask(int numTask) {
 		this.numTask = numTask;
 	}
 
-	public void resetTasks() {
+	public synchronized void resetTasks() {
 		numTask = 0;
 	}
 
@@ -568,7 +567,6 @@ public class Scene {
 				animateDirection = -1;
 			}
 			
-			//System.out.println(getQfsFields().getBaseField().getRotation().z);
 			getQfsFields().getBaseField().incRotation(0.0f, 0.0f, 0.5 * animateDirection);
 		}
 	}

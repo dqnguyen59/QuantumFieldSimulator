@@ -24,6 +24,7 @@ import org.joml.Vector4f;
 import org.smartblackbox.qfs.opengl.model.Material;
 import org.smartblackbox.qfs.opengl.model.ObjFileModel;
 import org.smartblackbox.qfs.opengl.model.QFSModel;
+import org.smartblackbox.qfs.opengl.model.Scene;
 import org.smartblackbox.qfs.opengl.utils.Neighbor;
 import org.smartblackbox.qfs.settings.QFSProject;
 
@@ -31,6 +32,7 @@ public class QFSNode extends Entity {
 	
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSModel qfsModel = qfsProject.getQfsModel();
+	private Scene scene = qfsProject.scene;
 	
 	/*
 	 * 0: neighbors right
@@ -52,8 +54,6 @@ public class QFSNode extends Entity {
 	private Vector3i index = new Vector3i(-1);
 	private double customScale = -1;
 	private Vector4f customColor;
-	private static double constantWaveSpeed = 1.0;
-	private static double constantRadiation = 1.0;
 
 	public QFSNode(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
 		super(parent, model, position, rotation, scale);
@@ -202,7 +202,7 @@ public class QFSNode extends Entity {
 			color.w = customColor.w * 2.0f;
 			alpha = 1.0f;
 		}
-		else if (isSelected) {
+		else if (isSelected && !scene.isAnimated()) {
 			color.x = settings.selectedColor.x * 2.0f;
 			color.y = settings.selectedColor.y * 2.0f;
 			color.z = settings.selectedColor.z * 2.0f;
@@ -288,22 +288,6 @@ public class QFSNode extends Entity {
 		customColor = null;
 	}
 
-	public static double getConstantWaveSpeed() {
-		return constantWaveSpeed;
-	}
-
-	public static void setConstantWaveSpeed(double constantWaveSpeed) {
-		QFSNode.constantWaveSpeed = constantWaveSpeed / 6.0;
-	}
-
-	public static double getConstantRadiation() {
-		return constantRadiation;
-	}
-
-	public static void setConstantRadiation(double constantRadiation) {
-		QFSNode.constantRadiation = constantRadiation;
-	}
-
 	/**
 	 * Note that this is not the full quantum field formula, only the electric field is simulated.<br/>
 	 * <br/>
@@ -357,14 +341,14 @@ public class QFSNode extends Entity {
 
 		acceleration.set(0);
 		// If set to false then the node stops updating its position
-		if (isSimulating) {
+		if (qfsModel.isSimulating()) {
 			for (QFSNode neighbor : neighbors) {
 				acceleration.add(neighbor.position).sub(position);
 			}
 
 			// Note that the result of the addition or multiplication is stored in the object variable itself.
 			// Fortunately, the formula fits pretty well on one line.
-			positionBuff.add(velocity.add(acceleration.mul(constantWaveSpeed)).mul(constantRadiation)).add(acceleration.mul(0.5));
+			positionBuff.add(velocity.add(acceleration.mul(qfsProject.getConstantWaveSpeed() / 6.0)).mul(qfsProject.getConstantRadiation())).add(acceleration.mul(0.5));
 		}
 
 		setAccelerationColor(acceleration);

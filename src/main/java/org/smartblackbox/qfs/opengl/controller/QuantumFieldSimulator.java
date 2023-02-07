@@ -636,7 +636,6 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				break;
 			case GLFW.GLFW_KEY_F4:
 				scene.toggleAnimation();
-				isAnimating = scene.isAnimated();
 				break;
 			case GLFW.GLFW_KEY_F5:
 				scene.updateWalls();
@@ -789,14 +788,6 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 			@Override
 			public void run() {
-				// Sleep shortly, to make sure renderFrame() is started before calculating next frame.
-				// This will prevents render flickering.
-				while (isRenderingReady) {
-					Utils.sleepMS(1);
-				}
-				// Not sure why, but some nodes weren't rendered. Wait at least for 8 ms to fix it.
-				Utils.sleepMS(8);
-
 				PerformanceMonitor.start(Measurement.totalCPURenderTime);
 				scene.resetTasks();
 
@@ -828,6 +819,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				PerformanceMonitor.stop(Measurement.updateMatrix);
 
 				PerformanceMonitor.stop(Measurement.totalCPURenderTime);
+				
 				isCalcNextPhysicsReady = true;
 			}
 
@@ -900,8 +892,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	public void startMonitoringDeadThreads() {
 		new Thread(new Runnable() {
 
-			private int lastNumTask;
-			private int lastNumTask2;
+			private int lastNumTask = -1;
+			private int lastNumTask2 = -1;
 
 			@Override
 			public void run() {
@@ -911,7 +903,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					} catch (InterruptedException e) {
 					}
 
-					if (System.currentTimeMillis() - currentTime > 1000) {
+					if (System.currentTimeMillis() - currentTime > 2000) {
 						//if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
 						if (scene.getNumTask() == lastNumTask2) {
 							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found! This should never happens!");
@@ -938,7 +930,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	}
 
 	@Override
-	public void render() {
+	public void render(boolean isAnimated) {
 		if (Screenshot.isTakingScreenShot()) {
 			Screenshot.updateScreenshotViewport();
 		}
@@ -957,13 +949,12 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		else {
 			waitForRenderingReady();
 			resetMonitoringDeadThreads();
-			// In the mean time, start the calculation of the next frame while rendering.
+			// Meanwhile, start calculating the next frame while rendering.
 			calcNextPhysicsFrame();
 		}
 		
 		PerformanceMonitor.start(Measurement.sendToGPU);
 		isRenderingReady = false;
-		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
 		if (qfsProject.terrain.isVisible())
 			renderer.processTerrain(qfsProject.terrain);
 		renderer.render(qfsProject.camera, scene);
@@ -972,7 +963,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		
 		scene.runAnimation();
 		
-		super.render();
+		super.render(scene.isAnimated());
 
 		if (Screenshot.isTakingScreenShot()) {
 			Screenshot.takeScreenShot();

@@ -65,7 +65,6 @@ public abstract class Engine {
 	private boolean isMenuActive;
 	private long handle;
 	private int renderCounter;
-	protected boolean isAnimating = false;
 	
 	public Engine(GLWindow glWindow) {
 		this.glWindow = glWindow;
@@ -328,7 +327,7 @@ public abstract class Engine {
 		GL11.glCullFace(GL11.GL_BACK);
 	}
 	
-	protected void render() {
+	protected void render(boolean isAnimated) {
 		PerformanceMonitor.start(Measurement.gui2D);
 
 		menuMouseActions();
@@ -337,7 +336,7 @@ public abstract class Engine {
 
 		checkFrameFocus();
 
-		if (!isAnimating && !Screenshot.isTakingScreenShot()) {
+		if (!isAnimated && !Screenshot.isTakingScreenShot()) {
 			nuklearView.render();
 		}
 		
@@ -378,7 +377,7 @@ public abstract class Engine {
 			
 			PerformanceMonitor.start(Measurement.totalRenderTime);
 			preRender();
-			render();
+			render(false);
 			PerformanceMonitor.frames++;
 			processInput();
 			PerformanceMonitor.stop(Measurement.totalRenderTime);
@@ -398,12 +397,4 @@ public abstract class Engine {
 		GLFW.glfwTerminate();
 	}
 
-	public boolean isAnimating() {
-		return isAnimating;
-	}
-
-	public void setAnimating(boolean isAnimating) {
-		this.isAnimating = isAnimating;
-	}
-	
 }

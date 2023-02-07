@@ -41,8 +41,7 @@ public class Renderer {
 		nodeRenderer.init();
 	}
 	
-	public synchronized void render(Camera camera, Scene scene) {
-		clear();
+	public void render(Camera camera, Scene scene) {
 		terrainRenderer.render(camera, scene);
 		nodeRenderer.render(camera, scene);
 	}
@@ -62,10 +61,6 @@ public class Renderer {
 	
 	public void processTerrain(Terrain terrain) {
 		terrainRenderer.getTerrains().add(terrain);
-	}
-	
-	public void clear() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	
 	public void cleanup() {

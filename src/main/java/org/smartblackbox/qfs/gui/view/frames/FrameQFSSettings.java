@@ -31,7 +31,7 @@ import org.smartblackbox.qfs.settings.QFSSettings.SliceType;
 public class FrameQFSSettings extends AbstractFrame {
 
 	private int width = 300;
-	private int height = 726;
+	private int height = 670;
 	private int heightAdjust = 0;
 	private float leftCol = 0.6f;
 	private float rightCol = 0.4f;
@@ -52,7 +52,6 @@ public class FrameQFSSettings extends AbstractFrame {
 	private StringBuffer bufIntensityAll = new StringBuffer();
 	private StringBuffer bufShininess = new StringBuffer();
 	private StringBuffer bufConstantFrequency = new StringBuffer();
-	private StringBuffer bufSwapInterval = new StringBuffer();
 
 	public FrameQFSSettings(NuklearModel frames) {
 		super(frames);
@@ -69,7 +68,7 @@ public class FrameQFSSettings extends AbstractFrame {
 		
 		switch (settings.getSliceType()) {
 		case none:
-			heightAdjust = -80;
+			heightAdjust = -60;
 			break;
 		case sliceXZ:
 		case sliceYZ:
@@ -185,9 +184,6 @@ public class FrameQFSSettings extends AbstractFrame {
 			nk_spacer(ctx, spacer1, 1);
 
 			qfsProject.setConstantRadiation(nk_label_edit(ctx, stack, " Constant Radiation:", bufRadiation, qfsProject.getConstantRadiation(), appSettings.getFormatScientific8(), leftCol, rightCol));
-			nk_spacer(ctx, spacer1, 1);
-			
-			qfsProject.setGlSwapInterval(nk_label_edit(ctx, stack, " GLSwap Interval:", bufSwapInterval, qfsProject.getGlSwapInterval(), leftCol, rightCol));
 			nk_spacer(ctx, spacer1, 1);
 			
 			Nuklear.nk_layout_row_end(ctx);
