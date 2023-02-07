@@ -92,7 +92,7 @@ public class FrameMenu extends AbstractFrame {
 		}
 		
 		if (dialogModel != null) {
-			String path = appSettings.getProjectFilePath() + Constants.SEPARATOR;
+			String path = Constants.BASE_PATH + appSettings.getProjectFilePath() + Constants.SEPARATOR;
 			
 			switch(dialogModel.getConfirmState()) {
 			case open:

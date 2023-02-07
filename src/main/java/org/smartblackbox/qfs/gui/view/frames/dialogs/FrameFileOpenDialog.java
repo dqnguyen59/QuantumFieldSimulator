@@ -22,9 +22,9 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.lwjgl.system.MemoryStack;
 import org.smartblackbox.qfs.Constants;
+import org.smartblackbox.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.qfs.gui.model.DialogFileModel;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
-import org.smartblackbox.qfs.gui.model.AbstractDialogModel.ConfirmState;
 
 public class FrameFileOpenDialog extends FrameDialog {
 
@@ -55,7 +55,7 @@ public class FrameFileOpenDialog extends FrameDialog {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			
 			Nuklear.nk_layout_row_dynamic(ctx, 250, 1);
-			boolean isOpenFilePerformed = nk_file_list_view(ctx, appSettings.getProjectFilePath(), Constants.PROJECT_FILE_EXT, dlgFileModel);
+			boolean isOpenFilePerformed = nk_file_list_view(ctx, Constants.BASE_PATH + appSettings.getProjectFilePath(), Constants.PROJECT_FILE_EXT, dlgFileModel);
 
 			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
     		Nuklear.nk_label(ctx, " File: " + dlgFileModel.getSelectedFileName(), Nuklear.NK_TEXT_LEFT);

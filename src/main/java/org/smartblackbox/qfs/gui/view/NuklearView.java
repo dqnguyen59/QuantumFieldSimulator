@@ -59,6 +59,7 @@ import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.Platform;
+import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
 import org.smartblackbox.qfs.gui.model.Theme;
 import org.smartblackbox.qfs.settings.AppSettings;
@@ -117,6 +118,7 @@ public class NuklearView {
 			ttf = Utils.resourceToByteBuffer(appSettings.getFontFile());
 			ttfItalic = Utils.resourceToByteBuffer(appSettings.getFontFileItalic());
 			ttfBold = Utils.resourceToByteBuffer(appSettings.getFontFileBold());
+			Utils.deleteAllTmpFiles(Constants.BASE_PATH + "tmp");
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException(e);
 		}

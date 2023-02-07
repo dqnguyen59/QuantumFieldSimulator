@@ -88,37 +88,36 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	@Override
 	public void loadFromFile(Wini ini, String section, int index) {
 		super.loadFromFile(ini, section, index);
-		String s;
 		
-		numThreads = ((s = get("System", "numThreads")) == null? MAX_NUM_THREADS : Integer.parseInt(s));
+		numThreads = getInt("System", "numThreads", MAX_NUM_THREADS);
 		if (numThreads >= MAX_NUM_THREADS) numThreads = MAX_NUM_THREADS;
 
-		setProjectFilePath((s = get("System", "projectFilePath")) == null? Constants.PROJECT_FILE_PATH : s);
-		setFontFile((s = get("System", "fontFile")) == null? Constants.DEFAULT_FONT_FILE : s);
-		setFontFileBold((s = get("System", "fontFileBold")) == null? Constants.DEFAULT_FONT_FILE_BOLD : s);
-		setFontFileItalic((s = get("System", "fontFileItalic")) == null? Constants.DEFAULT_FONT_FILE_ITALIC : s);
-		setFontSize((s = get("System", "fontSize")) == null? Constants.DEFAULT_FONT_SIZE : Integer.parseInt(s));
-		setWindowLeft((s = get("Window", "left")) == null? -9999 : Integer.parseInt(s));
-		setWindowTop((s = get("Window", "top")) == null? -9999 : Integer.parseInt(s));
-		setWindowWidth((s = get("Window", "width")) == null? 860 : Integer.parseInt(s));
-		setWindowHeight((s = get("Window", "height")) == null? 640 : Integer.parseInt(s));
-		setMaximized((s = get("Window", "maximized")) == null? 0 : Integer.parseInt(s));
+		setProjectFilePath(getString("System", "projectFilePath", Constants.PROJECT_FILE_PATH));
+		setFontFile(getString("System", "fontFile", Constants.DEFAULT_FONT_FILE));
+		setFontFileBold(getString("System", "fontFileBold", Constants.DEFAULT_FONT_FILE_BOLD));
+		setFontFileItalic(getString("System", "fontFileItalic", Constants.DEFAULT_FONT_FILE_ITALIC));
+		setFontSize(getInt("System", "fontSize", Constants.DEFAULT_FONT_SIZE));
+		setWindowLeft(getInt("Window", "left", -9999));
+		setWindowTop(getInt("Window", "top", -9999));
+		setWindowWidth(getInt("Window", "width", 860));
+		setWindowHeight(getInt("Window", "height", 640));
+		setMaximized(getInt("Window", "maximized", 0));
 	}
 
 	@Override
 	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
-		ini.put("System", "numThreads", numThreads);
-		ini.put("System", "projectFilePath", projectFilePath);
-		ini.put("System", "fontFile", fontFile);
-		ini.put("System", "fontFileBold", fontFileBold);
-		ini.put("System", "fontFileItalic", fontFileItalic);
-		ini.put("System", "fontSize", fontSize);
-		ini.put("Window", "left", windowLeft);
-		ini.put("Window", "top", windowTop);
-		ini.put("Window", "width", windowWidth);
-		ini.put("Window", "height", windowHeight);
-		ini.put("Window", "maximized", maximized);
+		put("System", "numThreads", numThreads);
+		put("System", "projectFilePath", projectFilePath);
+		put("System", "fontFile", fontFile);
+		put("System", "fontFileBold", fontFileBold);
+		put("System", "fontFileItalic", fontFileItalic);
+		put("System", "fontSize", fontSize);
+		put("Window", "left", windowLeft);
+		put("Window", "top", windowTop);
+		put("Window", "width", windowWidth);
+		put("Window", "height", windowHeight);
+		put("Window", "maximized", maximized);
 	}
 	
 	public int getNumThreads() {

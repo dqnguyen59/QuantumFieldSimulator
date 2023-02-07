@@ -171,8 +171,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				loader,
 				new Material());
 		qfsProject.terrain.setTerrainTexturePath(Constants.TEXTURE_FILE_PATH);
-		qfsProject.terrain.setTerrainTextureFile("default2.jpg");
-		Texture texture = new Texture(loader.loadTexture(qfsProject.terrain.getTerrainTextureFilePath()));
+		qfsProject.terrain.setTerrainTextureFile(Constants.TEXTURE_DEFAULT_FILE);
+		Texture texture = new Texture(loader.loadTexture(Constants.BASE_PATH + qfsProject.terrain.getTerrainTextureFilePath()));
 		qfsProject.terrain.getMaterial().setTexture(texture);
 		scene.addTerrain(qfsProject.terrain);
 	}
@@ -723,7 +723,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			setCustomTitle(qfsProject.getCurrentFilename());
 			nuklearModel.showFrame(Frame.progress);
 			try {
-				qfsProject.terrain.getMaterial().setTexture(new Texture(loader.loadTexture(qfsProject.terrain.getTerrainTextureFilePath())));
+				qfsProject.terrain.getMaterial().setTexture(new Texture(loader.loadTexture(Constants.BASE_PATH + qfsProject.terrain.getTerrainTextureFilePath())));
 			} catch (Exception e) {
 				String message = String.format("Texture file '%s' not found!", qfsProject.terrain.getTerrainTextureFilePath());
 				nuklearModel.showErrorDialog("Loading terrain texture", message);

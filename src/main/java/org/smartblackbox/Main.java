@@ -48,9 +48,9 @@ public class Main {
 
 		Utils.forceJarCurrentDirectory();
 		
-		Utils.deleteAllTmpFiles("tmp");
+		Utils.deleteAllTmpFiles(Constants.BASE_PATH + "tmp");
 		
-		AppSettings.getInstance().loadFromFile(Constants.APP_SETTINGS_FILE);
+		AppSettings.getInstance().loadFromFile(Constants.BASE_PATH + Constants.APP_SETTINGS_FILE);
 		
 		glWindow = new GLWindow(Constants.TITLE);
 		Engine engine = new QuantumFieldSimulator(glWindow);

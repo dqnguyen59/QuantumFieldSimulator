@@ -169,7 +169,7 @@ public class Terrain extends AbstractSettings {
 		super.loadFromFile(ini, section, index);
 		
 		terrainTexturePath = getString(section, "texturePath", Constants.TEXTURE_FILE_PATH);
-		terrainTextureFile = getString(section, "textureFile", "default2.jpg");
+		terrainTextureFile = getString(section, "textureFile", Constants.TEXTURE_DEFAULT_FILE);
 		isVisible = getBool(section, "visible", false);
 		scale = getFloat(section, "scale", 1);
 		depthVisibility = getFloat(section, "depthVisibility", 1);

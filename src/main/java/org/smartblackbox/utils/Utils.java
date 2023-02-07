@@ -145,7 +145,7 @@ public class Utils {
 			String[] list = f.list();
 			for (String filename : list) {
 				if (filename.endsWith(filter))
-					files.add(new File(filename));
+					files.add(new File(path + File.separatorChar + filename));
 			}
 		}
 		
