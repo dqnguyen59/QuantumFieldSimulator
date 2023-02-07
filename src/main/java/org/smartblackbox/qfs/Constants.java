@@ -23,7 +23,6 @@ import java.io.File;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.nuklear.NkColor;
-import org.smartblackbox.utils.Utils;
 
 public class Constants {
 
@@ -55,13 +54,15 @@ public class Constants {
 	public static final String TITLE = "Quantum Field Simulator";
 
 	public static final String JAR_RESOURCES_PATH = "resources" + File.separator;
-	public static final String BASE_PATH = Utils.getCurrentPath() + File.separator;
+	//public static final String BASE_PATH = Utils.getCurrentPath() + File.separator;
 
-	public static final String APP_SETTINGS_FILE = BASE_PATH + "qfs.ini";
+	//public static final String APP_SETTINGS_FILE = BASE_PATH + "qfs.ini";
+	public static final String APP_SETTINGS_FILE = "qfs.ini";
 
 	public static final String PROJECT_FILE_EXT = ".qfs";
-	public static final String PROJECT_FILE_PATH = BASE_PATH + "samples";
-	public static final String TEXTURE_FILE_PATH = BASE_PATH + JAR_RESOURCES_PATH + "textures/terrains/";
+	//public static final String PROJECT_FILE_PATH = BASE_PATH + "samples";
+	public static final String PROJECT_FILE_PATH = "samples";
+	public static final String TEXTURE_FILE_PATH = JAR_RESOURCES_PATH + "textures/terrains/";
 
 	public static final String DEFAULT_FONT_FILE = "fonts/fira-sans/FiraSans-Medium.ttf";
 	public static final String DEFAULT_FONT_FILE_BOLD = "fonts/fira-sans/FiraSans-ExtraBold.ttf";
