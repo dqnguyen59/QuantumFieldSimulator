@@ -99,7 +99,7 @@ rotation.z = -24.199999943375587
 
 [Terrain]
 visible = false
-texturePath = /home/dqnguyen/QuantumFieldSimulator/resources/textures/terrains/
+texturePath = resources/textures/terrains/
 textureFile = default2.jpg
 scale = 1.0
 depthVisibility = 1.0
