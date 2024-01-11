@@ -22,9 +22,9 @@ Go to website <a href="https://www.smartblackbox.org/">https://www.smartblackbox
 
 ### Compilation
 * IDE: Eclipse
-* Compiler: Java 11
+* Compiler: Java 17
 
-<p>Make sure you have Java 11 installed. JDK 11 or later is recommended.</p>
+<p>Make sure you have Java 17 installed. JDK 17 or later is recommended.</p>
 <p>Download the project to any folder. Then from the File menu in Eclipse click on "open Projects from File System..." and import the downloaded project folder.</p>
 <p>Then click on the menu "Project"->"Update Maven Project", then click on the "Ok" button. </p>
 <p>Find the file Main.java and run.</p>
