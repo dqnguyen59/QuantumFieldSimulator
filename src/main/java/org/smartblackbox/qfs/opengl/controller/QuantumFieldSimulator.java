@@ -893,35 +893,37 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	 * This should never occur and should not be needed.
 	 */
 	public void startMonitoringDeadThreads() {
-		new Thread(new Runnable() {
-
-			private int lastNumTask = -1;
-			private int lastNumTask2 = -1;
-
-			@Override
-			public void run() {
-				while (glWindow.getWindowHandle() != 0) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-					}
-
-					if (System.currentTimeMillis() - currentTime > 2000) {
-						//if (scene.getNumTask() != 0 && scene.getNumTask() == lastNumTask2) {
-						if (scene.getNumTask() == lastNumTask2) {
-							System.out.println("numTask: " + scene.getNumTask() + " == lastNumTask: " + lastNumTask2 + " - dead threads found! This should never happens!");
-							System.out.println("Status: " + scene.status);
-							scene.taskCompleted();
-							isCalcNextPhysicsReady = true;
-							isRenderingReady = false;
-						}
-						resetMonitoringDeadThreads();
-						lastNumTask = scene.getNumTask();
-						lastNumTask2 = lastNumTask;
-					}
-				}
-			}
-		}).start();
+//		new Thread(new Runnable() {
+//
+//			private int lastNumTask = -1;
+//			private int lastNumTask2 = -1;
+//
+//			@Override
+//			public void run() {
+//				while (glWindow.getWindowHandle() != 0) {
+//					try {
+//						Thread.sleep(100);
+//					} catch (InterruptedException e) {
+//					}
+//
+//					if (System.currentTimeMillis() - currentTime > 10000) {
+//						if (scene.getNumTask() == lastNumTask2) {
+//							System.out.println(
+//								"numTask: " + scene.getNumTask() +
+//								" == lastNumTask: " + lastNumTask2 + 
+//								" - dead threads found! This should never happens!");
+//							System.out.println("Status: " + scene.status);
+//							scene.taskCompleted();
+//							isCalcNextPhysicsReady = true;
+//							isRenderingReady = false;
+//						}
+//						resetMonitoringDeadThreads();
+//						lastNumTask = scene.getNumTask();
+//						lastNumTask2 = lastNumTask;
+//					}
+//				}
+//			}
+//		}).start();
 	}
 
 	@Override
