@@ -61,7 +61,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	private double constantWaveSpeed = 1;
 	private double constantRadiation = 1.0;
 
-	private int glSwapInterval = 0;
+	// Do set the glSwapInterval below 1! It will cause instability of the application and freeze.
+	private int glSwapInterval = 1;
 
 	private QFSModel qfsModel = new QFSModel();
 	public Camera camera = new Camera();
@@ -129,7 +130,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		
 		setConstantFrequency(getDouble("QuantumField", "constantFrequency", 1.0));
 		setConstantRadiation(getDouble("QuantumField", "constantRadiation", 1.0));
-		setGlSwapInterval(getInt("QuantumField", "glSwapInterval", 2));
+		setGlSwapInterval(getInt("QuantumField", "glSwapInterval", 1));
 		int x = getInt("QuantumField", "dimension.x", 15);
 		int y = getInt("QuantumField", "dimension.y", 15);
 		int z = getInt("QuantumField", "dimension.z", 15);
@@ -467,7 +468,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	public void setGlSwapInterval(int glSwapInterval) {
-		this.glSwapInterval = glSwapInterval;
+		if (glSwapInterval < 1) this.glSwapInterval = 1;
+		else this.glSwapInterval = glSwapInterval;
 	}
 
 	public Light createLight(Entity parent, ObjFileModel modelLightBulb, ObjFileModel modelSpotLight, Vector3d position, Vector3d rotation, double scale) {

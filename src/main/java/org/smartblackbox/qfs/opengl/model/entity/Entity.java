@@ -42,6 +42,7 @@ public class Entity {
 	// After all has been nodes has been calculated, then copy the positionBuff to position.
 	protected Vector3d position = new Vector3d();
 	protected Vector3d positionBuff = new Vector3d();
+	// swapBufIndex can only be 0 or 1
 	protected static int swapBufIndex = 0;
 
 	protected Vector3d direction = new Vector3d(0, 0, 1);
@@ -49,7 +50,7 @@ public class Entity {
 	protected Vector3d rotationRad = new Vector3d();
 	protected double scale;
 	private Matrix4d transformMatrix = new Matrix4d();
-	protected Matrix4f[] transformMatrixf = new Matrix4f[2];
+	protected Matrix4f[] transformMatrixfList = new Matrix4f[2];
 
 	protected boolean isVisible = true;
 	protected boolean isSelected = false;
@@ -62,8 +63,8 @@ public class Entity {
 		this.positionBuff = new Vector3d(position);
 		this.rotation = new Vector3d(rotation);
 		this.scale = scale;
-		transformMatrixf[0] = new Matrix4f();
-		transformMatrixf[1] = new Matrix4f();
+		transformMatrixfList[0] = new Matrix4f();
+		transformMatrixfList[1] = new Matrix4f();
 		
 		if (model != null)
 			material = new Material(model.getMaterial());
@@ -326,7 +327,7 @@ public class Entity {
 		
 		if (parent != null)
 			parent.transformMatrix.mul(transformMatrix, transformMatrix);
-		transformMatrixf[swapBufIndex].set(transformMatrix);
+		transformMatrixfList[swapBufIndex].set(transformMatrix);
 	}
 	
 	public Matrix4d getTransformMatrixd() {
@@ -344,7 +345,7 @@ public class Entity {
 	 * @return the processed matrix buffer
 	 */
 	public Matrix4f getTransformMatrixf() {
-		return transformMatrixf[1 - swapBufIndex];
+		return transformMatrixfList[1 - swapBufIndex];
 	}
 
 	public Matrix4d getTransformMatrix() {

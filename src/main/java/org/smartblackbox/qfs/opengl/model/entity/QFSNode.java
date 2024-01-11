@@ -181,7 +181,7 @@ public class QFSNode extends Entity {
 
 		if (parent != null)
 			parent.getTransformMatrix().mul(getTransformMatrix(), getTransformMatrix());
-		transformMatrixf[swapBufIndex].set(getTransformMatrix());
+		transformMatrixfList[swapBufIndex].set(getTransformMatrix());
 		customScale = -1;
 	}
 
@@ -277,7 +277,7 @@ public class QFSNode extends Entity {
 				alphaIntensity = color.w;
 				break;
 			}
-			alpha = (float) (alphaIntensity * (m.getDiffuseColor().length()));// * 0.1);
+			alpha = (float) (alphaIntensity * (m.getDiffuseColor().length()));
 		}
 		
 		m.setAmbientColor(color);
@@ -331,7 +331,6 @@ public class QFSNode extends Entity {
 	 * If k is greater than 1, the affected nodes become unstable and eventually fly away.<br/>
 	 * <br/>
 	 * 
-	 * @param isSimulating If set to false then the node stops updating its position
 	 */
 	public void calcNewPosition() {
 		if (!hasNeightbors || isFixed) {

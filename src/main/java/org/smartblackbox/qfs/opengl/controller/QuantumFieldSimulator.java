@@ -889,6 +889,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		currentTime = System.currentTimeMillis();
 	}
 	
+	/**
+	 * This should never occur and should not be needed.
+	 */
 	public void startMonitoringDeadThreads() {
 		new Thread(new Runnable() {
 

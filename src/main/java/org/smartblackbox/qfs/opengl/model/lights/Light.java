@@ -68,7 +68,7 @@ public class Light extends Entity {
 		
 		if (parent != null)
 			parent.getTransformMatrix().mul(getTransformMatrix(), getTransformMatrix());
-		transformMatrixf[swapBufIndex].set(getTransformMatrix());
+		transformMatrixfList[swapBufIndex].set(getTransformMatrix());
 		
 		if (spotLightHolder != null)
 			spotLightHolder.updateMatrix();
