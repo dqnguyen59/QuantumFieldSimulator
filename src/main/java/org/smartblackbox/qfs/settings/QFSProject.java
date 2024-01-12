@@ -61,7 +61,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	private double constantWaveSpeed = 1;
 	private double constantRadiation = 1.0;
 
-	// Do set the glSwapInterval below 1! It will cause instability of the application and freeze.
+	// Don't set the glSwapInterval below 1! It will cause instability of the application and freeze.
 	private int glSwapInterval = 1;
 
 	private QFSModel qfsModel = new QFSModel();
