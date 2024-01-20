@@ -57,9 +57,9 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	 */
 	private Vector3i dimension = new Vector3i();
 	
-	private double constantFrequency = 0.99;
-	private double constantWaveSpeed = 1;
-	private double constantRadiation = 1.0;
+	private double constantFrequency = 0.60;
+	private double constantWaveSpeed = 1.00;
+	private double constantRadiation = 1.00;
 
 	// Don't set the glSwapInterval below 1! It will cause instability of the application and freeze.
 	private int glSwapInterval = 1;
@@ -134,7 +134,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		int x = getInt("QuantumField", "dimension.x", 15);
 		int y = getInt("QuantumField", "dimension.y", 15);
 		int z = getInt("QuantumField", "dimension.z", 15);
-		setDimension(x, y, z);
+		setDimension(x, y, z, false);
 
 		camera.setFieldOfFiew(getFloat("Camera", "fieldOfFiew", 45));
 		camera.getPosition().x = getFloat("Camera", "position.x", 0);
@@ -165,16 +165,6 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		rainModel.loadFromFile(ini, "Rain", index);
 		detectorModel.loadFromFile(ini, "Detector", index);
 		
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (qfsModel.isLoadingReady()) {
-					loadWalls(ini);
-				}
-			}
-		}).start();
-		
 		if (oscillators.size() > 0)
 			qfsModel.selectedOscillator = oscillators.get(0);
 		
@@ -193,8 +183,27 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		qfsModel.getCurrentMouseNodeIndex().x = dimension.x / 2;
 		qfsModel.getCurrentMouseNodeIndex().y = dimension.y / 2;
 		qfsModel.getCurrentMouseNodeIndex().z = dimension.z / 2;
-	
+
 		reset();
+		qfsModel.setLoadingReady(false);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while (!qfsModel.isLoadingReady()) {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+					}
+				}
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+				loadWalls(ini);
+			}
+		}).start();
+		
 	}
 
 	@Override
@@ -262,6 +271,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 				scene.getWallNodeIndexList().add(nodeIndex);
 			}
 		}
+		scene.updateWalls();
 	}
 
 	private void saveWalls(Wini ini) {
@@ -438,6 +448,13 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		dimension.y = y;
 		dimension.z = z;
 		reset();
+	}
+
+	public void setDimension(int x, int y, int z, boolean reset) {
+		dimension.x = x;
+		dimension.y = y;
+		dimension.z = z;
+		if (reset) reset();
 	}
 
 	public double getConstantFrequency() {
