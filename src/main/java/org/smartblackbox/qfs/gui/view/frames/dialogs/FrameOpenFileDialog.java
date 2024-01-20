@@ -26,14 +26,14 @@ import org.smartblackbox.qfs.gui.model.AbstractDialogModel.ConfirmState;
 import org.smartblackbox.qfs.gui.model.DialogFileModel;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
 
-public class FrameFileOpenDialog extends FrameDialog {
+public class FrameOpenFileDialog extends FrameDialog {
 
 	private int width = 400;
 	private int height = 370;
 
 	private DialogFileModel dlgFileModel;
 
-	public FrameFileOpenDialog(NuklearModel frames) {
+	public FrameOpenFileDialog(NuklearModel frames) {
 		super(frames);
 		dlgFileModel = (DialogFileModel) getDialogModel();
 	}

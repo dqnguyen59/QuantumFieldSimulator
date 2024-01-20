@@ -730,7 +730,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			scene.getEntities().clear();
 			isLoadingStarted = true;
 			qfsModel.setLoadingReady(false);
-			// Build the Quantum Fields or the Ether.
+			// Build the Quantum Fields.
 			scene.getQfsFields().build();
 			waitAfterReset = 0;
 		}

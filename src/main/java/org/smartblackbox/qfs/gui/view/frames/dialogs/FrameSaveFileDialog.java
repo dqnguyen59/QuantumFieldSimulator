@@ -28,7 +28,7 @@ import org.smartblackbox.qfs.gui.model.DialogFileModel;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
 import org.smartblackbox.utils.Utils;
 
-public class FrameFileSaveDialog extends FrameDialog {
+public class FrameSaveFileDialog extends FrameDialog {
 
 	private int width = 400;
 	private int height = 370;
@@ -39,7 +39,7 @@ public class FrameFileSaveDialog extends FrameDialog {
 	private DialogDefaultModel confirmDialog;
 	private StringBuffer bufFileName = new StringBuffer();
 
-	public FrameFileSaveDialog(NuklearModel frames) {
+	public FrameSaveFileDialog(NuklearModel frames) {
 		super(frames);
 		dlgFileModel = (DialogFileModel) getDialogModel();
 	}
