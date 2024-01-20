@@ -26,10 +26,12 @@ import org.smartblackbox.qfs.opengl.model.entity.Entity;
 import org.smartblackbox.qfs.opengl.model.entity.QFSNode;
 import org.smartblackbox.qfs.opengl.utils.Neighbor;
 import org.smartblackbox.qfs.opengl.utils.OBJFormatLoader;
+import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 
 public class QFSFields {
 
+	private AppSettings appSettings = AppSettings.getInstance();
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSModel qfsModel = qfsProject.getQfsModel(); 
 	private Scene scene; 
@@ -86,6 +88,7 @@ public class QFSFields {
 		int sizeI = dimension.x;
 		int sizeJ = dimension.y;
 		int sizeK = dimension.z;
+
 		Statistics.numNodes = sizeI * sizeJ * sizeK;
 		Statistics.numNodesX = sizeI;
 		Statistics.numNodesY = sizeJ;
@@ -101,7 +104,7 @@ public class QFSFields {
 		float step = Constants.EP_DEFAULT_DISTANCE;
 		
 		// Draw xyz arrows on entity baseField.
-		drawArrows(baseField, step, modelSphere, sizeI, sizeJ, sizeK);
+		//drawArrows(baseField, step, modelSphere, sizeI, sizeJ, sizeK);
 		
 		QFSNode[][][] fieldMatrix = new QFSNode[sizeK][sizeJ][sizeI];
 
@@ -122,16 +125,20 @@ public class QFSFields {
 									new Vector3d((i - sizeI / 2) * step, (j - sizeJ / 2) * step, (k - sizeK / 2) * step),
 									new Vector3d(0, 0, 0), Constants.EP_DEFAULT_DISTANCE);
 							n.setIndex(i, j, k);
+							
 							n.setOverrideModelMaterial(true);
 							n.getMaterial().setDiffuseColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 							n.getMaterial().setAmbientColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 							fieldMatrix[k][j][i] = n;
+							
+							boolean isEdgeX = (sizeI > 1 && (i == 0 || i == sizeI - 1)); 
+							boolean isEdgeY = (sizeJ > 1 && (j == 0 || j == sizeJ - 1)); 
+							boolean isEdgeZ = (sizeK > 1 && (k == 0 || k == sizeK - 1)); 
 
-							if ((sizeI > 1 && (i == 0 || i == sizeI - 1)) ||
-									(sizeJ > 1 && (j == 0 || j == sizeJ - 1)) ||
-									(sizeK > 1 && (k == 0 || k == sizeK - 1))) {
-								n.setEdge(true);
-							}
+							n.setFixed(isEdgeX || isEdgeY || isEdgeZ);
+							n.setXFixed(isEdgeX);
+							n.setYFixed(isEdgeY);
+							n.setZFixed(isEdgeZ);
 
 							// experimentalMode, when only the edges are fixed. This creates a cool effect.
 //							if (!(
@@ -155,34 +162,33 @@ public class QFSFields {
 						for (int i = 0; i < sizeI; i++) {
 							if (i > 0)
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.LEFT, fieldMatrix[k][j][i - 1]);
-							else
+							else if (appSettings.isUseLoop())
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.LEFT, fieldMatrix[k][j][sizeI - 1]);
 							if (i < sizeI - 1)
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.RIGHT, fieldMatrix[k][j][i + 1]);
-							else
+							else if (appSettings.isUseLoop())
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.RIGHT, fieldMatrix[k][j][0]);
 
 							if (j > 0)
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.BOTTOM, fieldMatrix[k][j - 1][i]);
-							else
+							else if (appSettings.isUseLoop())
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.BOTTOM, fieldMatrix[k][sizeJ - 1][i]);
 							if (j < sizeJ - 1)
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.TOP, fieldMatrix[k][j + 1][i]);
-							else
+							else if (appSettings.isUseLoop())
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.TOP, fieldMatrix[k][0][i]);
 
 							if (k > 0)
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.BACK, fieldMatrix[k - 1][j][i]);
-							else
+							else if (appSettings.isUseLoop())
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.BACK, fieldMatrix[sizeK - 1][j][i]);
 							if (k < sizeK - 1)
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.FRONT, fieldMatrix[k + 1][j][i]);
-							else
+							else if (appSettings.isUseLoop())
 								fieldMatrix[k][j][i].setNeighbor(Neighbor.FRONT, fieldMatrix[0][j][i]);
 						}
 					}
 				}
-				
 				qfsModel.setLoadingReady(true);
 			}
 		}).start();

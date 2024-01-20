@@ -718,7 +718,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	}
 	
 	private void checkSettingsChanged() {
-		if (qfsProject.isResetting()) {
+		if (qfsProject.isChanged() || appSettings.isChanged()) {
 			setCustomTitle(qfsProject.getCurrentFilename());
 			nuklearModel.showFrame(Frame.progress);
 			try {

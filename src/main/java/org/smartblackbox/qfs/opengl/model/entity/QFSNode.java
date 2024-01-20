@@ -26,10 +26,14 @@ import org.smartblackbox.qfs.opengl.model.ObjFileModel;
 import org.smartblackbox.qfs.opengl.model.QFSModel;
 import org.smartblackbox.qfs.opengl.model.Scene;
 import org.smartblackbox.qfs.opengl.utils.Neighbor;
+import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 
 public class QFSNode extends Entity {
 	
+	private static final Vector3d FIXED_COLOR = new Vector3d(1f, 1f, 1f);
+	
+	private AppSettings appSettings = AppSettings.getInstance();
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSModel qfsModel = qfsProject.getQfsModel();
 	private Scene scene = qfsProject.scene;
@@ -45,10 +49,13 @@ public class QFSNode extends Entity {
 	 */
 	private QFSNode[] neighbors = new QFSNode[6];
 	private boolean hasNeightbors;
-	private boolean isEdge;
 	private boolean isFixed;
+	private boolean isXFixed;
+	private boolean isYFixed;
+	private boolean isZFixed;
 	private boolean isWall;
 	
+	private Vector3d fixedPosition = new Vector3d();
 	private Vector3d acceleration = new Vector3d();
 	private Vector3d velocity = new Vector3d();
 	private Vector3i index = new Vector3i(-1);
@@ -112,21 +119,36 @@ public class QFSNode extends Entity {
 		return isVisible || isWall && qfsModel.isWallVisible();
 	}
 
-	public boolean isEdge() {
-		return isEdge;
-	}
-
-	public void setEdge(boolean isEdge) {
-		this.isEdge = isEdge;
-		setFixed(isEdge);
-	}
-
 	public boolean isFixed() {
 		return isFixed;
 	}
 
 	public void setFixed(boolean isFixed) {
 		this.isFixed = isFixed;
+	}
+
+	public boolean isXFixed() {
+		return isXFixed;
+	}
+
+	public void setXFixed(boolean isXFixed) {
+		this.isXFixed = isXFixed;
+	}
+
+	public boolean isYFixed() {
+		return isYFixed;
+	}
+
+	public void setYFixed(boolean isYFixed) {
+		this.isYFixed = isYFixed;
+	}
+
+	public boolean isZFixed() {
+		return isZFixed;
+	}
+
+	public void setZFixed(boolean isZFixed) {
+		this.isZFixed = isZFixed;
 	}
 
 	public boolean isWall() {
@@ -333,24 +355,40 @@ public class QFSNode extends Entity {
 	 * 
 	 */
 	public void calcNewPosition() {
-		if (!hasNeightbors || isFixed) {
-			setAccelerationColor(new Vector3d(1f, 1f, 1f));
-			return;
-		}
-
-		acceleration.set(0);
 		// If set to false then the node stops updating its position
 		if (qfsModel.isSimulating()) {
+			if (isFixed || isWall) fixedPosition.set(positionBuff);
+			
+			acceleration.set(0);
+			
 			for (QFSNode neighbor : neighbors) {
-				acceleration.add(neighbor.position).sub(position);
+				if (neighbor != null) {
+					acceleration.add(neighbor.position).sub(position);
+				}
 			}
 
 			// Note that the result of the addition or multiplication is stored in the object variable itself.
-			// Fortunately, the formula fits pretty well on one line.
-			positionBuff.add(velocity.add(acceleration.mul(qfsProject.getConstantWaveSpeed() / 6.0)).mul(qfsProject.getConstantRadiation())).add(acceleration.mul(0.5));
+			positionBuff
+				.add(
+					velocity
+					.add(
+						acceleration
+						.mul(
+							qfsProject.getConstantWaveSpeed() / 6)
+						)
+					.mul(
+						qfsProject.getConstantRadiation()
+					)
+				).add(
+					acceleration.mul(0.5)
+				);
+			
+			if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.x = fixedPosition.x;
+			if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.y = fixedPosition.y;
+			if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.z = fixedPosition.z;
 		}
 
-		setAccelerationColor(acceleration);
+		setAccelerationColor(isFixed? FIXED_COLOR : acceleration);
 	}
 
 }

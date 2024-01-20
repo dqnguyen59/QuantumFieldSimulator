@@ -28,7 +28,7 @@ import org.smartblackbox.qfs.settings.QFSProject;
 public class FramePreferences extends AbstractFrame {
 
 	private int width = 300;
-	private int height = 200;
+	private int height = 240;
 	private float leftCol = 0.6f;
 	private float rightCol = 0.4f;
 
@@ -52,7 +52,7 @@ public class FramePreferences extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 		
-		createLayout(ctx, 0, model.getMenuBarHeight() + 120, width, height);
+		createLayout(ctx, 0, model.getMenuBarHeight() + 120, width, height + (appSettings.isUseFixedNodes()? 0 : 40));
 	}
 
 	@Override
@@ -61,6 +61,14 @@ public class FramePreferences extends AbstractFrame {
 
 			appSettings.setNumThreads(nk_label_edit(ctx, stack, " CPU Threads:", bufNumThreads, appSettings.getNumThreads(), leftCol, rightCol));
 			nk_spacer(ctx, spacer1, 1);
+			
+			appSettings.setUseFixedNodes(nk_check_label(ctx, " Use Fixed Nodes:", appSettings.isUseFixedNodes(), leftCol, rightCol));
+			nk_spacer(ctx, spacer1, 1);
+			
+			if (!appSettings.isUseFixedNodes()) {
+				appSettings.setUseLoop(nk_check_label(ctx, " Use Loop:", appSettings.isUseLoop(), leftCol, rightCol));
+				nk_spacer(ctx, spacer1, 1);
+			}
 			
 			qfsProject.setGlSwapInterval(nk_label_edit(ctx, stack, " GLSwap Interval:", bufSwapInterval, qfsProject.getGlSwapInterval(), leftCol, rightCol));
 			nk_spacer(ctx, spacer1, 1);

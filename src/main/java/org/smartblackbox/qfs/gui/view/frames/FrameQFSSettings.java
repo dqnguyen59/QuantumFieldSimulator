@@ -181,7 +181,7 @@ public class FrameQFSSettings extends AbstractFrame {
 			nk_spacer(ctx, spacer1, 1);
 
 			qfsProject.setConstantFrequency(nk_label_edit(ctx, stack, " Constant Frequency:", bufConstantFrequency, qfsProject.getConstantFrequency(), leftCol, rightCol));
-			qfsProject.setConstantFrequency(nk_slider(ctx, 0, qfsProject.getConstantFrequency(), 1.0, 0.0001));
+			qfsProject.setConstantFrequency(nk_slider(ctx, 0, qfsProject.getConstantFrequency(), 0.9999, 0.0001));
 			nk_spacer(ctx, spacer1, 1);
 
 			qfsProject.setConstantRadiation(nk_label_edit(ctx, stack, " Constant Radiation:", bufRadiation, qfsProject.getConstantRadiation(), appSettings.getFormatScientific8(), leftCol, rightCol));

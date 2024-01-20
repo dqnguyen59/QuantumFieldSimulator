@@ -51,8 +51,8 @@ import org.smartblackbox.qfs.gui.view.frames.FrameStatistics;
 import org.smartblackbox.qfs.gui.view.frames.FrameStatusBar;
 import org.smartblackbox.qfs.gui.view.frames.IFrame;
 import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameConfirmDialog;
-import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameFileOpenDialog;
-import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameFileSaveDialog;
+import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameOpenFileDialog;
+import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameSaveFileDialog;
 
 public class NuklearModel {
 	
@@ -248,9 +248,9 @@ public class NuklearModel {
 		case detector:
 			return new FrameDetector(this);
 		case openFileDialog:
-			return new FrameFileOpenDialog(this);
+			return new FrameOpenFileDialog(this);
 		case saveFileDialog:
-			return new FrameFileSaveDialog(this);
+			return new FrameSaveFileDialog(this);
 		default:
 			break;
 		

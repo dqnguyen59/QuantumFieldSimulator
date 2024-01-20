@@ -102,7 +102,7 @@ public class Constants {
 
 	public static final int GLFW_CONTINUOUS_PRESS = 3;
 
-	public static final float MAX_INTENSITY = 1000;
+	public static final float MAX_INTENSITY = 5000;
 
 	public static final int DOUBLE_CLICK_INTERVAL = 200;
 

@@ -24,7 +24,7 @@ import org.smartblackbox.utils.AbstractSettings;
 public class RainModel extends AbstractSettings  {
 	
 	private boolean isActive = false;
-	private double force = -25.0;
+	private double force = -1000.0;
 	private int iterations = 2;
 
 	public RainModel() {

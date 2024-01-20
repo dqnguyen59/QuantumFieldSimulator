@@ -46,7 +46,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 
 	private static QFSProject instance;
 
-	private boolean isResetting;
+	private boolean isChanged;
 	private boolean isFileSaved;
 	
 	/**
@@ -97,7 +97,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	}
 
 	public void set(QFSProject qfsProject) {
-		isResetting = qfsProject.isResetting;
+		isChanged = qfsProject.isChanged;
 		isFileSaved = qfsProject.isFileSaved;
 		dimension.x = qfsProject.getDimensionX();
 		dimension.y = qfsProject.getDimensionY();
@@ -197,7 +197,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 					}
 				}
 				try {
-					Thread.sleep(100);
+					Thread.sleep(200);
 				} catch (InterruptedException e) {
 				}
 				loadWalls(ini);
@@ -258,6 +258,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	private void loadWalls(Wini ini) {
 		Vector3i nodeIndex;
 		
+		scene.clearAllWalls();
 		scene.getWallNodeIndexList().clear();
 		
 		int numWalls = getInt("Walls", "numWalls", 0);
@@ -387,11 +388,11 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	/**
 	 * Reset the project.
 	 * 
-	 * Use {@link #isResetting()} to check if reset is required.
+	 * Use {@link #isChanged()} to check if reset is required.
 	 * If true, then define your customized reset.
 	 */
 	public void reset() {
-		isResetting = true;
+		isChanged = true;
 		setConstantFrequency(constantFrequency);
 		slitWall.reset();
 		for (Oscillator oscillator : oscillators) {
@@ -405,9 +406,9 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	 * 
 	 * @return true if {@link #reset()} has been called.
 	 */
-	public boolean isResetting() {
-		if (isResetting) {
-			isResetting = false;
+	public boolean isChanged() {
+		if (isChanged) {
+			isChanged = false;
 			return true;
 		}
 		return false;

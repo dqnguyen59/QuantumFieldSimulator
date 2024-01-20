@@ -32,6 +32,10 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	
 	public static int MAX_NUM_THREADS = Runtime.getRuntime().availableProcessors();
 	private int numThreads = MAX_NUM_THREADS;
+	
+	private boolean useFixedNodes = true;
+	private boolean useLoop;
+	private boolean isChanged;
 
 	private String projectFilePath = Constants.PROJECT_FILE_PATH;
 
@@ -92,6 +96,8 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		super.loadFromFile(ini, section, index);
 		
 		numThreads = getInt("System", "numThreads", MAX_NUM_THREADS);
+		useFixedNodes = getBool("System", "useFixedNodes", true);
+		useLoop = getBool("System", "useLoop", false);
 		if (numThreads >= MAX_NUM_THREADS) numThreads = MAX_NUM_THREADS;
 
 		setProjectFilePath(getString("System", "projectFilePath", Constants.PROJECT_FILE_PATH));
@@ -111,6 +117,8 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
 		put("System", "numThreads", numThreads);
+		put("System", "useFixedNodes", useFixedNodes);
+		put("System", "useLoop", useLoop);
 		put("System", "projectFilePath", projectFilePath);
 		put("System", "fontFile", fontFile);
 		put("System", "fontFileBold", fontFileBold);
@@ -129,8 +137,48 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	}
 
 	public void setNumThreads(int numThreads) {
-		this.numThreads = numThreads;
-		saveToFile();
+		if (this.numThreads != numThreads) {
+			this.numThreads = numThreads;
+			saveToFile();
+		}
+	}
+
+	public boolean isUseFixedNodes() {
+		return useFixedNodes;
+	}
+
+	public void setUseFixedNodes(boolean useFixedNodes) {
+		if (this.useFixedNodes != useFixedNodes) {
+			this.useFixedNodes = useFixedNodes;
+			saveToFile();
+			isChanged = true;
+		}
+	}
+
+	public boolean isUseLoop() {
+		return useLoop;
+	}
+
+	public void setUseLoop(boolean useLoop) {
+		if (this.useLoop != useLoop) {
+			this.useLoop = useLoop;
+			saveToFile();
+			isChanged = true;
+		}
+	}
+
+	/**
+	 * Use this function to check if reset is required.
+	 * If true, then define your customized reset.
+	 * 
+	 * @return true if {@link #reset()} has been called.
+	 */
+	public boolean isChanged() {
+		if (isChanged) {
+			isChanged = false;
+			return true;
+		}
+		return false;
 	}
 
 	public String getProjectFilePath() {

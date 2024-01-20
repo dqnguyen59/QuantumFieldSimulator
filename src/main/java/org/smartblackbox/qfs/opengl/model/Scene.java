@@ -196,7 +196,6 @@ public class Scene {
 	
 	private void setNodeWall(QFSNode node, boolean value) {
 		node.setWall(value);
-		node.setFixed(value);
 		if (node.isWall())
 			addWallNode(node);
 		else
@@ -234,7 +233,6 @@ public class Scene {
 		for (Vector3i nodeIndex : wallNodeIndexList) {
 			QFSNode node = getNodeByIndex(nodeIndex);
 			if (node != null) {
-				node.setFixed(false);
 				node.setWall(false);
 			}
 		}
@@ -254,7 +252,6 @@ public class Scene {
 		for (Vector3i nodeIndex : wallNodeIndexList) {
 			QFSNode node = getNodeByIndex(nodeIndex);
 			if (node != null) {
-				node.setFixed(true);
 				node.setWall(true);
 			}
 		}
@@ -428,7 +425,7 @@ public class Scene {
         // TODO: use BSP to improve performance.
         for (int i = iMin; i >= 0 && i < iMax && i < nodeArray.length; i++) {
         	QFSNode node = (QFSNode) nodeArray[i];
-	    	if (node.isVisible() && (!node.isEdge() || node.isWall())) {
+	    	if (node.isVisible() && (!node.isFixed() || node.isWall())) {
 	    		node.getTransformMatrixf().transform(0, 0, 0, 1, nodePos);
 				node.getTransformMatrixf().getScale(scale);
 	    		
