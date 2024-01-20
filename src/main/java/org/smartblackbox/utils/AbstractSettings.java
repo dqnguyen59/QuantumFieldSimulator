@@ -20,6 +20,7 @@ package org.smartblackbox.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.ini4j.Wini;
 
@@ -60,11 +61,18 @@ public abstract class AbstractSettings implements ISettings {
 		try {
 			File f = new File(filename);
 			
-			if (!f.exists()) f.createNewFile();
+			if (Files.deleteIfExists(f.toPath())) {
+				System.out.println(String.format("File '%s' deleted.", filename));
+			}
+			
+			if (!f.exists()) {
+				f.createNewFile();
+			}
 			currentFilename = filename;
 			
 			saveToFile(new Wini(f), "", 0);
 			ini.store();
+			System.out.println(String.format("File '%s' created.", filename));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
