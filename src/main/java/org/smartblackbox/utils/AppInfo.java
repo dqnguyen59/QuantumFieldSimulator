@@ -37,7 +37,7 @@ public class AppInfo {
 							Attributes mainAttribs = manifest.getMainAttributes();
 
 							setTitle(mainAttribs.getValue("Title"));
-							setDescription(mainAttribs.getValue("Description"));
+							setDescription(mainAttribs.getValue("Description").replace("\t\t", " "));
 							setDateTime(mainAttribs.getValue("Date-Time"));
 							setBuiltBy(mainAttribs.getValue("Built-By"));
 							setCreator(mainAttribs.getValue("Author"));
