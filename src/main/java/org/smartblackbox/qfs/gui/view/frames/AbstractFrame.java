@@ -162,8 +162,6 @@ public abstract class AbstractFrame implements IFrame {
 		
 		if (lastHeight != height || lastWidth != height) {
 			update();
-			lastHeight = height;
-			lastWidth = height;
 		}
 		
 		if (centered) {
@@ -183,8 +181,10 @@ public abstract class AbstractFrame implements IFrame {
 			if (r != null) {
 				x = (int) r.x();
 				y = (int) r.y();
-				width = (int) r.w();
-				height = (int) r.h();
+				if (lastHeight == height && lastWidth == height) {
+					width = (int) r.w();
+					height = (int) r.h();
+				}
 			}
 		}
 		
@@ -272,6 +272,8 @@ public abstract class AbstractFrame implements IFrame {
 		}
 		
 		Nuklear.nk_end(ctx);
+		lastHeight = height;
+		lastWidth = height;
 	}
 
 	protected void createLayout(NkContext ctx, int x, int y, int width, int height) {

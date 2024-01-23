@@ -873,7 +873,6 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				if (node != null && o != null) {
 					node.setPosition(oscillator.getNodeInitPosition());
 					node.getPositionBuff().add(o);
-					node.setFixed(true);
 				}
 			}
 		}
