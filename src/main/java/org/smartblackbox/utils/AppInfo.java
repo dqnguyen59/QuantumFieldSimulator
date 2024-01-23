@@ -14,7 +14,7 @@ public class AppInfo {
 	private static String description = "Only visible when running from JAR MANIFEST.MF.";
 	private static String builtBy = "SmartBlackBox";
 	private static String contributers = "";
-	private static String version = "Version not available in development mode";
+	private static String version = "";
 	private static String website = "https://www.smartblackbox.org";
 	private static String author = "Duy Quoc Nguyen";
 	private static String email = "d.q.nguyen@smartblackbox.org";
@@ -58,10 +58,10 @@ public class AppInfo {
 							if (version != null) AppInfo.version = version;
 
 							String website = mainAttribs.getValue("Website");
-							if (website != null) AppInfo.version = website;
+							if (website != null) AppInfo.website = website;
 
 							String email = mainAttribs.getValue("Email");
-							if (email != null) AppInfo.version = email;
+							if (email != null) AppInfo.email = email;
 						}
 					}
 				}
@@ -95,7 +95,7 @@ public class AppInfo {
 		return AppInfo.builtBy;
 	}
 
-	public static String getAuthot() {
+	public static String getAuthor() {
 		return author;
 	}
 
