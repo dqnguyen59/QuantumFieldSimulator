@@ -369,7 +369,7 @@ public class QFSNode extends Entity {
 			for (QFSNode neighbor : neighbors) {
 				if (neighbor != null) {
 					if (isFixed || isWall) {
-						double alpha = isWall? 0.02 : (1.0 - appSettings.getAbsorptionFixedNodes());
+						double alpha = isWall? 0.00 : (1.0 - appSettings.getAbsorptionFixedNodes());
 						
 						if (alpha == 0) {
 							velocity.set(0);
