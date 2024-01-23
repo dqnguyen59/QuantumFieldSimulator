@@ -47,7 +47,7 @@ public class FrameAbout extends AbstractFrame {
 	@Override
 	public void layout(NkContext ctx, int x, int y, int width, int height) {
 		
-		String copyRight = String.format("(c) Copyright %s <%s> and contributers. All right reserved.", AppInfo.getAuthot(), AppInfo.getEmail());
+		String copyRight = String.format("(c) Copyright %s <%s> and contributers. All right reserved.", AppInfo.getAuthor(), AppInfo.getEmail());
 		String version = String.format("Version: %s    (%s)", AppInfo.getVersion(), AppInfo.getDateTime());
 		
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight * 5, 1);
