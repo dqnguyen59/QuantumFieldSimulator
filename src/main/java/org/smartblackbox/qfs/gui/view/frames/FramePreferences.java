@@ -28,7 +28,7 @@ import org.smartblackbox.qfs.settings.QFSProject;
 public class FramePreferences extends AbstractFrame {
 
 	private int width = 300;
-	private int height = 320;
+	private int height = 240;
 	private float leftCol = 0.6f;
 	private float rightCol = 0.4f;
 
@@ -53,7 +53,7 @@ public class FramePreferences extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 		
-		createLayout(ctx, 0, model.getMenuBarHeight() + 120, width, height + (appSettings.isUseFixedNodes()? 0 : 40));
+		createLayout(ctx, 0, model.getMenuBarHeight() + 120, width, height + (appSettings.isUseFixedNodes()? 0 : 120));
 	}
 
 	@Override
@@ -66,12 +66,12 @@ public class FramePreferences extends AbstractFrame {
 			appSettings.setUseFixedNodes(nk_check_label(ctx, " Use Fixed Nodes:", appSettings.isUseFixedNodes(), leftCol, rightCol));
 			nk_spacer(ctx, spacer1, 1);
 			
-			appSettings.setAbsorptionFixedNodes(nk_label_edit(ctx, stack, " Absorption Fixed Nodes:",
-				bufAbsorptionFixedNodes, appSettings.getAbsorptionFixedNodes(), leftCol, rightCol));
-			appSettings.setAbsorptionFixedNodes(nk_slider(ctx, 0.0, appSettings.getAbsorptionFixedNodes(), 1.0, 0.01));
-			nk_spacer(ctx, spacer1, 1);
-
 			if (!appSettings.isUseFixedNodes()) {
+				appSettings.setAbsorptionFixedNodes(nk_label_edit(ctx, stack, " Absorption Fixed Nodes:",
+					bufAbsorptionFixedNodes, appSettings.getAbsorptionFixedNodes(), leftCol, rightCol));
+				appSettings.setAbsorptionFixedNodes(nk_slider(ctx, 0.0, appSettings.getAbsorptionFixedNodes(), 1.0, 0.01));
+				nk_spacer(ctx, spacer1, 1);
+
 				appSettings.setUseLoop(nk_check_label(ctx, " Use Loop:", appSettings.isUseLoop(), leftCol, rightCol));
 				nk_spacer(ctx, spacer1, 1);
 			}
