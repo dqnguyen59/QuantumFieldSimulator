@@ -134,16 +134,6 @@ public class FrameMenu extends AbstractFrame {
 				Nuklear.nk_menu_close(ctx);
 			}
 			
-			if (nk_menu_item_label(ctx, "QFS Settings")) {
-				model.toggleFrame(Frame.qfsSettings);
-				Nuklear.nk_menu_close(ctx);
-			}
-			
-			if (nk_menu_item_label(ctx, "QFS Terrain Settings")) {
-				model.toggleFrame(Frame.qfsTerrainSettings);
-				Nuklear.nk_menu_close(ctx);
-			}
-			
 			if (nk_menu_item_label(ctx, "Oscillators")) {
 				qfsModel.setEditMode(EditMode.none);
 				model.toggleFrame(Frame.oscillator);
@@ -171,6 +161,16 @@ public class FrameMenu extends AbstractFrame {
 				Nuklear.nk_menu_close(ctx);
 			}
 
+			if (nk_menu_item_label(ctx, "QFS Terrain Settings")) {
+				model.toggleFrame(Frame.qfsTerrainSettings);
+				Nuklear.nk_menu_close(ctx);
+			}
+			
+			if (nk_menu_item_label(ctx, "QFS Settings")) {
+				model.toggleFrame(Frame.qfsSettings);
+				Nuklear.nk_menu_close(ctx);
+			}
+			
 			if (nk_menu_item_label(ctx, "Preferences")) {
 				model.toggleFrame(Frame.preferences);
 				Nuklear.nk_menu_close(ctx);

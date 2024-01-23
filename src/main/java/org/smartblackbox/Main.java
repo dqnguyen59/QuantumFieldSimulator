@@ -39,7 +39,7 @@ public class Main {
 		System.out.println("Version: " + AppInfo.getVersion());
 		System.out.println("Version Date: " + AppInfo.getDateTime());
 		System.out.println("Built By: " + AppInfo.getBuiltBy());
-		System.out.println("Creator: " + AppInfo.getCreator());
+		System.out.println("Creator: " + AppInfo.getAuthot());
 		System.out.println("Contributers: " + AppInfo.getContributers());
 		System.out.println(AppInfo.getWebsite());
 		System.out.println("");

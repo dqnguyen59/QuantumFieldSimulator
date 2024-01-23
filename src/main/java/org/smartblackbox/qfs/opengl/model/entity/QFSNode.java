@@ -55,7 +55,7 @@ public class QFSNode extends Entity {
 	private boolean isZFixed;
 	private boolean isWall;
 	
-	private Vector3d fixedPosition = new Vector3d();
+	private Vector3d fixedPosition;
 	private Vector3d acceleration = new Vector3d();
 	private Vector3d velocity = new Vector3d();
 	private Vector3i index = new Vector3i(-1);
@@ -92,6 +92,13 @@ public class QFSNode extends Entity {
 		return String.format("(%d, %d, %d)", index.x, index.y, index.z);
 	}
 
+	@Override
+	public void setPosition(Vector3d position) {
+		super.setPosition(position);
+		if (fixedPosition == null) fixedPosition = new Vector3d();
+		fixedPosition.set(position);
+	}
+	
 	public QFSNode[] getNeighbors() {
 		return neighbors;
 	}
@@ -357,31 +364,54 @@ public class QFSNode extends Entity {
 	public void calcNewPosition() {
 		// If set to false then the node stops updating its position
 		if (qfsModel.isSimulating()) {
-			if (isFixed || isWall) fixedPosition.set(positionBuff);
-			
 			acceleration.set(0);
 			
 			for (QFSNode neighbor : neighbors) {
 				if (neighbor != null) {
-					acceleration.add(neighbor.position).sub(position);
+					if (isFixed || isWall) {
+						double alpha = isWall? 0.02 : (1.0 - appSettings.getAbsorptionFixedNodes());
+						
+						if (alpha == 0) {
+							velocity.set(0);
+							positionBuff.set(fixedPosition);
+						}
+						
+						if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
+							acceleration.y += (neighbor.position.y - position.y) * alpha;
+							acceleration.z += (neighbor.position.z - position.z) * alpha;
+						}
+						if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
+							acceleration.x += (neighbor.position.x - position.x) * alpha;
+							acceleration.z += (neighbor.position.z - position.z) * alpha;
+						}
+						if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
+							acceleration.x += (neighbor.position.x - position.x) * alpha;
+							acceleration.y += (neighbor.position.y - position.y) * alpha;
+						}
+					}
+					else {
+						acceleration.add(neighbor.position).sub(position);
+					}
 				}
 			}
-
+			
 			// Note that the result of the addition or multiplication is stored in the object variable itself.
 			positionBuff
+			.add(
+				velocity
 				.add(
-					velocity
-					.add(
-						acceleration
-						.mul(
-							qfsProject.getConstantWaveSpeed() / 6)
-						)
+					acceleration
 					.mul(
-						qfsProject.getConstantRadiation()
+						qfsProject.getConstantWaveSpeed() / 6
 					)
-				).add(
-					acceleration.mul(0.5)
-				);
+				)
+				.mul(
+					qfsProject.getConstantRadiation()
+				)
+			)
+			.add(
+				acceleration.mul(0.5)
+			);
 			
 			if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.x = fixedPosition.x;
 			if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.y = fixedPosition.y;

@@ -60,7 +60,7 @@ public class Entity {
 		this.parent = parent;
 		this.model = model;
 		this.position = new Vector3d(position);
-		this.positionBuff = new Vector3d(position);
+		setPosition(new Vector3d(position));
 		this.rotation = new Vector3d(rotation);
 		this.scale = scale;
 		transformMatrixfList[0] = new Matrix4f();
@@ -104,16 +104,12 @@ public class Entity {
 		return positionBuff;
 	}
 
-	public void setPosition(Vector3d positionBuff) {
-		this.positionBuff.x = positionBuff.x;
-		this.positionBuff.y = positionBuff.y;
-		this.positionBuff.z = positionBuff.z;
+	public void setPosition(Vector3d position) {
+		positionBuff.set(position);
 	}
 
 	public void setPosition(double x, double y, double z) {
-		positionBuff.x = x;
-		positionBuff.y = y;
-		positionBuff.z = z;
+		positionBuff.set(x, y, z);
 	}
 	
 	public void incPosition(Vector3d p) {
@@ -121,15 +117,11 @@ public class Entity {
 	}
 
 	public void incPosition(double x, double y, double z) {
-		positionBuff.x += x;
-		positionBuff.y += y;
-		positionBuff.z += z;
+		positionBuff.add(x, y, z);
 	}
 	
 	public void decPosition(double x, double y, double z) {
-		positionBuff.x -= x;
-		positionBuff.y -= y;
-		positionBuff.z -= z;
+		positionBuff.sub(x, y, z);
 	}
 	
 	public double setPositionDX(double dx) {

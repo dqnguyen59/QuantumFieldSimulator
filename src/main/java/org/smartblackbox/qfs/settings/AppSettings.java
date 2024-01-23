@@ -19,8 +19,12 @@
 package org.smartblackbox.qfs.settings;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.ini4j.Profile.Section;
 import org.ini4j.Wini;
+import org.lwjgl.nuklear.NkRect;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
@@ -34,6 +38,8 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	private int numThreads = MAX_NUM_THREADS;
 	
 	private boolean useFixedNodes = true;
+	// Range: 0.0 - 1.0
+	private double absorptionFixedNodes = 1.0;
 	private boolean useLoop;
 	private boolean isChanged;
 
@@ -51,7 +57,9 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	private int displayWidth;
 	private int displayHeight;
 	private int maximized = 0;
-
+	
+	private HashMap<String, NkRect> frameRectMap = new HashMap<String, NkRect>();
+	
 	private char decimalSeperator = '.';
 	private DecimalFormat formatInt = Utils.setFormat(0, 0, decimalSeperator, false, false);
 	private DecimalFormat formatDefault = Utils.setFormat(2, 2, decimalSeperator, false, false); 
@@ -111,6 +119,25 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		setWindowHeight(getInt("Window", "height", 640));
 		setMaximized(getInt("Window", "maximized", 0));
 		setAntiAliasing(getInt("OpenGL", "antiAliasing", 1));
+		
+		String sFrame = "Frame";
+		Section frameSection = ini.get(sFrame);
+		if (frameSection != null) {
+	        for (String key: frameSection.keySet()) {
+	        	String value = getString(sFrame, key);
+	        	if (!value.isEmpty()) {
+		        	String[] array = value.split(",");
+		        	
+		        	NkRect rect = NkRect.create();
+		        	
+		        	rect.x(Float.parseFloat(array[0]));
+		        	rect.y(Float.parseFloat(array[1]));
+		        	rect.w(Float.parseFloat(array[2]));
+		        	rect.h(Float.parseFloat(array[3]));
+		        	frameRectMap.put(key, rect);
+	        	}
+	        }
+		}
 	}
 
 	@Override
@@ -130,6 +157,13 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		put("Window", "height", windowHeight);
 		put("Window", "maximized", maximized);
 		put("OpenGL", "antiAliasing", antiAliasing);
+
+		String sFrame = "Frame";
+		for (Map.Entry<String, NkRect> entry : frameRectMap.entrySet()) {
+		    String key = entry.getKey();
+		    NkRect value = entry.getValue();
+			put(sFrame, key, value.x() + "," + value.y() + "," + value.w() + "," + value.h());
+		}
 	}
 	
 	public int getNumThreads() {
@@ -153,6 +187,14 @@ public class AppSettings extends AbstractSettings implements ISettings {
 			saveToFile();
 			isChanged = true;
 		}
+	}
+
+	public double getAbsorptionFixedNodes() {
+		return absorptionFixedNodes;
+	}
+
+	public void setAbsorptionFixedNodes(double absorptionFixedNodes) {
+		this.absorptionFixedNodes = absorptionFixedNodes;
 	}
 
 	public boolean isUseLoop() {
@@ -281,6 +323,14 @@ public class AppSettings extends AbstractSettings implements ISettings {
 
 	public void setMaximized(int maximized) {
 		this.maximized = maximized;
+	}
+
+	public HashMap<String, NkRect> getFrameRectMap() {
+		return frameRectMap;
+	}
+
+	public void setFrameRectMap(HashMap<String, NkRect> frameRectMap) {
+		this.frameRectMap = frameRectMap;
 	}
 
 	public char getDecimalSeperator() {

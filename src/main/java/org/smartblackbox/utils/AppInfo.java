@@ -14,9 +14,9 @@ public class AppInfo {
 	private static String description = "Only visible when running from JAR MANIFEST.MF.";
 	private static String builtBy = "SmartBlackBox";
 	private static String contributers = "";
-	private static String version = "";
+	private static String version = "Version not available in development mode";
 	private static String website = "https://www.smartblackbox.org";
-	private static String creator = "Duy Quoc Nguyen";
+	private static String author = "Duy Quoc Nguyen";
 	private static String email = "d.q.nguyen@smartblackbox.org";
 	private static String dateTime = "";
 
@@ -36,15 +36,32 @@ public class AppInfo {
 							Manifest manifest = new Manifest(is);
 							Attributes mainAttribs = manifest.getMainAttributes();
 
-							setTitle(mainAttribs.getValue("Title"));
-							setDescription(mainAttribs.getValue("Description").replace("\t\t", " "));
-							setDateTime(mainAttribs.getValue("Date-Time"));
-							setBuiltBy(mainAttribs.getValue("Built-By"));
-							setCreator(mainAttribs.getValue("Author"));
-							setContributers(mainAttribs.getValue("Contributers"));
-							setVersion(mainAttribs.getValue("Version"));
-							setWebsite(mainAttribs.getValue("Website"));
-							setEmail(mainAttribs.getValue("Email"));
+							String title = mainAttribs.getValue("Title");
+							if (title == null) AppInfo.title = title;
+
+							String description = mainAttribs.getValue("Description");
+							if (description != null) AppInfo.description = description.replace("\t\t", " ");
+
+							String dateTime = mainAttribs.getValue("Date-Time");
+							if (dateTime != null) AppInfo.dateTime = dateTime;
+
+							String builtBy = mainAttribs.getValue("Built-By");
+							if (builtBy != null) AppInfo.builtBy = builtBy;
+
+							String author = mainAttribs.getValue("Author");
+							if (author != null) AppInfo.author = author;
+
+							String contributers = mainAttribs.getValue("Contributers");
+							if (contributers != null) AppInfo.contributers = contributers;
+
+							String version = mainAttribs.getValue("Version");
+							if (version != null) AppInfo.version = version;
+
+							String website = mainAttribs.getValue("Website");
+							if (website != null) AppInfo.version = website;
+
+							String email = mainAttribs.getValue("Email");
+							if (email != null) AppInfo.version = email;
 						}
 					}
 				}
@@ -59,88 +76,43 @@ public class AppInfo {
 	}
 
 	public static String getCopyRight() {
-		return String.format("© Copyright %s <%s> and contributers. All right reserved.", creator, email);
+		return String.format("© Copyright %s <%s> and contributers. All right reserved.", author, email);
 	}
 	
 	public static String getTitle() {
-		return title;
-	}
-
-	public static void setTitle(String title) {
-		if (title != null)
-			AppInfo.title = title;
+		return AppInfo.title;
 	}
 
 	public static String getDescription() {
-		return description;
-	}
-
-	public static void setDescription(String description) {
-		if (description != null)
-			AppInfo.description = description;
+		return AppInfo.description;
 	}
 
 	public static String getDateTime() {
-		return dateTime;
-	}
-
-	public static void setDateTime(String dateTime) {
-		if (dateTime != null)
-			AppInfo.dateTime = dateTime;
+		return AppInfo.dateTime;
 	}
 
 	public static String getBuiltBy() {
-		return builtBy;
+		return AppInfo.builtBy;
 	}
 
-	public static void setBuiltBy(String builtBy) {
-		if (builtBy != null)
-			AppInfo.builtBy = builtBy;
+	public static String getAuthot() {
+		return author;
 	}
-
-	public static String getCreator() {
-		return creator;
-	}
-
-	public static void setCreator(String creator) {
-		if (creator != null)
-			AppInfo.creator = creator;
-	}	
 
 	public static String getContributers() {
-		return contributers;
-	}
-
-	public static void setContributers(String developers) {
-		if (developers != null)
-			AppInfo.contributers = developers;
+		return AppInfo.contributers;
 	}
 
 	public static String getVersion() {
-		return version;
-	}
-
-	public static void setVersion(String version) {
-		if (version != null)
-			AppInfo.version = version;
+		return AppInfo.version;
 	}
 
 	public static String getWebsite() {
-		return website;
-	}
-
-	public static void setWebsite(String website) {
-		if (website != null)
-			AppInfo.website = website;
+		return AppInfo.website;
 	}
 
 	public static String getEmail() {
 		return email;
-	}
-
-	public static void setEmail(String email) {
-		if (email != null)
-			AppInfo.email = email;
 	}
 
 }

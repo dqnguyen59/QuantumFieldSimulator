@@ -85,6 +85,7 @@ public class FrameStatusBar extends AbstractFrame {
 		if (nk_button_label(ctx, qfsModel.getBtnSimulatingLabel()))
 			qfsModel.toggleSimulation();
 
+		ctx.style().button().normal().data().color(Theme.blue1);
 		Nuklear.nk_layout_row_push(ctx, col[i++] / width);
 		if (nk_button_label(ctx, "Reset")) {
 			qfsProject.reset();

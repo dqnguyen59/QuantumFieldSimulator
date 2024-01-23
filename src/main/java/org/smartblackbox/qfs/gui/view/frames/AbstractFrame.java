@@ -158,6 +158,8 @@ public abstract class AbstractFrame implements IFrame {
 	}
 
 	private void _createLayout(NkContext ctx, int x, int y, int width, int height, boolean centered) {
+		String title = getTitle();
+		
 		if (lastHeight != height || lastWidth != height) {
 			update();
 			lastHeight = height;
@@ -176,6 +178,15 @@ public abstract class AbstractFrame implements IFrame {
 				windowRect.y(y);
 			}
 		}
+		else {
+			NkRect r = appSettings.getFrameRectMap().get(title);
+			if (r != null) {
+				x = (int) r.x();
+				y = (int) r.y();
+				width = (int) r.w();
+				height = (int) r.h();
+			}
+		}
 		
 		// Create the rectangle that represents
 		windowRect = NkRect.create();
@@ -191,21 +202,31 @@ public abstract class AbstractFrame implements IFrame {
 		}
 
 		if (Nuklear.nk_begin(ctx, getTitle() + getAlternateChar(), windowRect, windowOptions)) {
-			NkRect rect = NkRect.create();
-			Nuklear.nk_window_get_content_region(ctx, rect);
+			NkVec2 pos = NkVec2.create();
+			Nuklear.nk_window_get_position(ctx, pos);
+			float w = Nuklear.nk_window_get_width(ctx);
+			float h = Nuklear.nk_window_get_height(ctx);
+			NkRect frameRect = NkRect.create();
+			frameRect.x(pos.x());
+			frameRect.y(pos.y());
+			frameRect.w(w);
+			frameRect.h(h);
 
-			rect.x(rect.x() - 6);
-			rect.w(rect.w() + 14);
-			rect.y(rect.y() - 36);
-			rect.h(rect.h() + 40);
+			NkRect contentRect = NkRect.create();
+			Nuklear.nk_window_get_content_region(ctx, contentRect);
 
-			model.checkFocus(this, rect);
+			contentRect.x(contentRect.x() - 6);
+			contentRect.w(contentRect.w() + 14);
+			contentRect.y(contentRect.y() - 36);
+			contentRect.h(contentRect.h() + 40);
+
+			model.checkFocus(this, contentRect);
 
 			ctx.style().window().header().label_normal(Theme.colorHeaderText);
 			ctx.style().window().header().label_active(Theme.colorHeaderText);
 			
 			if (isDialog() && model.getDialogStack().getCurrent() != null) {
-				model.getDialogStack().getCurrent().setWindowRect(rect);
+				model.getDialogStack().getCurrent().setWindowRect(contentRect);
 			}
 			
 			if (Nuklear.nk_window_has_focus(ctx)) {
@@ -226,8 +247,22 @@ public abstract class AbstractFrame implements IFrame {
 //				}
 			}
 			
-			focusCount = 0;
-			layout(ctx, x, y, width, height);
+			NkRect lastRect = appSettings.getFrameRectMap().get(title);
+			
+			if (lastRect == null ||
+				lastRect.x() != frameRect.x() ||
+				lastRect.y() != frameRect.y() ||
+				lastRect.w() != frameRect.w() ||
+				lastRect.h() != frameRect.h()) {
+
+				System.out.println("Frame: " + title + "; X: " + frameRect.x() + " ; y :" + frameRect.y());
+
+				appSettings.getFrameRectMap().put(title, frameRect);
+				
+				appSettings.saveToFile();
+			}
+			
+			layout(ctx, (int)contentRect.x(), (int)contentRect.y(), width, height);
 			
 			tabKeyPressed = false;
 			focusChanged = false;
