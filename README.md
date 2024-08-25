@@ -54,6 +54,10 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
   Recommended NVIDIA graphics cards: RTX2080Ti, RTX3070 or higher.
 </p>
 
+### Formulas used
+<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula_v1.1.png">
+<br/>
+
 ### Double-slit simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit.png">
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/double_slit2.png">
@@ -66,10 +70,6 @@ Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/re
 ### Random wave simulation
 <img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/waves.png">
 <br/>
-
-### Formulas used
-<img src="https://raw.githubusercontent.com/dqnguyen59/QuantumFieldSimulator/main/images/qfs_formula_v1.1.png">
-
 
 <p>
   I have only a little knowledge of the formulas used, as shown on Wikipedia: <a href="https://en.wikipedia.org/wiki/Quantum_field_theory" target="_blank" rel="nofollow noopener noreferrer">Quantum field theory</a>, but after a lot of trials and errors, I've found that the above formula works pretty well for simulating waves and double-slit experiments.
