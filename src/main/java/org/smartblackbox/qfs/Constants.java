@@ -37,7 +37,6 @@ public class Constants {
 	public static final double NANOSECOND = 1000000000;
 	public static final double MILLISECOND = 1000000;
 	public static final double UPDATE_RATE = 100; // ms
-	public static final long KEYBOARD_INTERVAL = 50; // ms
 	public static final int KEYBOARD_INTERVAL_REPEAT = 15; // ms
 	
 	public static final NkColor DEFAULT_BG_COLOR = NkColor.create()
@@ -108,5 +107,9 @@ public class Constants {
 
 	public static final Float DEPTH_FADING_FACTOR = 0.008f;
 	public static final Float TERRAIN_DEPTH_FADING_FACTOR = 0.0005f;
+
+	public static final int DEFAULT_DIMENSION_X = 151;
+	public static final int DEFAULT_DIMENSION_Y = 151;
+	public static final int DEFAULT_DIMENSION_Z = 3;
 
 }

@@ -134,7 +134,7 @@ public class FrameStatusBar extends AbstractFrame {
 			if (nk_button_label(ctx, s)) {
 				qfsModel.setMode(m);
 				if (m == Mode.rain)
-					model.toggleFrame(Frame.rain);
+					nuklearModel.toggleFrame(Frame.rain);
 			}
 		}
 		

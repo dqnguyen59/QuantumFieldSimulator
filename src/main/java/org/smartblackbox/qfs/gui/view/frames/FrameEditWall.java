@@ -47,7 +47,7 @@ public class FrameEditWall extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 
-		createLayout(ctx, 0, model.getMenuBarHeight(), width, height);
+		createLayout(ctx, 0, nuklearModel.getMenuBarHeight(), width, height);
 	}
 
 	@Override

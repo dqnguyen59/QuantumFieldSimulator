@@ -51,7 +51,7 @@ public class FrameSlitWall extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 		
-		createLayout(ctx, 0, model.getMenuBarHeight() + 558, width, height);
+		createLayout(ctx, 0, nuklearModel.getMenuBarHeight() + 558, width, height);
 	}
 
 	@Override

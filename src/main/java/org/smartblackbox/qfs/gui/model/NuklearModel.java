@@ -47,7 +47,7 @@ import org.smartblackbox.qfs.gui.view.frames.FrameQFSSettings;
 import org.smartblackbox.qfs.gui.view.frames.FrameQFSTerrainSettings;
 import org.smartblackbox.qfs.gui.view.frames.FrameRain;
 import org.smartblackbox.qfs.gui.view.frames.FrameSlitWall;
-import org.smartblackbox.qfs.gui.view.frames.FrameStatistics;
+import org.smartblackbox.qfs.gui.view.frames.FramePerformance;
 import org.smartblackbox.qfs.gui.view.frames.FrameStatusBar;
 import org.smartblackbox.qfs.gui.view.frames.IFrame;
 import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameConfirmDialog;
@@ -55,11 +55,19 @@ import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameOpenFileDialog;
 import org.smartblackbox.qfs.gui.view.frames.dialogs.FrameSaveFileDialog;
 
 public class NuklearModel {
-	
-	public enum Frame {
+
+    public DialogFileModel getDialogFileModel() {
+        return dialogFileModel;
+    }
+
+    public void setDialogFileModel(DialogFileModel dialogFileModel) {
+        this.dialogFileModel = dialogFileModel;
+    }
+
+    public enum Frame {
 		menu,
 		statusBar,
-		statistic,
+		performance,
 		windowProperty,
 		keyboardShortcuts,
 		about,
@@ -86,7 +94,9 @@ public class NuklearModel {
 	private List<AbstractFrame> frames2Add = new ArrayList<AbstractFrame>();
 	private List<AbstractFrame> frames2Remove = new ArrayList<AbstractFrame>();
 	private DialogModelStack dialogModelStack = new DialogModelStack();
-	
+
+	private DialogFileModel dialogFileModel;
+
 	private double mouseX;
 	private double mouseY;
 	private boolean nkButtonDown;
@@ -96,9 +106,10 @@ public class NuklearModel {
 	public int dialogActiveCount = 0;
 	
 	private AbstractFrame focusedFrame;
-	private boolean menuActive;
+	private boolean subMenuActive;
+	private boolean subMenuVisible;
 	private int menuIndex;
-	private int menuBarHeight = 28;
+	private int menuBarHeight = 26;
 	private int menuItemWidth = 40;
 	private NkUserFont defaultFont = NkUserFont.create();
 	private NkUserFont defaultFontBold = NkUserFont.create();
@@ -155,7 +166,7 @@ public class NuklearModel {
 	public void setFocusedFrame(AbstractFrame focusedFrame) {
 		if (focusedFrame.getClass() == FrameMenu.class
 			|| focusedFrame.getClass() == FrameStatusBar.class
-			|| focusedFrame.getClass() == FrameStatistics.class
+			|| focusedFrame.getClass() == FramePerformance.class
 			|| focusedFrame.getClass() == FrameProperties.class
 			|| focusedFrame.getClass() == FrameProgress.class
 		)
@@ -211,8 +222,8 @@ public class NuklearModel {
 			return new FrameMenu(this);
 		case statusBar:
 			return new FrameStatusBar(this);
-		case statistic:
-			return new FrameStatistics(this);
+		case performance:
+			return new FramePerformance(this);
 		case windowProperty:
 			return new FrameProperties(this);
 		case keyboardShortcuts:
@@ -368,12 +379,20 @@ public class NuklearModel {
 		return dlgMessage;
 	}
 
-	public boolean isMenuActive() {
-		return menuActive;
+	public boolean isSubMenuActive() {
+		return subMenuActive;
 	}
 
-	public void setMenuActive(boolean menuActive) {
-		this.menuActive = menuActive;
+	public void setSubMenuActive(boolean subMenuActive) {
+		this.subMenuActive = subMenuActive;
+	}
+
+	public boolean isSubMenuVisible() {
+		return subMenuVisible;
+	}
+
+	public void setSubMenuVisible(boolean subMenuVisible) {
+		this.subMenuVisible = subMenuVisible;
 	}
 
 	public int getMenuIndex() {

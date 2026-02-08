@@ -89,10 +89,10 @@ public class QFSFields {
 		int sizeJ = dimension.y;
 		int sizeK = dimension.z;
 
-		Statistics.numNodes = sizeI * sizeJ * sizeK;
-		Statistics.numNodesX = sizeI;
-		Statistics.numNodesY = sizeJ;
-		Statistics.numNodesZ = sizeK;
+		Performance.numNodes = sizeI * sizeJ * sizeK;
+		Performance.numNodesX = sizeI;
+		Performance.numNodesY = sizeJ;
+		Performance.numNodesZ = sizeK;
 
 		ObjFileModel modelSphere = loader.loadOBJModel(Constants.MODEL_NODE);
 

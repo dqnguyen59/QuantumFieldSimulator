@@ -23,11 +23,11 @@ import org.lwjgl.nuklear.NkContext;
 import org.lwjgl.nuklear.Nuklear;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.gui.model.NuklearModel;
-import org.smartblackbox.qfs.opengl.model.Statistics;
+import org.smartblackbox.qfs.opengl.model.Performance;
 import org.smartblackbox.utils.PerformanceMonitor;
 import org.smartblackbox.utils.PerformanceMonitor.Measurement;
 
-public class FrameStatistics extends AbstractFrame {
+public class FramePerformance extends AbstractFrame {
 
 	private int width = 300;
 	private int height = 420;
@@ -41,14 +41,14 @@ public class FrameStatistics extends AbstractFrame {
 	private double mGUI2D;
 	private double mTotalRenderTime;
 
-	public FrameStatistics(NuklearModel frames) {
+	public FramePerformance(NuklearModel frames) {
 		super(frames);
 		windowOptions = 0;
 	}
 
 	@Override
 	public String getTitle() {
-		return "Statistics";
+		return "Performance";
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class FrameStatistics extends AbstractFrame {
 		
 		ctx.style().window().fixed_background().data().color(Constants.TRANSPARENT_BG_COLOR);
 
-		createLayout(ctx, getWindowWidth() - width, model.getMenuBarHeight(), width, height);
+		createLayout(ctx, getWindowWidth() - width, nuklearModel.getMenuBarHeight(), width, height);
 		
 		ctx.style().window().fixed_background().data().color(savedColor);
 	}
@@ -67,20 +67,20 @@ public class FrameStatistics extends AbstractFrame {
 	@Override
 	public void layout(NkContext ctx, int x, int y, int width, int height) {
 		
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
 		Nuklear.nk_label(ctx, String.format(" #Nodes: %d (%d, %d, %d)",
-        		Statistics.numNodes,
-        		Statistics.numNodesX,
-        		Statistics.numNodesY,
-        		Statistics.numNodesZ
+        		Performance.numNodes,
+        		Performance.numNodesX,
+        		Performance.numNodesY,
+        		Performance.numNodesZ
         		), Nuklear.NK_TEXT_LEFT);
 		Nuklear.nk_label(ctx, String.format(" #Nodes on plane.xy: %d (%d, %d)",
-				Statistics.numNodesX * Statistics.numNodesY,
-        		Statistics.numNodesX,
-        		Statistics.numNodesY
+				Performance.numNodesX * Performance.numNodesY,
+        		Performance.numNodesX,
+        		Performance.numNodesY
         		), Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 
 		Nuklear.nk_layout_row_dynamic(ctx, spacer1 , 1);
 		Nuklear.nk_spacer(ctx);
@@ -97,9 +97,9 @@ public class FrameStatistics extends AbstractFrame {
 		}
 		
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, " CPU:", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		nk_label_value(ctx, "   - Threads:", String.format("%d", appSettings.getNumThreads()), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, "   - Physics:", String.format("%.2f ms", mPhysics), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, "   - Matrix Update:", String.format("%.2f ms", mUpdateMatrix), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
@@ -109,20 +109,20 @@ public class FrameStatistics extends AbstractFrame {
 		Nuklear.nk_spacer(ctx);
 
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, " GPU:", Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		nk_label_value(ctx, "   - OPEN GL:", String.format("%.2f ms", mSendToGPU), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, "   - GUI 2D:", String.format("%.2f ms", mGUI2D), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		
 		Nuklear.nk_layout_row_dynamic(ctx, spacer1, 1);
 		Nuklear.nk_spacer(ctx);
 
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		nk_label_value(ctx, " Total Render Time:", String.format("%.2f ms", mTotalRenderTime), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, " FPS:", String.format("%.2f", PerformanceMonitor.fps), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
 		nk_label_value(ctx, " Frame:", String.format("%d", PerformanceMonitor.totalFrames), leftCol, rightCol, Nuklear.NK_TEXT_LEFT, Nuklear.NK_TEXT_RIGHT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 
     }
 

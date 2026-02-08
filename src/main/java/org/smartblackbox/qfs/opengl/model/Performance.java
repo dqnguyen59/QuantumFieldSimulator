@@ -18,7 +18,7 @@
  */
 package org.smartblackbox.qfs.opengl.model;
 
-public class Statistics {
+public class Performance {
 	public static int numNodes;
 	public static int numNodesX;
 	public static int numNodesY;

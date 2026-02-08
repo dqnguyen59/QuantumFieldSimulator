@@ -29,8 +29,22 @@ Go to website <a href="https://www.smartblackbox.org/">https://www.smartblackbox
 <p>Then click on the menu "Project"->"Update Maven Project", then click on the "Ok" button. </p>
 <p>Find the file Main.java and run.</p>
 
-<b>Mac users:</b></br>
-VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
+### Mac users:
+
+    VM arguments "-XstartOnFirstThread" needs to be added in Eclipse.
+
+### Heap size:
+
+You might want to increase your heap size to appropriate value in your VM Options,
+if you are getting errors like:
+
+    Process finished with exit code 137 (interrupted by signal 9:SIGKILL)
+
+Set an appropriate value in your VM Options, i.e.:
+
+    -Xmx64g
+
+The required memory depends on the size of the number nodes that is used.
 
 ### Download executable binary files
 Go to the latest <a href="https://github.com/dqnguyen59/QuantumFieldSimulator/releases/tag/v0.1.90">release</a>.

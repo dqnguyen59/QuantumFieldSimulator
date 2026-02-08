@@ -20,12 +20,15 @@ package org.smartblackbox.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import org.ini4j.Wini;
+import org.smartblackbox.qfs.Constants;
+import org.smartblackbox.qfs.gui.model.NuklearModel;
 
 public abstract class AbstractSettings implements ISettings {
-	
+
+	protected NuklearModel nuklearModel;
+
 	protected String currentFilename = "";
 	private Wini ini;
 
@@ -33,6 +36,14 @@ public abstract class AbstractSettings implements ISettings {
 	}
 	
 	abstract public AbstractSettings clone();
+
+	public NuklearModel getNuklearModel() {
+		return nuklearModel;
+	}
+
+	public void setNuklearModel(NuklearModel nuklearModel) {
+		this.nuklearModel = nuklearModel;
+	}
 
 	public void loadFromFile(String filename) {
 		currentFilename = filename;
@@ -51,19 +62,23 @@ public abstract class AbstractSettings implements ISettings {
 	public void loadFromFile(Wini ini, String section, int index) {
 		this.ini = ini;
 	}
-	
+
 	public void loadFromFile() {
-		if (!currentFilename.isEmpty())
+		if (currentFilename.isEmpty()) {
+			getNuklearModel().setDialogFileModel(nuklearModel.showOpenFileDialog("Open Project File"));
+		}
+		else {
 			loadFromFile(currentFilename);
+		}
+	}
+
+	public void openFile() {
+		getNuklearModel().setDialogFileModel(nuklearModel.showOpenFileDialog("Open Project File"));
 	}
 
 	public void saveToFile(String filename) {
 		try {
 			File f = new File(filename);
-			
-			if (Files.deleteIfExists(f.toPath())) {
-				System.out.println(String.format("File '%s' deleted.", filename));
-			}
 			
 			if (!f.exists()) {
 				f.createNewFile();
@@ -72,7 +87,7 @@ public abstract class AbstractSettings implements ISettings {
 			
 			saveToFile(new Wini(f), "", 0);
 			ini.store();
-			System.out.println(String.format("File '%s' created.", filename));
+			System.out.println("saveToFile: " + currentFilename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -84,10 +99,18 @@ public abstract class AbstractSettings implements ISettings {
 	}
 	
 	public void saveToFile() {
-		if (!currentFilename.isEmpty())
+		if (getCurrentFilename().isEmpty()) {
+			getNuklearModel().setDialogFileModel(nuklearModel.showSaveFileDialog("Save Project File As"));
+		}
+		else {
 			saveToFile(currentFilename);
+		}
 	}
-	
+
+	public void saveAs() {
+		getNuklearModel().setDialogFileModel(nuklearModel.showSaveFileDialog("Save Project File As"));
+	}
+
 	public String getCurrentFilename() {
 		return currentFilename;
 	}
@@ -171,4 +194,22 @@ public abstract class AbstractSettings implements ISettings {
 		}
 	}
 
+	public void performFileDialog(String projectFilePath) {
+		if (getNuklearModel().getDialogFileModel() != null) {
+			String path = Constants.BASE_PATH + projectFilePath + Constants.SEPARATOR;
+
+			switch(getNuklearModel().getDialogFileModel().getConfirmState()) {
+				case open:
+					loadFromFile(path + getNuklearModel().getDialogFileModel().getSelectedFileName());
+					getNuklearModel().setDialogFileModel(null);
+					break;
+				case save:
+					saveToFile(path + getNuklearModel().getDialogFileModel().getSelectedFileName());
+					getNuklearModel().setDialogFileModel(null);
+					break;
+                default:
+					break;
+			}
+		}
+	}
 }

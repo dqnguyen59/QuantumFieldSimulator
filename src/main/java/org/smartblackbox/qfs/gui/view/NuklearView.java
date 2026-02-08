@@ -589,7 +589,7 @@ public class NuklearView {
 		NkMouse mouse = context.input().mouse();
 
 		if (mouse.grab()) {
-			//GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+			GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
 		} else if (mouse.grabbed()) {
 			float prevX = mouse.prev().x();
 			float prevY = mouse.prev().y();
@@ -597,7 +597,7 @@ public class NuklearView {
 			mouse.pos().x(prevX);
 			mouse.pos().y(prevY);
 		} else if (mouse.ungrab()) {
-			//GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+			GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
 		}
 	}
 

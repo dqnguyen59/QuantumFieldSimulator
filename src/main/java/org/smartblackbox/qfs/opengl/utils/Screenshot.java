@@ -13,7 +13,7 @@ import org.smartblackbox.utils.Utils;
 
 public class Screenshot {
 
-	private static AppSettings appSettings = AppSettings.getInstance();
+	private static final AppSettings appSettings = AppSettings.getInstance();
 
 	private static boolean isTakingScreenShot;
 	private static int screenshotBackgroundTransparency;
@@ -63,7 +63,7 @@ public class Screenshot {
 	/**
 	 * This method adjust the View port and should be called before rendering.<br/>
 	 * <br/>
-	 * See also method {@link #prepareScreenshot()}.<br/>
+	 * See also method {@link #prepareScreenshot(int, int, int)}.<br/>
 	 * See also method {@link #takeScreenShot()}.<br/>
 	 * 
 	 */
@@ -76,7 +76,7 @@ public class Screenshot {
 	/**
 	 * This method takes the actual screenshot and should be called after rendering.<br/>
 	 * <br/>
-	 * See also method {@link #prepareScreenshot()}.<br/>
+	 * See also method {@link #prepareScreenshot(int, int, int)}.<br/>
 	 * See also method {@link #updateScreenshotViewport()}.<br/>
 	 * 
 	 */

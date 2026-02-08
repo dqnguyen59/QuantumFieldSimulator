@@ -53,7 +53,7 @@ public class FramePreferences extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 		
-		createLayout(ctx, 0, model.getMenuBarHeight() + 120, width, height + (appSettings.isUseFixedNodes()? 0 : 120));
+		createLayout(ctx, 0, nuklearModel.getMenuBarHeight() + 120, width, height + (appSettings.isUseFixedNodes()? 0 : 120));
 	}
 
 	@Override

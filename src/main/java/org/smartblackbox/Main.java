@@ -40,11 +40,11 @@ public class Main {
 		System.out.println("Version Date: " + AppInfo.getDateTime());
 		System.out.println("Built By: " + AppInfo.getBuiltBy());
 		System.out.println("Author: " + AppInfo.getAuthor());
-		System.out.println("Contributers: " + AppInfo.getContributers());
+		System.out.println("Contributors: " + AppInfo.getContributors());
 		System.out.println(AppInfo.getWebsite());
-		System.out.println("");
+		System.out.println();
 		System.out.println("JWGL Version: " + Version.getVersion());
-		System.out.println("");
+		System.out.println();
 
 		Utils.forceJarCurrentDirectory();
 		

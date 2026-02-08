@@ -92,7 +92,7 @@ public abstract class AbstractFrame implements IFrame {
 	private boolean windowSizeChanged;
 
 	private String button_label_pressed = "";
-	protected NuklearModel model;
+	protected NuklearModel nuklearModel;
 	private StringBuffer editingText = new StringBuffer();
 	private int focusCount;
 	private int tabIndex;
@@ -107,12 +107,12 @@ public abstract class AbstractFrame implements IFrame {
 	
 	private Stack<NkColor> stackTextColor = new Stack<>();
 	
-	public AbstractFrame(NuklearModel model) {
-		this.model = model;
+	public AbstractFrame(NuklearModel nuklearModel) {
+		this.nuklearModel = nuklearModel;
 	}
 
 	public void close() {
-		model.close(this);
+		nuklearModel.close(this);
 	}
 
 	@Override
@@ -159,8 +159,10 @@ public abstract class AbstractFrame implements IFrame {
 
 	private void _createLayout(NkContext ctx, int x, int y, int width, int height, boolean centered) {
 		String title = getTitle();
-		
-		if (lastHeight != height || lastWidth != height) {
+
+        //System.out.println("width, height: " + lastWidth + ", " + lastHeight + ", " + width + ", " + height + ", ");
+
+		if (lastWidth != width || lastHeight != height) {
 			update();
 		}
 		
@@ -177,11 +179,16 @@ public abstract class AbstractFrame implements IFrame {
 			}
 		}
 		else {
+
 			NkRect r = appSettings.getFrameRectMap().get(title);
-			if (r != null) {
+            if (title.equals("Statusbar")) {
+                r.y(getWindowHeight() - r.h());
+            }
+
+            if (r != null) {
 				x = (int) r.x();
 				y = (int) r.y();
-				if (lastHeight == height && lastWidth == height) {
+				if (lastHeight == height && lastWidth == width) {
 					width = (int) r.w();
 					height = (int) r.h();
 				}
@@ -192,7 +199,7 @@ public abstract class AbstractFrame implements IFrame {
 		windowRect = NkRect.create();
 		Nuklear.nk_rect(x, y, width, height, windowRect);
 		
-		if (model.getFocusedFrame() == this) {
+		if (nuklearModel.getFocusedFrame() == this) {
 			ctx.style().window().header().label_normal(Theme.colorHeaderTextActive);
 			ctx.style().window().header().label_active(Theme.colorHeaderTextActive);
 		}
@@ -220,13 +227,13 @@ public abstract class AbstractFrame implements IFrame {
 			contentRect.y(contentRect.y() - 36);
 			contentRect.h(contentRect.h() + 40);
 
-			model.checkFocus(this, contentRect);
+			nuklearModel.checkFocus(this, contentRect);
 
 			ctx.style().window().header().label_normal(Theme.colorHeaderText);
 			ctx.style().window().header().label_active(Theme.colorHeaderText);
 			
-			if (isDialog() && model.getDialogStack().getCurrent() != null) {
-				model.getDialogStack().getCurrent().setWindowRect(contentRect);
+			if (isDialog() && nuklearModel.getDialogStack().getCurrent() != null) {
+				nuklearModel.getDialogStack().getCurrent().setWindowRect(contentRect);
 			}
 			
 			if (Nuklear.nk_window_has_focus(ctx)) {
@@ -272,8 +279,8 @@ public abstract class AbstractFrame implements IFrame {
 		}
 		
 		Nuklear.nk_end(ctx);
+		lastWidth = width;
 		lastHeight = height;
-		lastWidth = height;
 	}
 
 	protected void createLayout(NkContext ctx, int x, int y, int width, int height) {
@@ -393,9 +400,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeight, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, alignLabel);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		Nuklear.nk_label(ctx, value, alignValue);
@@ -407,9 +414,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeight, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		Nuklear.nk_label(ctx, value, Nuklear.NK_TEXT_LEFT);
@@ -425,9 +432,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeightEdit, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		value = Nuklear.nk_check_label(ctx, "", value);
@@ -556,9 +563,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeightEdit, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		value = editString(ctx, stack, stringBuffer, value, asciiFilter);
@@ -591,9 +598,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeightEdit, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		value = editInt(ctx, stack, stringBuffer, value);
@@ -631,9 +638,9 @@ public abstract class AbstractFrame implements IFrame {
 
 	protected double nk_label_edit(NkContext ctx, MemoryStack stack, String label, StringBuffer buffer, double value, DecimalFormat format) {
 		Nuklear.nk_layout_row_dynamic(ctx, rowHeightEdit, 1);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		return editDouble(ctx, stack, buffer, value, format);
 	}
 
@@ -646,9 +653,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeightEdit, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		value = editDouble(ctx, stack, buffer, value, format);
@@ -707,9 +714,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeightEdit, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		value = nk_combo_options(ctx, stack, values, value);
@@ -722,9 +729,9 @@ public abstract class AbstractFrame implements IFrame {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeightEdit, 2);
 		
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		
 		boolean isChanged = false;
 		for (String s : values) {
@@ -782,9 +789,9 @@ public abstract class AbstractFrame implements IFrame {
 	protected Vector3f nk_combo_color_picker(NkContext ctx, MemoryStack stack, String label, Vector3f color, double leftCol, double rightCol) {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeight, 2);
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_ALIGN_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		color = nk_combo_color_picker(ctx, stack, color);
 		Nuklear.nk_layout_row_end(ctx);
@@ -814,9 +821,9 @@ public abstract class AbstractFrame implements IFrame {
 	protected Vector4f nk_combo_color_picker(NkContext ctx, MemoryStack stack, String label, Vector4f color, double leftCol, double rightCol) {
 		Nuklear.nk_layout_row_begin(ctx, Nuklear.NK_DYNAMIC, rowHeight, 2);
 		Nuklear.nk_layout_row_push(ctx, (float) leftCol);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFontBold());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFontBold());
 		Nuklear.nk_label(ctx, label, Nuklear.NK_TEXT_ALIGN_LEFT);
-		Nuklear.nk_style_set_font(ctx, model.getDefaultFont());
+		Nuklear.nk_style_set_font(ctx, nuklearModel.getDefaultFont());
 		Nuklear.nk_layout_row_push(ctx, (float) rightCol);
 		color = nk_combo_color_picker(ctx, stack, color);
 		Nuklear.nk_layout_row_end(ctx);
@@ -840,11 +847,11 @@ public abstract class AbstractFrame implements IFrame {
 	}
 
 	public String getSelectedFile() {
-		return ((DialogFileModel) model.getDialogStack().getCurrent()).getSelectedFileName();
+		return ((DialogFileModel) nuklearModel.getDialogStack().getCurrent()).getSelectedFileName();
 	}
     
 	public void setSelectedFile(String fileName) {
-		((DialogFileModel) model.getDialogStack().getCurrent()).setSelectedFileName(fileName);
+		((DialogFileModel) nuklearModel.getDialogStack().getCurrent()).setSelectedFileName(fileName);
 	}
 
 	public boolean nk_file_list_view(NkContext ctx, String path, String projectFileExt, DialogFileModel dlgFileModel) {
@@ -860,11 +867,10 @@ public abstract class AbstractFrame implements IFrame {
 			
 			for (File file : files) {
 				boolean selected = dlgFileModel.getSelectedFileName().equalsIgnoreCase(file.getName());
-				boolean widgetMouseClickDown = Nuklear.nk_widget_is_mouse_clicked(ctx, Nuklear.NK_BUTTON_LEFT);
 				if (Nuklear.nk_select_label(ctx, file.getName(), Nuklear.NK_TEXT_ALIGN_LEFT, selected)) {
 					dlgFileModel.setSelectedFileName(file.getName());
 					dlgFileModel.setSelectedFilePath(path + Constants.SEPARATOR + file.getName());
-					if (widgetMouseClickDown && model.isDoubleClicked()) {
+					if (nuklearModel.isDoubleClicked()) {
 						isDoubleClicked = true;
 					}
 				}

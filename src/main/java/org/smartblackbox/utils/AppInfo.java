@@ -13,7 +13,7 @@ public class AppInfo {
 	private static String title = "Quantum Field Simulator";
 	private static String description = "Only visible when running from JAR MANIFEST.MF.";
 	private static String builtBy = "SmartBlackBox";
-	private static String contributers = "";
+	private static String contributors = "";
 	private static String version = "";
 	private static String website = "https://www.smartblackbox.org";
 	private static String author = "Duy Quoc Nguyen";
@@ -51,8 +51,8 @@ public class AppInfo {
 							String author = mainAttribs.getValue("Author");
 							if (author != null) AppInfo.author = author;
 
-							String contributers = mainAttribs.getValue("Contributers");
-							if (contributers != null) AppInfo.contributers = contributers;
+							String contributors = mainAttribs.getValue("Contributors");
+							if (contributors != null) AppInfo.contributors = contributors;
 
 							String version = mainAttribs.getValue("Version");
 							if (version != null) AppInfo.version = version;
@@ -76,7 +76,7 @@ public class AppInfo {
 	}
 
 	public static String getCopyRight() {
-		return String.format("© Copyright %s <%s> and contributers. All right reserved.", author, email);
+		return String.format("© Copyright %s <%s> and contributors. All right reserved.", author, email);
 	}
 	
 	public static String getTitle() {
@@ -99,8 +99,8 @@ public class AppInfo {
 		return author;
 	}
 
-	public static String getContributers() {
-		return AppInfo.contributers;
+	public static String getContributors() {
+		return AppInfo.contributors;
 	}
 
 	public static String getVersion() {

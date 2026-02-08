@@ -33,22 +33,28 @@ public class QFSNode extends Entity {
 	
 	private static final Vector3d FIXED_COLOR = new Vector3d(1f, 1f, 1f);
 	
-	private AppSettings appSettings = AppSettings.getInstance();
-	private QFSProject qfsProject = QFSProject.getInstance();
-	private QFSModel qfsModel = qfsProject.getQfsModel();
-	private Scene scene = qfsProject.scene;
-	
-	/*
-	 * 0: neighbors right
-	 * 1: neighbors top
-	 * 2: neighbors front
-	 * 3: neighbors left
-	 * 4: neighbors bottom
-	 * 5: neighbors back
-	 * 
-	 */
-	private QFSNode[] neighbors = new QFSNode[6];
-	private boolean hasNeightbors;
+	private final AppSettings appSettings = AppSettings.getInstance();
+	private final QFSProject qfsProject = QFSProject.getInstance();
+	private final QFSModel qfsModel = qfsProject.getQfsModel();
+	private final Scene scene = qfsProject.scene;
+
+    private static final int NEIGHBOR_RIGHT = 0;
+    private static final int NEIGHBOR_TOP = 1;
+    private static final int NEIGHBOR_FRONT = 2;
+    private static final int NEIGHBOR_LEFT = 3;
+    private static final int NEIGHBOR_BOTTOM = 4;
+    private static final int NEIGHBOR_BACK = 5;
+
+    /*
+     * 0: neighbors right
+     * 1: neighbors top
+     * 2: neighbors front
+     * 3: neighbors left
+     * 4: neighbors bottom
+     * 5: neighbors back
+     */
+	private final QFSNode[] neighbors = new QFSNode[6];
+	private boolean hasNeighbors;
 	private boolean isFixed;
 	private boolean isXFixed;
 	private boolean isYFixed;
@@ -56,7 +62,9 @@ public class QFSNode extends Entity {
 	private boolean isWall;
 	
 	private Vector3d fixedPosition;
-	private Vector3d acceleration = new Vector3d();
+    private final Vector3d ef = new Vector3d();
+	private final Vector3d mf = new Vector3d();
+	private final Vector3d acceleration = new Vector3d();
 	private Vector3d velocity = new Vector3d();
 	private Vector3i index = new Vector3i(-1);
 	private double customScale = -1;
@@ -103,22 +111,17 @@ public class QFSNode extends Entity {
 		return neighbors;
 	}
 
-	public void setNeighbor(int index, QFSNode node) {
-		this.neighbors[index] = node;
-		hasNeightbors = true;
-	}
-
-	public void setNeighbor(Neighbor neighbor, QFSNode node) {
+    public void setNeighbor(Neighbor neighbor, QFSNode node) {
 		this.neighbors[neighbor.ordinal()] = node;
-		hasNeightbors = true;
+		hasNeighbors = true;
 	}
 
 	public boolean isHasNeightbors() {
-		return hasNeightbors;
+		return hasNeighbors;
 	}
 
-	public void setHasNeightbors(boolean hasNeightbors) {
-		this.hasNeightbors = hasNeightbors;
+	public void setHasNeighbors(boolean hasNeighbors) {
+		this.hasNeighbors = hasNeighbors;
 	}
 
 	@Override
@@ -214,7 +217,7 @@ public class QFSNode extends Entity {
 		customScale = -1;
 	}
 
-	private synchronized void setAccelerationColor(Vector3d acceleration) {
+	private synchronized void setEMFieldColor(Vector3d emf) {
 		Material m = getMaterial(); 
 		
 		Vector4f color = m.getDiffuseColor();
@@ -225,88 +228,73 @@ public class QFSNode extends Entity {
 		float alphaIntensity = settings.getAlpha();
 		
 		if (customColor != null) {
-			color.x = customColor.x * 2.0f;
-			color.y = customColor.y * 2.0f;
-			color.z = customColor.z * 2.0f;
-			color.w = customColor.w * 2.0f;
+            color.set(customColor).mul(2.0f);
 			alpha = 1.0f;
 		}
 		else if (isSelected && !scene.isAnimated()) {
-			color.x = settings.selectedColor.x * 2.0f;
-			color.y = settings.selectedColor.y * 2.0f;
-			color.z = settings.selectedColor.z * 2.0f;
-			color.w = settings.selectedColor.w * 2.0f;
+            color.set(settings.selectedColor).mul(2.0f);
 			alpha = 1.0f;
 		}
 		else if (isHiLighted) {
-			color.x = settings.hiLightColor.x;
-			color.y = settings.hiLightColor.y;
-			color.z = settings.hiLightColor.z;
-			color.w = settings.hiLightColor.w;
+            color.set(settings.hiLightColor).mul(2.0f);
 			alpha = color.w;
 		}
 		else if (isWall) {
-			color.x = settings.wallColor.x;
-			color.y = settings.wallColor.y;
-			color.z = settings.wallColor.z;
-			color.w = settings.wallColor.w;
+            color.set(settings.wallColor).mul(2.0f);
 			alpha = color.w;
 		}
 		else if (isFixed) {
-			color.x = settings.fixedColor.x;
-			color.y = settings.fixedColor.y;
-			color.z = settings.fixedColor.z;
-			color.w = settings.fixedColor.w;
+            color = settings.fixedColor;
 			alpha = color.w;
 		}
 		else {
 			switch (settings.getColorMode()) {
 			case zColor:
-				color.x = (float) (Math.max(0, -acceleration.z) * intensity);
-				color.y = (float) (Math.abs(acceleration.y) * intensity);
-				color.z = (float) (Math.max(0, acceleration.z) * intensity);
+				color.x = (float) (Math.max(0, -emf.z) * intensity);
+				color.y = (float) (Math.abs(emf.y) * intensity);
+				color.z = (float) (Math.max(0, emf.z) * intensity);
 				color.w = 0;
 				break;
 			case zColor2:
-				color.x = (float) (Math.max(0, -acceleration.z) * intensity2);
-				color.y = (float) (Math.abs(acceleration.y) * intensity2);
-				color.z = (float) (Math.max(0, acceleration.z) * intensity2);
+				color.x = (float) (Math.max(0, -emf.z) * intensity2);
+				color.y = (float) (Math.abs(emf.y) * intensity2);
+				color.z = (float) (Math.max(0, emf.z) * intensity2);
 				color.w = 0;
 				break;
 			case zColor3:
-				color.x = (float) (Math.max(0, -acceleration.z) * Math.max(0, -acceleration.z) * intensity3);
-				color.y = (float) (Math.abs(acceleration.y * acceleration.y) * intensity3);
-				color.z = (float) (Math.max(0, acceleration.z) * Math.max(0, acceleration.z) * intensity3);
+				color.x = (float) (Math.max(0, -emf.z) * Math.max(0, -emf.z) * intensity3);
+				color.y = (float) (Math.abs(emf.y * emf.y) * intensity3);
+				color.z = (float) (Math.max(0, emf.z) * Math.max(0, emf.z) * intensity3);
 				color.w = 0;
 				break;
 			case xyzColor:
-				color.x = (float) (Math.abs(acceleration.x)) * intensity;
-				color.y = (float) (Math.abs(acceleration.y)) * intensity;
-				color.z = (float) (Math.abs(acceleration.z)) * intensity;
+				color.x = (float) (Math.abs(emf.x)) * intensity;
+				color.y = (float) (Math.abs(emf.y)) * intensity;
+				color.z = (float) (Math.abs(emf.z)) * intensity;
 				color.w = 0;
 				break;
 			case xyzColor2:
-				color.x = (float) (Math.abs(acceleration.x) * intensity2);
-				color.y = (float) (Math.abs(acceleration.y) * intensity2);
-				color.z = (float) (Math.abs(acceleration.z) * intensity2);
+				color.x = (float) (Math.abs(emf.x) * intensity2);
+				color.y = (float) (Math.abs(emf.y) * intensity2);
+				color.z = (float) (Math.abs(emf.z) * intensity2);
 				color.w = 0;
 				break;
 			case xyzColor3:
-				color.x = (float) (acceleration.x * acceleration.x) * intensity3;
-				color.y = (float) (acceleration.y * acceleration.y) * intensity3;
-				color.z = (float) (acceleration.z * acceleration.z) * intensity3;
+				color.x = (float) (emf.x * emf.x) * intensity3;
+				color.y = (float) (emf.y * emf.y) * intensity3;
+				color.z = (float) (emf.z * emf.z) * intensity3;
 				color.w = 0;
 				break;
 			case normal:
 			default:
-				color.x = settings.defaultNodeColor.x * (float) intensity / 100.0f;
-				color.y = settings.defaultNodeColor.y * (float) intensity / 100.0f;
-				color.z = settings.defaultNodeColor.z * (float) intensity / 100.0f;
-				color.w = settings.defaultNodeColor.w * (float) alphaIntensity;
+				color.x = settings.defaultNodeColor.x * intensity / 100.0f;
+				color.y = settings.defaultNodeColor.y * intensity / 100.0f;
+				color.z = settings.defaultNodeColor.z * intensity / 100.0f;
+				color.w = settings.defaultNodeColor.w * alphaIntensity;
 				alphaIntensity = color.w;
 				break;
 			}
-			alpha = (float) (alphaIntensity * (m.getDiffuseColor().length()));
+			alpha = (alphaIntensity * (m.getDiffuseColor().length()));
 		}
 		
 		m.setAmbientColor(color);
@@ -364,7 +352,8 @@ public class QFSNode extends Entity {
 	public void calcNewPosition() {
 		// If set to false then the node stops updating its position
 		if (qfsModel.isSimulating()) {
-			acceleration.set(0);
+			ef.set(0);
+            mf.set(0);
 			
 			for (QFSNode neighbor : neighbors) {
 				if (neighbor != null) {
@@ -377,48 +366,56 @@ public class QFSNode extends Entity {
 						}
 						
 						if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
-							acceleration.y += (neighbor.position.y - position.y) * alpha;
-							acceleration.z += (neighbor.position.z - position.z) * alpha;
+							ef.y += (neighbor.position.y - position.y) * alpha;
+							ef.z += (neighbor.position.z - position.z) * alpha;
 						}
 						if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
-							acceleration.x += (neighbor.position.x - position.x) * alpha;
-							acceleration.z += (neighbor.position.z - position.z) * alpha;
+							ef.x += (neighbor.position.x - position.x) * alpha;
+							ef.z += (neighbor.position.z - position.z) * alpha;
 						}
 						if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
-							acceleration.x += (neighbor.position.x - position.x) * alpha;
-							acceleration.y += (neighbor.position.y - position.y) * alpha;
+							ef.x += (neighbor.position.x - position.x) * alpha;
+							ef.y += (neighbor.position.y - position.y) * alpha;
 						}
 					}
 					else {
-						acceleration.add(neighbor.position).sub(position);
+						ef.add(neighbor.position).sub(position);
 					}
 				}
 			}
-			
+
+			Vector3d nLeft = neighbors[NEIGHBOR_LEFT] == null? new Vector3d() : neighbors[NEIGHBOR_LEFT].velocity;
+			Vector3d nRight = neighbors[NEIGHBOR_RIGHT] == null? new Vector3d() : neighbors[NEIGHBOR_RIGHT].velocity;
+			Vector3d nTop = neighbors[NEIGHBOR_TOP] == null? new Vector3d() : neighbors[NEIGHBOR_TOP].velocity;
+			Vector3d nBottom = neighbors[NEIGHBOR_BOTTOM] == null? new Vector3d() : neighbors[NEIGHBOR_BOTTOM].velocity;
+			Vector3d nFront = neighbors[NEIGHBOR_FRONT] == null? new Vector3d() : neighbors[NEIGHBOR_FRONT].velocity;
+			Vector3d nBack = neighbors[NEIGHBOR_BACK] == null? new Vector3d() : neighbors[NEIGHBOR_BACK].velocity;
+
+            mf.x = (nFront.y - nBack.y) * 0.05 - (nTop.z - nBottom.z) * 0.05;
+            mf.y = (nRight.z - nLeft.z) * 0.05 - (nFront.x - nBack.x) * 0.05;
+            mf.z = (nTop.x - nBottom.x) * 0.05 - (nRight.y - nLeft.y) * 0.05;
+
+            double cws = qfsProject.getConstantWaveSpeed() / 6;
+            double gamma = qfsProject.getConstantElectricFactor();
+            double beta = qfsProject.getConstantMagneticFactor();
+
+            Vector3d e_f = ef.mul(gamma);
+            Vector3d m_f = mf.mul(beta);
+
+			acceleration.set(e_f.add(m_f));
+
 			// Note that the result of the addition or multiplication is stored in the object variable itself.
-			positionBuff
-			.add(
-				velocity
-				.add(
-					acceleration
-					.mul(
-						qfsProject.getConstantWaveSpeed() / 6
-					)
-				)
-				.mul(
-					qfsProject.getConstantRadiation()
-				)
-			)
-			.add(
-				acceleration.mul(0.5)
-			);
-			
+			//positionBuff.add(velocity.add(e_f)).add(e_f.mul(0.5));
+			positionBuff.add(velocity.add(acceleration.mul(cws))).add(acceleration.mul(0.5));
+
+//			positionBuff.add(velocity.add(acceleration.mul(cws))).add(acceleration.mul(0.5));
+
 			if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.x = fixedPosition.x;
 			if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.y = fixedPosition.y;
 			if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.z = fixedPosition.z;
 		}
 
-		setAccelerationColor(isFixed? FIXED_COLOR : acceleration);
+		setEMFieldColor(isFixed? FIXED_COLOR : ef);
 	}
 
 }

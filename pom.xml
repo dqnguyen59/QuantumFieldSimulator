@@ -37,7 +37,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
-		<lwjgl.version>3.3.3</lwjgl.version>
+		<lwjgl.version>3.3.6</lwjgl.version>
 	</properties>
 
 	<profiles>
@@ -539,7 +539,7 @@
 							<Date-Time>${buildDateTime}</Date-Time>
 							<Built-By>${project.groupId}</Built-By>
 							<Author>${project.name}</Author>
-							<Contributers>${project.name}</Contributers>
+							<Contributors>${project.name}</Contributors>
 							<Version>${project.version}.${buildNumber}</Version>
 							<Website>https://www.smartblackbox.org</Website>
 							<Email>d.q.nguyen@smartblackbox.org</Email>

@@ -25,6 +25,7 @@ import org.ini4j.Wini;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.lwjgl.glfw.GLFW;
 import org.smartblackbox.qfs.Constants;
 import org.smartblackbox.qfs.opengl.model.Camera;
 import org.smartblackbox.qfs.opengl.model.DetectorModel;
@@ -59,7 +60,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	
 	private double constantFrequency = 0.60;
 	private double constantWaveSpeed = 1.00;
-	private double constantRadiation = 1.00;
+    private double constantElectricFactor = 0.35;
+    private double constantMagneticFactor = 0.26;
 
 	// Don't set the glSwapInterval below 1! It will cause instability of the application and freeze.
 	private int glSwapInterval = 1;
@@ -69,7 +71,7 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	public Scene scene;
 	public Terrain terrain;
 	public Vector3d baseRotation = new Vector3d(-66.6, 0, 0);
-	
+
 	public QFSSettings settings = new QFSSettings();
 	public SlitWallSettings slitWall = new SlitWallSettings();
 	public DetectorModel detectorModel = new DetectorModel();
@@ -104,7 +106,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		dimension.z = qfsProject.getDimensionZ();
 		constantFrequency = qfsProject.constantFrequency;
 		constantWaveSpeed = qfsProject.constantWaveSpeed;
-		constantRadiation = qfsProject.constantRadiation;
+        constantElectricFactor = qfsProject.constantElectricFactor;
+        constantMagneticFactor = qfsProject.constantMagneticFactor;
 		glSwapInterval = qfsProject.glSwapInterval;
 
 		camera.setFieldOfFiew(qfsProject.camera.getFieldOfFiew());
@@ -129,7 +132,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		super.loadFromFile(ini, section, index);
 		
 		setConstantFrequency(getDouble("QuantumField", "constantFrequency", 1.0));
-		setConstantRadiation(getDouble("QuantumField", "constantRadiation", 1.0));
+        setConstantElectricFactor(getDouble("QuantumField", "constantElectricFactor", 0.025));
+        setConstantMagneticFactor(getDouble("QuantumField", "constantMagneticFactor", 0.0003));
 		setGlSwapInterval(getInt("QuantumField", "glSwapInterval", 1));
 		int x = getInt("QuantumField", "dimension.x", 15);
 		int y = getInt("QuantumField", "dimension.y", 15);
@@ -210,7 +214,8 @@ public class QFSProject extends AbstractSettings implements ISettings {
 	public void saveToFile(Wini ini, String section, int index) {
 		super.saveToFile(ini, section, index);
 		put("QuantumField", "constantFrequency", constantFrequency);
-		put("QuantumField", "constantRadiation", constantRadiation);
+        put("QuantumField", "constantElectricFactor", constantElectricFactor);
+        put("QuantumField", "constantMagneticFactor", constantMagneticFactor);
 		put("QuantumField", "glSwapInterval", glSwapInterval);
 		put("QuantumField", "dimension.x", dimension.x);
 		put("QuantumField", "dimension.y", dimension.y);
@@ -473,21 +478,31 @@ public class QFSProject extends AbstractSettings implements ISettings {
 		return constantWaveSpeed;
 	}
 
-	public double getConstantRadiation() {
-		return constantRadiation;
+	public double getConstantElectricFactor() {
+		return constantElectricFactor;
 	}
 
-	public void setConstantRadiation(double constantRadiation) {
-		this.constantRadiation = constantRadiation;
+	public void setConstantElectricFactor(double constantElectricFactor) {
+		this.constantElectricFactor = constantElectricFactor;
 	}
 
-	public int getGlSwapInterval() {
+    public double getConstantMagneticFactor() {
+        return constantMagneticFactor;
+    }
+
+    public void setConstantMagneticFactor(double constantMagneticFactor) {
+        this.constantMagneticFactor = constantMagneticFactor;
+    }
+
+    public int getGlSwapInterval() {
 		return glSwapInterval;
 	}
 
 	public void setGlSwapInterval(int glSwapInterval) {
-		if (glSwapInterval < 1) this.glSwapInterval = 1;
-		else this.glSwapInterval = glSwapInterval;
+//		if (glSwapInterval < 1) this.glSwapInterval = 1;
+//		else this.glSwapInterval = glSwapInterval;
+		this.glSwapInterval = glSwapInterval;
+		GLFW.glfwSwapInterval(glSwapInterval);
 	}
 
 	public Light createLight(Entity parent, ObjFileModel modelLightBulb, ObjFileModel modelSpotLight, Vector3d position, Vector3d rotation, double scale) {

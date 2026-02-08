@@ -62,6 +62,8 @@ public class GLWindow {
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 3);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
 		GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+		GLFW.glfwWindowHint(GLFW.GLFW_DOUBLEBUFFER, GL11.GL_TRUE);
+		GLFW.glfwWindowHint(GLFW.GLFW_REFRESH_RATE, GLFW.GLFW_DONT_CARE);
 
 		GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, appSettings.getAntiAliasing());
 		
@@ -113,12 +115,12 @@ public class GLWindow {
 			GL11.glDisable(GL30.GL_MULTISAMPLE);
 
 		GL11.glEnable(GL11.GL_LIGHTING);
+		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
 	}
 
 	public void update() {
 		//GL11.glFinish();
 		GLFW.glfwSwapBuffers(windowHandle);
-		GLFW.glfwSwapInterval(qfsProject.getGlSwapInterval());
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 	

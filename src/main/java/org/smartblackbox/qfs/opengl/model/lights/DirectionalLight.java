@@ -28,7 +28,7 @@ public class DirectionalLight {
 	public DirectionalLight(Vector3f color, Vector3f direction, float intensity) {
 		super();
 		this.color = color;
-		this.direction = direction;
+		this.direction = direction.normalize();
 		this.intensity = intensity;
 	}
 
@@ -45,7 +45,7 @@ public class DirectionalLight {
 	}
 
 	public void setDirection(Vector3f direction) {
-		this.direction = direction;
+		this.direction = direction.normalize();
 	}
 
 	public float getIntensity() {

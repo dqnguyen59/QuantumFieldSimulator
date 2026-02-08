@@ -26,7 +26,7 @@ import org.smartblackbox.utils.ISettings;
 
 /**
  * To increase the performance, some have public variables to avoid calling getters and setters.
- * Most of these settings have a direct affect on the output,
+ * Most of these settings have a direct effect on the output,
  * while others might need further actions that can be checked with the method isChanged().
  * 
  * @author dqnguyen

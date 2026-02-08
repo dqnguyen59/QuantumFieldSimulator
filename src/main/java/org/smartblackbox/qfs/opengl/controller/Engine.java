@@ -35,6 +35,7 @@ import org.smartblackbox.qfs.gui.model.NuklearModel.Frame;
 import org.smartblackbox.qfs.gui.view.NuklearView;
 import org.smartblackbox.qfs.opengl.utils.Screenshot;
 import org.smartblackbox.qfs.opengl.view.GLWindow;
+import org.smartblackbox.qfs.settings.QFSProject;
 import org.smartblackbox.utils.PerformanceMonitor;
 import org.smartblackbox.utils.PerformanceMonitor.Measurement;
 
@@ -61,11 +62,12 @@ public abstract class Engine {
 
 	private int clickCount;
 	private long tDoubleClickInterval;
-	private int menuIndex;
-	private boolean isMenuActive;
+	//private int menuIndex;
+	//private boolean isMenuActive;
 	private long handle;
 	private int renderCounter;
-	
+    private long currentTime;
+
 	public Engine(GLWindow glWindow) {
 		this.glWindow = glWindow;
 	}
@@ -97,6 +99,7 @@ public abstract class Engine {
     	
     	nuklearController.unfocusAllFrames();
 
+		QFSProject.getInstance().setNuklearModel(nuklearModel);
 	}
 	
 	protected void addMouseAndKeyboardListener(IMouseAndKeyboardEvents listener) {
@@ -111,33 +114,42 @@ public abstract class Engine {
 	}
 
 	private void menuMouseMove() {
-		if (nuklearModel.getMouseY() < 19) {
+		if (nuklearModel.getMouseY() >  0 && nuklearModel.getMouseY() < nuklearModel.getMenuBarHeight()) {
 			int menuWidth = nuklearModel.getMenuItemWidth() + 5;
-			int menuMod = (int) (nuklearModel.getMouseX() % menuWidth);
+			int menuIndex = (int) (nuklearModel.getMouseX() / menuWidth);
 
-			if (menuMod > 5 && menuMod < (menuWidth - 5))
-				menuIndex = (int) (nuklearModel.getMouseX() / menuWidth);
+			if (menuIndex > 3) menuIndex = 3;
+
+			if (nuklearModel.isSubMenuActive() && menuIndex != nuklearModel.getMenuIndex()) {
+
+				// A fix when sometimes submenu is not visible while subMenu should be active,
+				// otherwise simulate button click to hide the current sub menu and show the sub menu at menu index.
+				if (nuklearModel.isSubMenuVisible())
+					simulateMouseClick();
+				simulateMouseClick();
+				nuklearModel.setMenuIndex(menuIndex);
+			}
 		}
 	}
 	
 	private void menuMouseButtonDown(int action) {
-		if (nuklearModel.getMouseY() < 19) {
+		if (nuklearModel.getMouseY() >  0 && nuklearModel.getMouseY() < nuklearModel.getMenuBarHeight()) {
 			if (action == GLFW.GLFW_RELEASE) {
-				isMenuActive = !isMenuActive;
+				nuklearModel.setSubMenuActive(!nuklearModel.isSubMenuActive());
 				simulateMouseClick();
 			}
 		}
 		else
-			isMenuActive = false;
+			nuklearModel.setSubMenuActive(false);
 	}
 
 	private void menuMouseActions() {
-		if (isMenuActive && handle != 0 && renderCounter % 2 == 0) {
-			if (menuIndex != nuklearModel.getMenuIndex() || 
-				menuIndex == nuklearModel.getMenuIndex() && !nuklearModel.isMenuActive()) {
-				simulateMouseClick();
-			}
-		}
+//		if (isMenuActive && handle != 0 && renderCounter % 2 == 0) {
+//			if (menuIndex != nuklearModel.getMenuIndex()) {
+//				simulateMouseClick();
+//				menuIndex = nuklearModel.getMenuIndex();
+//			}
+//		}
 	}
 
 	private void simulateMouseClick() {
@@ -146,10 +158,11 @@ public abstract class Engine {
 	}
 	
 	private void performMouseActions() {
-		if (mouseButtonEvents.size() > 0) {
+		if (!mouseButtonEvents.isEmpty()) { // && renderCounter % 2 == 0) {
 			// Make sure Nuklear have the time to process the mouse events at low fps.
 			// Only process one mouse event each rendering frame; 
 			MouseButtonEvent event = mouseButtonEvents.get(0);
+			nuklearModel.setDoubleClicked(event.action == GLFW.GLFW_REPEAT);
 			for (IMouseAndKeyboardEvents listener : eventListeners) {
 				if (listener.mouseButtonCallback(event.handle, event.button, event.action, event.mods))
 					break;
@@ -158,12 +171,14 @@ public abstract class Engine {
 		}
 	}
 
-	private void checkMouseDoubleClick(int button, int action, int mods) {
-		if (System.currentTimeMillis() - tDoubleClickInterval < Constants.DOUBLE_CLICK_INTERVAL) {
+	private void checkMouseDoubleClick(int button, int mods) {
+		long t = System.currentTimeMillis() - tDoubleClickInterval;
+
+		if (t < Constants.DOUBLE_CLICK_INTERVAL) {
 			clickCount++;
+
 			if (clickCount == 2) {
-				action = GLFW.GLFW_REPEAT;
-				mouseButtonEvents.add(new MouseButtonEvent(handle, button, action, mods));
+				mouseButtonEvents.add(new MouseButtonEvent(handle, button, GLFW.GLFW_REPEAT, mods));
 			}
 		}
 		else 
@@ -218,8 +233,8 @@ public abstract class Engine {
         });
         
 		GLFW.glfwSetMouseButtonCallback(handle, (window, button, action, mods) -> {
+			//menuMouseMove();
 			if (!isMouseActionLocked()) {
-				
 				menuMouseButtonDown(action);
 				
 				// Nuklear input does not always process the call backs in time at low fps.
@@ -227,7 +242,7 @@ public abstract class Engine {
 				// Call listener.mouseButtonCallback before rendering Nuklear.
 				mouseButtonEvents.add(new MouseButtonEvent(handle, button, action, mods));
 
-				checkMouseDoubleClick(button, action, mods);
+				checkMouseDoubleClick(button, mods);
 			}
         });
 
@@ -294,24 +309,7 @@ public abstract class Engine {
 		}
 	}
 
-	private void runInput() {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while (isRunning) {
-					processKeyboardInput();
-					try {
-						Thread.sleep(Constants.KEYBOARD_INTERVAL);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}).start();
-		
-	}
-
-	private void processInput() {
+	private void processGuiMouseInput() {
 		nuklearView.beginInput();
 		// Poll events for both OpenGL and NuklearGUI.
 		GLFW.glfwPollEvents();
@@ -330,6 +328,9 @@ public abstract class Engine {
 	protected void render(boolean isAnimated) {
 		PerformanceMonitor.start(Measurement.gui2D);
 
+		processKeyboardInput();
+		processGuiMouseInput();
+
 		menuMouseActions();
 
 		performMouseActions();
@@ -339,11 +340,11 @@ public abstract class Engine {
 		if (!isAnimated && !Screenshot.isTakingScreenShot()) {
 			nuklearView.render();
 		}
-		
+
 		PerformanceMonitor.stop(Measurement.gui2D);
 
 		glWindow.update();
-		
+
 		renderCounter++;
 	}
 	
@@ -354,33 +355,13 @@ public abstract class Engine {
 
 	private void run() {
 		isRunning = true;
-		runInput();
-		long delta;
-		long t = System.nanoTime();
-		
+		currentTime = System.nanoTime();
+
 		while (isRunning) {
-			if ((delta = System.nanoTime() - t) >= Constants.UPDATE_RATE * Constants.MILLISECOND) {
-				if (glWindow.windowShouldClose()) stop();
-				PerformanceMonitor.totalFrames += PerformanceMonitor.frames;
-				PerformanceMonitor.fps = PerformanceMonitor.frames * Constants.NANOSECOND / delta;
-				String custom_title = customTitle;
-				if (!custom_title.isEmpty())
-					custom_title = "| File: " + custom_title;
-				String title = String.format("%s %s | frames: %012d | FPS: %04.1f",
-						Constants.TITLE, custom_title,
-						PerformanceMonitor.totalFrames,
-						PerformanceMonitor.fps);
-				glWindow.setTitle(title);
-				t = System.nanoTime();
-				PerformanceMonitor.frames = 0;
-			}
-			
-			PerformanceMonitor.start(Measurement.totalRenderTime);
 			preRender();
 			render(false);
-			PerformanceMonitor.frames++;
-			processInput();
-			PerformanceMonitor.stop(Measurement.totalRenderTime);
+
+			showPerformance();
 		}
 		cleanUp();
 	}
@@ -395,6 +376,29 @@ public abstract class Engine {
 		glWindow.cleanUp();
 		errorCallback.free();
 		GLFW.glfwTerminate();
+	}
+
+	private void showPerformance() {
+		long deltaTime;
+		if ((deltaTime = System.nanoTime() - currentTime) >= Constants.UPDATE_RATE * Constants.MILLISECOND) {
+			if (glWindow.windowShouldClose()) stop();
+			PerformanceMonitor.totalFrames += PerformanceMonitor.frames;
+			PerformanceMonitor.fps = PerformanceMonitor.frames * Constants.NANOSECOND / deltaTime;
+			String custom_title = customTitle;
+			if (!custom_title.isEmpty())
+				custom_title = "| File: " + custom_title;
+			String title = String.format("%s %s | frames: %012d | FPS: %04.1f",
+					Constants.TITLE, custom_title,
+					PerformanceMonitor.totalFrames,
+					PerformanceMonitor.fps);
+			glWindow.setTitle(title);
+			currentTime = System.nanoTime();
+			PerformanceMonitor.frames = 0;
+		}
+
+		PerformanceMonitor.frames++;
+		PerformanceMonitor.stop(Measurement.totalRenderTime);
+		PerformanceMonitor.start(Measurement.totalRenderTime);
 	}
 
 }

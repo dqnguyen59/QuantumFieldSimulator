@@ -257,7 +257,7 @@ public class FrameOscillator extends AbstractFrame {
 						qfsProject.oscillators.set(i, qfsModel.selectedOscillator = oscillatorEdit.clone());
 					}
 					else {
-						model.showWarningDialog("Node Selection", "You haven't select a node, please select a node first.");
+						nuklearModel.showWarningDialog("Node Selection", "You haven't select a node, please select a node first.");
 					}
 				}
 			}

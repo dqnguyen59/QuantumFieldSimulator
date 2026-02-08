@@ -73,7 +73,7 @@ public class FrameQFSDimension extends AbstractFrame {
     		Nuklear.nk_label(ctx, "", Nuklear.NK_TEXT_CENTERED);
     		if (nk_button_label(ctx, "Update")) {
     			if (dimension.x < 3|| dimension.y < 3 || dimension.z < 1) {
-					model.showErrorDialog("Dimension Error", "Invalid dimension range.\n\nChoose a valid dimension: \nx >= 3\ny >= 3\nz >= 1");
+					nuklearModel.showErrorDialog("Dimension Error", "Invalid dimension range.\n\nChoose a valid dimension: \nx >= 3\ny >= 3\nz >= 1");
     			}
 				else
 					update();

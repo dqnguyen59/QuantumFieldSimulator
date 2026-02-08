@@ -82,7 +82,7 @@ public class FrameSaveFileDialog extends FrameDialog {
 
 			if (isSaveFilePerformed) {
 				if (Utils.fileExists(appSettings.getProjectFilePath() + Constants.SEPARATOR + dlgFileModel.getSelectedFileName())) {
-					confirmDialog = model.showConfirmDialog(DialogDefaultModel.NO_YES, "File save",
+					confirmDialog = nuklearModel.showConfirmDialog(DialogDefaultModel.NO_YES, "File save",
 							"File '" + dlgFileModel.getSelectedFileName() + "' already exists!\nDo you want to overwrite?");
 				}
 				else

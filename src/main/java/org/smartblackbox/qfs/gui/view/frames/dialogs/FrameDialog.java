@@ -31,12 +31,12 @@ public abstract class FrameDialog extends AbstractFrame {
 
 	@Override
 	public void close() {
-		model.getDialogStack().pop();
+		nuklearModel.getDialogStack().pop();
 		super.close();
 	}
 
 	public AbstractDialogModel getDialogModel() {
-		return model.getDialogStack().getCurrent();
+		return nuklearModel.getDialogStack().getCurrent();
 	}
 
 }

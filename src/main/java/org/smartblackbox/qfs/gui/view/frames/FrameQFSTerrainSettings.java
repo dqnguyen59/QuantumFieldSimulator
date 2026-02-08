@@ -52,7 +52,7 @@ public class FrameQFSTerrainSettings extends AbstractFrame {
 	public void render(long windowHandle, NkContext ctx) {
 		super.render(windowHandle, ctx);
 		
-		createLayout(ctx, 0, model.getMenuBarHeight() + 120, width, height);
+		createLayout(ctx, 0, nuklearModel.getMenuBarHeight() + 120, width, height);
 	}
 
 	@Override
