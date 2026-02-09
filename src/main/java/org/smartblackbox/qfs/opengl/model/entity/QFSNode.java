@@ -1,18 +1,16 @@
 /*
- * Copyright (C) 2023  Duy Quoc Nguyen <d.q.nguyen@smartblackbox.org> and contributors
+ * Copyright (C) 2023 Duy Quoc Nguyen <d.q.nguyen@smartblackbox.org> and contributors
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If
+ * not, see <https://www.gnu.org/licenses/>.
  * 
  * File created on 01/01/2023
  */
@@ -30,21 +28,17 @@ import org.smartblackbox.qfs.settings.AppSettings;
 import org.smartblackbox.qfs.settings.QFSProject;
 
 public class QFSNode extends Entity {
-	
+
 	private static final Vector3d FIXED_COLOR = new Vector3d(1f, 1f, 1f);
-	
+
 	private AppSettings appSettings = AppSettings.getInstance();
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSModel qfsModel = qfsProject.getQfsModel();
 	private Scene scene = qfsProject.scene;
-	
+
 	/*
-	 * 0: neighbors right
-	 * 1: neighbors top
-	 * 2: neighbors front
-	 * 3: neighbors left
-	 * 4: neighbors bottom
-	 * 5: neighbors back
+	 * 0: neighbors right 1: neighbors top 2: neighbors front 3: neighbors left 4:
+	 * neighbors bottom 5: neighbors back
 	 * 
 	 */
 	private QFSNode[] neighbors = new QFSNode[6];
@@ -54,18 +48,22 @@ public class QFSNode extends Entity {
 	private boolean isYFixed;
 	private boolean isZFixed;
 	private boolean isWall;
-	
-	private Vector3d fixedPosition;
-	private Vector3d acceleration = new Vector3d();
-	private Vector3d velocity = new Vector3d();
+
+	private Vector3d fixedPos;
+	private AV avp = new AV();
+	private AV avr = new AV();
+	// private Vector3d acceleration = new Vector3d();
+	// private Vector3d velocity = new Vector3d();
 	private Vector3i index = new Vector3i(-1);
 	private double customScale = -1;
 	private Vector4f customColor;
 
+	private double reflection;
+
 	public QFSNode(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
 		super(parent, model, position, rotation, scale);
 	}
-	
+
 	public Vector3i getIndex() {
 		return index;
 	}
@@ -87,7 +85,7 @@ public class QFSNode extends Entity {
 		index.y = y;
 		index.z = z;
 	}
-	
+
 	public String printIndex() {
 		return String.format("(%d, %d, %d)", index.x, index.y, index.z);
 	}
@@ -95,10 +93,11 @@ public class QFSNode extends Entity {
 	@Override
 	public void setPosition(Vector3d position) {
 		super.setPosition(position);
-		if (fixedPosition == null) fixedPosition = new Vector3d();
-		fixedPosition.set(position);
+		if (fixedPos == null)
+			fixedPos = new Vector3d();
+		fixedPos.set(position);
 	}
-	
+
 	public QFSNode[] getNeighbors() {
 		return neighbors;
 	}
@@ -167,11 +166,13 @@ public class QFSNode extends Entity {
 	}
 
 	public Vector3d getVelocity() {
-		return velocity;
+		return avp.v;
+		// return velocity;
 	}
 
 	public void setVelocity(Vector3d velocity) {
-		this.velocity = velocity;
+		avp.v.set(velocity);
+		// this.velocity = velocity;
 	}
 
 	/**
@@ -182,7 +183,7 @@ public class QFSNode extends Entity {
 	 * @param customScale
 	 */
 	public void setCustomScale(double customScale) {
-		this.customScale = customScale;		
+		this.customScale = customScale;
 	}
 
 	/**
@@ -196,17 +197,21 @@ public class QFSNode extends Entity {
 		customColor = color;
 	}
 
+	public double getReflection() {
+		return reflection;
+	}
+
+	public void setReflection(float reflection) {
+		this.reflection = reflection;
+	}
+
 	@Override
 	public void updateMatrix() {
 		updatePosition();
 		updateRotation();
-		
-		getTransformMatrix()
-		.identity()
-		.translate(position).
-		setRotationXYZ(rotationRad.x, rotationRad.y, rotationRad.z)
-		.scale(settings.scale)
-		.scale(customScale > 0? customScale : scale);
+
+		getTransformMatrix().identity().translate(pos).setRotationXYZ(rotRad.x, rotRad.y, rotRad.z)
+				.scale(settings.scale).scale(customScale > 0 ? customScale : scale);
 
 		if (parent != null)
 			parent.getTransformMatrix().mul(getTransformMatrix(), getTransformMatrix());
@@ -215,51 +220,46 @@ public class QFSNode extends Entity {
 	}
 
 	private synchronized void setAccelerationColor(Vector3d acceleration) {
-		Material m = getMaterial(); 
-		
+		Material m = getMaterial();
+
 		Vector4f color = m.getDiffuseColor();
 		float alpha = 0;
 		float intensity = settings.getIntensity();
 		float intensity2 = intensity * intensity;
 		float intensity3 = intensity2 * intensity;
 		float alphaIntensity = settings.getAlpha();
-		
+
 		if (customColor != null) {
 			color.x = customColor.x * 2.0f;
 			color.y = customColor.y * 2.0f;
 			color.z = customColor.z * 2.0f;
 			color.w = customColor.w * 2.0f;
 			alpha = 1.0f;
-		}
-		else if (isSelected && !scene.isAnimated()) {
+		} else if (isSelected && !scene.isAnimated()) {
 			color.x = settings.selectedColor.x * 2.0f;
 			color.y = settings.selectedColor.y * 2.0f;
 			color.z = settings.selectedColor.z * 2.0f;
 			color.w = settings.selectedColor.w * 2.0f;
 			alpha = 1.0f;
-		}
-		else if (isHiLighted) {
+		} else if (isHiLighted) {
 			color.x = settings.hiLightColor.x;
 			color.y = settings.hiLightColor.y;
 			color.z = settings.hiLightColor.z;
 			color.w = settings.hiLightColor.w;
 			alpha = color.w;
-		}
-		else if (isWall) {
+		} else if (isWall && reflection == 1.0) {
 			color.x = settings.wallColor.x;
 			color.y = settings.wallColor.y;
 			color.z = settings.wallColor.z;
 			color.w = settings.wallColor.w;
 			alpha = color.w;
-		}
-		else if (isFixed) {
+		} else if (isFixed && reflection == 1.0) {
 			color.x = settings.fixedColor.x;
 			color.y = settings.fixedColor.y;
 			color.z = settings.fixedColor.z;
 			color.w = settings.fixedColor.w;
 			alpha = color.w;
-		}
-		else {
+		} else {
 			switch (settings.getColorMode()) {
 			case zColor:
 				color.x = (float) (Math.max(0, -acceleration.z) * intensity);
@@ -308,117 +308,318 @@ public class QFSNode extends Entity {
 			}
 			alpha = (float) (alphaIntensity * (m.getDiffuseColor().length()));
 		}
-		
+
 		m.setAmbientColor(color);
 		m.getDiffuseColor().w = alpha;
 		m.getAmbientColor().w = m.getDiffuseColor().w;
 		m.setShininess(settings.getShininess() * alpha);
-		
+
 		customColor = null;
 	}
 
 	/**
-	 * Note that this is not the full quantum field formula, only the electric field is simulated.<br/>
+	 * Note that this is not the full quantum field formula, only the electric field
+	 * is simulated.
+	 * 
+	 * Some definitions:
+	 * 
+	 * t = time a = acceleration v = node velocity N = neighbor position
+	 * array[Right, Up, Front, Left, Down, Back] p = position (variable
+	 * positionBuff) r = radiation (wave will fade when radiation < 1) k = constant
+	 * light speed {k ∈ [0..1]} this constant is responsible for the speed of light.
+	 * Meaning, changing this constant would change the speed of light. Decreasing
+	 * this constant will result in a lower speed of light.
+	 * 
+	 * The equation of Quantum Field is simply based on motion formula:
+	 * 
+	 * ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N} a = ∆v / ∆t v = v + a * t x = x0 +
+	 * v0 * t + 1/2 a * t² v = v * r
+	 * 
+	 * Note that v is not the speed of light, but is actually the speed of the node
+	 * itself. The propagation of the light wave is caused by the motion of the node
+	 * and the variable k determines the speed of light.
+	 * 
+	 * If ∆t is one frame and one frame is one Planck time unit, then the short
+	 * formula can be written as:
+	 * 
+	 * a = avg(N) = k² / |N| * ∑(n – p) {n ∈ N} v = (v + a) * r p = p + v + a * 0.5
+	 * 
+	 * A node can only have six neighbors in the field matrix, then the length of
+	 * the array |N| is 6.
+	 * 
+	 * Remarks: the higher the k value the higher the speed of light, but k cannot
+	 * exceed 1. If k is greater than 1, the affected nodes become unstable and
+	 * eventually fly away.
+	 * 
+	 */
+	public void updateNodePropertiesV1_0() {
+		if (!hasNeightbors || isFixed) {
+			setAccelerationColor(new Vector3d(1f, 1f, 1f));
+			return;
+		}
+
+		if (qfsModel.isSimulating()) {
+			avp.a.set(0);
+			for (QFSNode neighbor : neighbors) {
+				avp.a.add(neighbor.pos).sub(pos);
+			}
+
+			// Note that the result of the addition or multiplication is stored in the
+			// object variable itself.
+			posBuff.add(avp.v.add(avp.a.mul(qfsProject.getConstantWaveSpeed() / 6.0))
+					.mul(qfsProject.getConstantRadiation())).add(avp.a.mul(0.5));
+		}
+
+		setAccelerationColor(avp.a);
+	}
+
+	/**
+	 * Note that this is not the full quantum field formula, only the electric field
+	 * is simulated.<br/>
 	 * <br/>
 	 * Some definitions:<br/>
 	 * <p style="margin-left: 30px;">
-	 * 		t = time																<br/>
-	 * 		a = acceleration														<br/>
-	 * 		v = node velocity														<br/>
-	 * 		N = neighbor position array[Right, Up, Front, Left, Down, Back]			<br/>
-	 * 		p = position (variable positionBuff)									<br/>
-	 * 		r = radiation (wave will fade when radiation < 1)						<br/>
-	 * 		k = constant light speed {k ∈ [0..1]}									<br/>
-	 * 			this constant is responsible for the speed of light.				<br/>
-	 * 			Meaning, changing this constant would change the speed of light.	<br/>
-	 * 			Decreasing this constant will result in a lower speed of light.		<br/>
+	 * t = time <br/>
+	 * a = acceleration <br/>
+	 * v = node velocity <br/>
+	 * N = neighbor position array[Right, Up, Front, Left, Down, Back] <br/>
+	 * p = position (variable positionBuff) <br/>
+	 * r = radiation (wave will fade when radiation < 1) <br/>
+	 * k = constant light speed {k ∈ [0..1]} <br/>
+	 * this constant is responsible for the speed of light. <br/>
+	 * Meaning, changing this constant would change the speed of light. <br/>
+	 * Decreasing this constant will result in a lower speed of light. <br/>
 	 * </p>
 	 * <br/>
 	 * The equation of Quantum Field is simply based on motion formula:<br/>
 	 * <p style="margin-left: 30px;">
-	 * 	   ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N}	<br/>
-	 * 		a = ∆v / ∆t									<br/>
-	 * 		v = v + a * t								<br/>
-	 * 		x = x0 + v0 * t + 1/2 a * t²				<br/>
+	 * ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N} <br/>
+	 * a = ∆v / ∆t <br/>
+	 * v = v + a * t <br/>
+	 * x = x0 + v0 * t + 1/2 a * t² <br/>
 	 * </p>
 	 * <br/>
-	 * Note that v is not the speed of light, but is actually the speed of the node itself.
-	 * The propagation of the light wave is caused by the motion of the node
+	 * Note that v is not the speed of light, but is actually the speed of the node
+	 * itself. The propagation of the light wave is caused by the motion of the node
 	 * and the variable k determines the speed of light.<br/>
 	 * <br/>
-	 * If ∆t is one frame and one frame is one Planck time unit, then the short formula can be written as:<br/> 
+	 * If ∆t is one frame and one frame is one Planck time unit, then the short
+	 * formula can be written as:<br/>
 	 * <p style="margin-left: 30px;">
-	 * 		a = avg(N)        = k² / |N| * ∑(n – p) {n ∈ N}		<br/>
-	 * 		v = nVel(v, a)    = (v + a) * r						<br/>
-	 * 		p = nPos(v, p, a) = p + v + a * 0.5					<br/>
+	 * a = avg(N) = k² / |N| * ∑(n – p) {n ∈ N} <br/>
+	 * v = nVel(v, a) = (v + a) * r <br/>
+	 * p = nPos(v, p, a) = p + v + a * 0.5 <br/>
 	 * </p>
 	 * <br/>
-	 * A node can only have six neighbors in the field matrix, then the length of the array |N| is 6.<br/>
+	 * A node can only have six neighbors in the field matrix, then the length of
+	 * the array |N| is 6.<br/>
 	 * <br/>
-	 * <b>Remarks:</b>
-	 * The higher the k value the higher the speed of light, but k cannot exceed 1. 
-	 * If k is greater than 1, the affected nodes become unstable and eventually fly away.<br/>
+	 * <b>Remarks:</b> The higher the k value the higher the speed of light, but k
+	 * cannot exceed 1. If k is greater than 1, the affected nodes become unstable
+	 * and eventually fly away.<br/>
 	 * <br/>
 	 * 
 	 */
-	public void calcNewPosition() {
-		// If set to false then the node stops updating its position
-		if (qfsModel.isSimulating()) {
-			acceleration.set(0);
-			
-			for (QFSNode neighbor : neighbors) {
-				if (neighbor != null) {
+	public void updateNodePropertiesV1_1() {
+		avp.a.set(0);
+
+		for (QFSNode neighbor : neighbors) {
+			if (neighbor != null) {
+				// if (false && (isFixed || isWall)) {
+				// // double alpha = 1.0 - (isWall? reflection :
+				// appSettings.getReflectionFixedNodes());
+				//
+				// if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
+				// acceleration.y += (neighbor.position.y - position.y) * alpha;
+				// acceleration.z += (neighbor.position.z - position.z) * alpha;
+				// }
+				// if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
+				// acceleration.x += (neighbor.position.x - position.x) * alpha;
+				// acceleration.z += (neighbor.position.z - position.z) * alpha;
+				// }
+				// if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
+				// acceleration.x += (neighbor.position.x - position.x) * alpha;
+				// acceleration.y += (neighbor.position.y - position.y) * alpha;
+				// }
+				// } else {
+				// acceleration.add(neighbor.position).sub(position).mul(alpha);
+				// }
+				if (isFixed || isWall) {
+					double alpha = 1.0 - (isWall ? reflection : appSettings.getReflectionFixedNodes());
+
 					if (isFixed || isWall) {
-						double alpha = isWall? 0.02 : (1.0 - appSettings.getAbsorptionFixedNodes());
-						
 						if (alpha == 0) {
-							velocity.set(0);
-							positionBuff.set(fixedPosition);
-						}
-						
-						if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
-							acceleration.y += (neighbor.position.y - position.y) * alpha;
-							acceleration.z += (neighbor.position.z - position.z) * alpha;
-						}
-						if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
-							acceleration.x += (neighbor.position.x - position.x) * alpha;
-							acceleration.z += (neighbor.position.z - position.z) * alpha;
-						}
-						if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) {
-							acceleration.x += (neighbor.position.x - position.x) * alpha;
-							acceleration.y += (neighbor.position.y - position.y) * alpha;
+							avp.v.set(0);
+							posBuff.set(fixedPos);
 						}
 					}
-					else {
-						acceleration.add(neighbor.position).sub(position);
-					}
+
+					avp.a.x += (neighbor.pos.x - pos.x) * alpha;
+					avp.a.y += (neighbor.pos.y - pos.y) * alpha;
+					avp.a.z += (neighbor.pos.z - pos.z) * alpha;
+				} else {
+					avp.a.add(neighbor.pos).sub(pos);
 				}
+				// acceleration.add(neighbor.position).sub(position).mul(alpha);
 			}
-			
-			// Note that the result of the addition or multiplication is stored in the object variable itself.
-			positionBuff
-			.add(
-				velocity
-				.add(
-					acceleration
-					.mul(
-						qfsProject.getConstantWaveSpeed() / 6
-					)
-				)
-				.mul(
-					qfsProject.getConstantRadiation()
-				)
-			)
-			.add(
-				acceleration.mul(0.5)
-			);
-			
-			if ((isXFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.x = fixedPosition.x;
-			if ((isYFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.y = fixedPosition.y;
-			if ((isZFixed || isFixed && appSettings.isUseFixedNodes()) || isWall) positionBuff.z = fixedPosition.z;
 		}
 
-		setAccelerationColor(isFixed? FIXED_COLOR : acceleration);
+		// Note that the result of the addition or multiplication is stored in the
+		// object variable itself.
+		posBuff.add(avp.v.add(avp.a.mul(qfsProject.getConstantWaveSpeed() / 6)).mul(qfsProject.getConstantRadiation()))
+				.add(avp.a.mul(0.5));
+
+		if ((isXFixed || isFixed && appSettings.isUseFixedNodes()))
+			posBuff.x = fixedPos.x;
+		if ((isYFixed || isFixed && appSettings.isUseFixedNodes()))
+			posBuff.y = fixedPos.y;
+		if ((isZFixed || isFixed && appSettings.isUseFixedNodes()))
+			posBuff.z = fixedPos.z;
+
+		setAccelerationColor(isFixed ? FIXED_COLOR : avp.a);
 	}
 
+	/**
+	 * This formula enables to calculate absorptions.
+	 * 
+	 * Note that this is not the full quantum field formula, only the electric field
+	 * is simulated.<br/>
+	 * <br/>
+	 * Some definitions:<br/>
+	 * <p style="margin-left: 30px;">
+	 * t = time <br/>
+	 * a = acceleration <br/>
+	 * v = node velocity <br/>
+	 * N = neighbor position array[Right, Up, Front, Left, Down, Back] <br/>
+	 * p = position (variable positionBuff) <br/>
+	 * r = radiation (wave will fade when radiation < 1) <br/>
+	 * k = constant light speed {k ∈ [0..1]} <br/>
+	 * this constant is responsible for the speed of light. <br/>
+	 * Meaning, changing this constant would change the speed of light. <br/>
+	 * Decreasing this constant will result in a lower speed of light. <br/>
+	 * </p>
+	 * <br/>
+	 * The equation of Quantum Field is simply based on motion formula:<br/>
+	 * <p style="margin-left: 30px;">
+	 * ∆v = avg(N) = k² / |N| * ∑(n – p) {n ∈ N} <br/>
+	 * a = ∆v / ∆t <br/>
+	 * v = v + a * t <br/>
+	 * x = x0 + v0 * t + 1/2 a * t² <br/>
+	 * </p>
+	 * <br/>
+	 * Note that v is not the speed of light, but is actually the speed of the node
+	 * itself. The propagation of the light wave is caused by the motion of the node
+	 * and the variable k determines the speed of light.<br/>
+	 * <br/>
+	 * If ∆t is one frame and one frame is one Planck time unit, then the short
+	 * formula can be written as:<br/>
+	 * <p style="margin-left: 30px;">
+	 * a = avg(N) = k² / |N| * ∑(n – p) {n ∈ N} <br/>
+	 * v = nVel(v, a) = (v + a) * r <br/>
+	 * p = nPos(v, p, a) = p + v + a * 0.5 <br/>
+	 * </p>
+	 * <br/>
+	 * A node can only have six neighbors in the field matrix, then the length of
+	 * the array |N| is 6.<br/>
+	 * <br/>
+	 * <b>Remarks:</b> The higher the k value the higher the speed of light, but k
+	 * cannot exceed 1. If k is greater than 1, the affected nodes become unstable
+	 * and eventually fly away.<br/>
+	 * <br/>
+	 * 
+	 */
+	public void updateNodePropertiesV1_2() {
+		avp.a.set(0);
+
+		for (QFSNode neighbor : neighbors) {
+			if (neighbor != null) {
+				if (isFixed || isWall) {
+					// Absorptions alpha
+					double alpha = 1.0 - (isWall ? reflection : appSettings.getReflectionFixedNodes());
+
+					if (alpha == 0) {
+						avp.v.set(0);
+						posBuff.set(fixedPos);
+					}
+
+					avp.a.add(neighbor.pos).add(neighbor.pos).sub(pos).sub(neighbor.posBuff).mul(alpha);
+				} else {
+					avp.a.add(neighbor.pos).sub(pos);
+				}
+			}
+		}
+
+		// Note that the result of the addition or multiplication is stored in the
+		// object variable itself.
+		posBuff.add(avp.v.add(avp.a.mul(qfsProject.getConstantWaveSpeed() / 6)).mul(qfsProject.getConstantRadiation()))
+				.add(avp.a.mul(0.5));
+
+		if ((isXFixed || isFixed && appSettings.isUseFixedNodes()))
+			posBuff.x = fixedPos.x;
+		if ((isYFixed || isFixed && appSettings.isUseFixedNodes()))
+			posBuff.y = fixedPos.y;
+		if ((isZFixed || isFixed && appSettings.isUseFixedNodes()))
+			posBuff.z = fixedPos.z;
+
+		lastPos.set(posBuff);
+
+		setAccelerationColor(isFixed ? FIXED_COLOR : avp.a);
+	}
+
+	public void updateNodePropertiesV1_3() {
+		avr.a.set(0);
+		avp.a.set(0);
+
+		for (QFSNode n : neighbors) {
+			if (n != null) {
+				Vector3d ar;
+				Vector3d ap;
+				if (isFixed || isWall) {
+					// Absorptions alpha
+					double alpha = 1.0 - (isWall ? reflection : appSettings.getReflectionFixedNodes());
+					ar = (new Vector3d()).add(n.rot).add(n.rot).sub(rot).sub(n.rotBuff).mul(alpha);
+					ap = (new Vector3d()).add(n.pos).sub(pos).sub(n.posBuff).mul(alpha);
+				} else {
+					ar = (new Vector3d()).add(n.rot).sub(rot).mul(2.0);
+					ap = (new Vector3d()).add(n.pos).sub(pos);
+//					if (n.help != null) {
+//						n.help.setPosition(ap);
+//
+//						Vector4d nodePos1 = new Vector4d();
+//						Vector4d nodePos2 = new Vector4d();
+//						getTransformMatrixd().transform(0, 0, 0, 1, nodePos1);
+//						n.help.getTransformMatrixd().transform(0, 0, 0, 1, nodePos2);
+//						ap.sub((new Vector3d(nodePos1.x, nodePos1.y, nodePos1.z))
+//								.sub(new Vector3d(nodePos2.x, nodePos2.y, nodePos2.z)).mul(0.001));
+//					}
+				}
+				avp.a.add(ap);// .add(ar.y, ar.z, ar.x);
+				double f = 10.0;
+				avr.a.add(ar).sub(ap.x * f, ap.y * f, ap.z * f);
+			}
+		}
+
+		double k = qfsProject.getConstantWaveSpeed() / 6;
+		double r = qfsProject.getConstantRadiation();
+
+		// Note that the result of the addition or multiplication is stored in the
+		// object variable itself.
+		rotBuff.add(avr.v.add(avr.a.mul(k)).mul(r)).add(avr.a.mul(0.5));
+		posBuff.add(avp.v.add(avp.a.mul(k)).mul(r)).add(avp.a.mul(0.5));
+
+		if ((isXFixed || isFixed && appSettings.isUseFixedNodes())) {
+			posBuff.x = fixedPos.x;
+		}
+		if ((isYFixed || isFixed && appSettings.isUseFixedNodes())) {
+			posBuff.y = fixedPos.y;
+		}
+		if ((isZFixed || isFixed && appSettings.isUseFixedNodes())) {
+			posBuff.z = fixedPos.z;
+		}
+
+		lastRot.set(rotBuff);
+		lastPos.set(posBuff);
+
+		setAccelerationColor(isFixed ? FIXED_COLOR : avp.a);
+	}
 }

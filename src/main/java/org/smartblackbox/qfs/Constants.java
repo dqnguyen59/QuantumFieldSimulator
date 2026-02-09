@@ -28,29 +28,23 @@ import org.smartblackbox.utils.Utils;
 public class Constants {
 
 	public static final String MANIFEST_FILE = "META-INF/MANIFEST.MF";
-	
+
 	public static final String SEPARATOR = System.getProperty("file.separator");
 
 	public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	public static final String DATE_FILE_FORMAT = "yyyyMMddHHmmss";
-	
+
 	public static final double NANOSECOND = 1000000000;
 	public static final double MILLISECOND = 1000000;
 	public static final double UPDATE_RATE = 100; // ms
 	public static final long KEYBOARD_INTERVAL = 50; // ms
 	public static final int KEYBOARD_INTERVAL_REPEAT = 15; // ms
-	
-	public static final NkColor DEFAULT_BG_COLOR = NkColor.create()
-            .r((byte) 0x50)
-            .g((byte) 0x50)
-            .b((byte) 0x50)
-            .a((byte) 0xFF);
 
-	public static final NkColor TRANSPARENT_BG_COLOR = NkColor.create()
-            .r((byte) 0x70)
-            .g((byte) 0x70)
-            .b((byte) 0xB0)
-            .a((byte) 0xD0);
+	public static final NkColor DEFAULT_BG_COLOR = NkColor.create().r((byte) 0x50).g((byte) 0x50).b((byte) 0x50)
+			.a((byte) 0xFF);
+
+	public static final NkColor TRANSPARENT_BG_COLOR = NkColor.create().r((byte) 0x70).g((byte) 0x70).b((byte) 0xB0)
+			.a((byte) 0xD0);
 
 	public static final String TITLE = "Quantum Field Simulator";
 
@@ -74,21 +68,21 @@ public class Constants {
 	public static final String SHADER_NODE_VERTEX_FILE = "shaders/node_vertex.vs";
 	public static final String SHADER_NODE_FRAGMENT_FILE = "shaders/node_fragment.fs";
 
-	public static final String MODEL_NODE = "models/sphere2.obj";
+	public static final String MODEL_NODE = "models/cube.obj";
 	public static final String MODEL_LIGHT_BULB = "models/sphere2.obj";
 	public static final String MODEL_LIGHT_CAP = "models/spotLight.obj";
 	public static final String MODEL_ARROW = "models/arrow.obj";
 
 	public static final int STATUS_BAR_HEIGHT = 40;
-	
+
 	public static final int INITIAL_NUM_LIGHTS = 2;
 
 	public static final float SPECULAR_POWER = 32f;
-	
+
 	public static final float CAMERA_MOVE_SPEED = 0.05f;
 	public static final float MOUSE_SENSITIVITY = 0.2f;
 	public static final float CAMERA_STEP = 0.05f;
-	
+
 	public static final Vector4f DEFAULT_COLOUR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
 	public static final Vector3f AMBIENT_LIGHT = new Vector3f(0.1f, 0.1f, 0.1f);
 

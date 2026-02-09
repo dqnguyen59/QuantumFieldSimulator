@@ -25,14 +25,20 @@ import org.smartblackbox.qfs.gui.model.NuklearModel;
 import org.smartblackbox.qfs.opengl.model.QFSModel;
 import org.smartblackbox.qfs.opengl.model.QFSModel.EditMode;
 import org.smartblackbox.qfs.settings.QFSProject;
+import org.smartblackbox.qfs.settings.SlitWallSettings;
 
 public class FrameEditWall extends AbstractFrame {
 
 	private QFSProject qfsProject = QFSProject.getInstance();
+	private SlitWallSettings slitWall = qfsProject.slitWall;
 	private QFSModel qfsModel = qfsProject.getQfsModel(); 
 
 	private int width = 300;
-	private int height = 312;
+	private int height = 420;
+	private double leftCol = 0.50;
+	private double rightCol = 0.50;
+
+	private StringBuffer bufReflection = new StringBuffer();
 
 	public FrameEditWall(NuklearModel frames) {
 		super(frames);
@@ -53,9 +59,9 @@ public class FrameEditWall extends AbstractFrame {
 	@Override
 	protected void layout(NkContext ctx, int x, int y, int width, int height) {
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
-			qfsModel.setWallVisible(Nuklear.nk_check_label(ctx, "Show Wall", qfsModel.isWallVisible()));
 
+			qfsModel.setWallVisible(nk_check_label(ctx, "Show Wall", qfsModel.isWallVisible(), leftCol, rightCol));
+			
 			Nuklear.nk_layout_row_static(ctx, rowHeight, 120, 1);
 			if (Nuklear.nk_option_label(ctx, "None", qfsModel.getEditMode() == EditMode.none)) {
 				qfsModel.setEditMode(EditMode.none);
@@ -85,9 +91,16 @@ public class FrameEditWall extends AbstractFrame {
 				qfsModel.setEditMode(EditMode.eraseWall);
 			}
 
-			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
-			Nuklear.nk_label(ctx, "", Nuklear.NK_TEXT_LEFT);
-			
+			if (Nuklear.nk_option_label(ctx, "Fill", qfsModel.getEditMode() == EditMode.fillWall)) {
+				qfsModel.setEditMode(EditMode.fillWall);
+			}
+
+			nk_spacer(ctx, spacer1, 1);
+			slitWall.setReflection(nk_label_edit(ctx, stack, " Reflection:",
+				bufReflection, slitWall.getReflection(), leftCol, rightCol));
+			slitWall.setReflection(nk_slider(ctx, 0.0, slitWall.getReflection(), 1.0, 0.01));
+			nk_spacer(ctx, spacer1, 1);
+
 			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 4);
 			Nuklear.nk_label(ctx, "", Nuklear.NK_TEXT_LEFT);
 			if (nk_button_label(ctx, "Clear all")) {

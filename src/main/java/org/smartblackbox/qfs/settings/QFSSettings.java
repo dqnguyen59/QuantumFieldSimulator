@@ -25,25 +25,19 @@ import org.smartblackbox.utils.AbstractSettings;
 import org.smartblackbox.utils.ISettings;
 
 /**
- * To increase the performance, some have public variables to avoid calling getters and setters.
- * Most of these settings have a direct affect on the output,
- * while others might need further actions that can be checked with the method isChanged().
+ * To increase the performance, some have public variables to avoid calling
+ * getters and setters. Most of these settings have a direct affect on the
+ * output, while others might need further actions that can be checked with the
+ * method isChanged().
  * 
  * @author dqnguyen
  *
  */
 public class QFSSettings extends AbstractSettings implements ISettings {
-	
+
 	public enum SliceType {
-		sliceX,
-		sliceY,
-		sliceZ,
-		sliceXZ,
-		sliceYZ,
-		sliceXY,
-		none,
-		;
-		
+		sliceX, sliceY, sliceZ, sliceXZ, sliceYZ, sliceXY, none,;
+
 		private static String[] strEnums;
 
 		public static String[] getValues() {
@@ -56,24 +50,18 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 			}
 			return strEnums;
 		}
-		
+
 		public static boolean contains(String value) {
 			for (String item : getValues()) {
-				if (item.equals(value)) return true;
+				if (item.equals(value))
+					return true;
 			}
 			return false;
 		}
 	}
 
 	public enum ColorMode {
-		normal,
-		xyzColor,
-		xyzColor2,
-		xyzColor3,
-		zColor,
-		zColor2,
-		zColor3,
-		;
+		normal, xyzColor, xyzColor2, xyzColor3, zColor, zColor2, zColor3,;
 
 		private static String[] strEnums;
 
@@ -88,17 +76,42 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 			return strEnums;
 		}
 	}
-	
+
+	public enum NodeFormulaVersion {
+		v_1_0, v_1_1, v_1_2, v_1_3,;
+
+		private static String[] strEnums;
+
+		public static String[] getValues() {
+			if (strEnums == null) {
+				NodeFormulaVersion[] v = values();
+				strEnums = new String[v.length];
+				for (int i = 0; i < v.length; i++) {
+					strEnums[i] = v[i].name();
+				}
+			}
+			return strEnums;
+		}
+
+		public static boolean contains(String value) {
+			for (String item : getValues()) {
+				if (item.equals(value))
+					return true;
+			}
+			return false;
+		}
+	}
+
 	private boolean isChanged;
 
-	public Vector4f defaultNodeColor	= new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
-	public Vector4f fixedColor			= new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
-	public Vector4f wallColor			= new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
-	public Vector4f selectedColor		= new Vector4f(1.0f, 0.0f, 1.0f, 1.0f);
-	public Vector4f hiLightColor		= new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
-	
-	public float scale = 1.0f;
-	
+	public Vector4f defaultNodeColor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+	public Vector4f fixedColor = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
+	public Vector4f wallColor = new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
+	public Vector4f selectedColor = new Vector4f(1.0f, 0.0f, 1.0f, 1.0f);
+	public Vector4f hiLightColor = new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
+
+	public float scale = 0.2f;
+
 	private Float depthVisibility = 0.8f;
 	private float alphaSlice = 1.0f;
 	private float alphaAll = 0.1f;
@@ -109,6 +122,8 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	private SliceType lastSliceType = SliceType.sliceZ;
 	private ColorMode colorMode = ColorMode.normal;
 	private ColorMode lastColorMode = ColorMode.normal;
+	private NodeFormulaVersion nodeFormulaVersion = NodeFormulaVersion.v_1_3;
+	private NodeFormulaVersion lastNodeFormulaVersion = NodeFormulaVersion.v_1_3;
 	private int visibleIndexX;
 	private int visibleIndexY;
 	private int visibleIndexZ;
@@ -137,7 +152,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	public AbstractSettings clone() {
 		return new QFSSettings(this);
 	}
-	
+
 	public Float getDepthVisibility() {
 		return depthVisibility;
 	}
@@ -149,7 +164,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	public float getDepthVisibilityFactor() {
 		return (1 - depthVisibility) * Constants.DEPTH_FADING_FACTOR;
 	}
-	
+
 	public float getAlphaSlice() {
 		return alphaSlice;
 	}
@@ -178,8 +193,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	public void incAlpha() {
 		if (getSliceType() == SliceType.none) {
 			setAlphaAll(Math.min(1, getAlphaAll() + 0.01f));
-		}
-		else {
+		} else {
 			setAlphaSlice(Math.min(1, getAlphaSlice() + 0.01f));
 		}
 	}
@@ -187,8 +201,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	public void decAlpha() {
 		if (getSliceType() == SliceType.none) {
 			setAlphaAll(Math.max(0, getAlphaAll() - 0.01f));
-		}
-		else {
+		} else {
 			setAlphaSlice(Math.max(0, getAlphaSlice() - 0.01f));
 		}
 	}
@@ -221,8 +234,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	public void incIntensity() {
 		if (getSliceType() == SliceType.none) {
 			setIntensityAll(Math.min(Constants.MAX_INTENSITY, getIntensityAll() + 10.0f));
-		}
-		else {
+		} else {
 			setIntensitySlice(Math.min(Constants.MAX_INTENSITY, getIntensitySlice() + 10.0f));
 		}
 	}
@@ -230,8 +242,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 	public void decIntensity() {
 		if (getSliceType() == SliceType.none) {
 			setIntensityAll(Math.max(0, getIntensityAll() - 10.0f));
-		}
-		else {
+		} else {
 			setIntensitySlice(Math.max(0, getIntensitySlice() - 10.0f));
 		}
 	}
@@ -252,7 +263,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		if (lastSliceType != sliceType)
 			isChanged = true;
 		this.sliceType = sliceType;
-		lastSliceType  = sliceType; 
+		lastSliceType = sliceType;
 	}
 
 	public ColorMode getColorMode() {
@@ -263,7 +274,18 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		this.colorMode = colorMode;
 		if (lastColorMode != colorMode)
 			isChanged = true;
-		lastColorMode = colorMode; 
+		lastColorMode = colorMode;
+	}
+
+	public NodeFormulaVersion getNodeFormulaVersion() {
+		return nodeFormulaVersion;
+	}
+
+	public void setNodeFormulaVersion(NodeFormulaVersion nodeFormulaVersion) {
+		this.nodeFormulaVersion = nodeFormulaVersion;
+		if (lastNodeFormulaVersion != nodeFormulaVersion)
+			isChanged = true;
+		lastNodeFormulaVersion = nodeFormulaVersion;
 	}
 
 	public int getVisibleIndexX() {
@@ -345,9 +367,11 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		hiLightColor.w = getFloat(section, "hiLightColor.w", 1);
 
 		scale = getFloat(section, "scale", 1);
-		depthVisibility = getFloat(section, "depthFadingOffset", 0.8f);
-		colorMode = (s = getString(section, "colorMode", "")).isEmpty()? ColorMode.normal : ColorMode.valueOf(s);
-		setSliceType((s = getString(section, "sliceType", "")).isEmpty()? SliceType.sliceZ : SliceType.valueOf(s));
+		setDepthVisibility(getFloat(section, "depthFadingOffset", 0.8f));
+		setColorMode((s = getString(section, "colorMode", "")).isEmpty() ? ColorMode.normal : ColorMode.valueOf(s));
+		setSliceType((s = getString(section, "sliceType", "")).isEmpty() ? SliceType.sliceZ : SliceType.valueOf(s));
+		setNodeFormulaVersion((s = getString(section, "NodeFormulaVersion", "")).isEmpty() ? NodeFormulaVersion.v_1_2
+				: NodeFormulaVersion.valueOf(s));
 		visibleIndexX = getInt(section, "visibleIndexX", 15);
 		visibleIndexY = getInt(section, "visibleIndexY", 15);
 		visibleIndexZ = getInt(section, "visibleIndexZ", 15);
@@ -386,6 +410,7 @@ public class QFSSettings extends AbstractSettings implements ISettings {
 		put(section, "depthFadingOffset", depthVisibility);
 		put(section, "colorMode", colorMode.toString());
 		put(section, "sliceType", sliceType.toString());
+		put(section, "nodeFormulaVersion", nodeFormulaVersion.toString());
 		put(section, "visibleIndexX", visibleIndexX);
 		put(section, "visibleIndexY", visibleIndexY);
 		put(section, "visibleIndexZ", visibleIndexZ);

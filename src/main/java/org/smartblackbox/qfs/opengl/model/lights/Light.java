@@ -60,8 +60,8 @@ public class Light extends Entity {
 		
 		getTransformMatrix()
 		.identity()
-		.translate(position)
-		.setRotationXYZ(rotationRad.x, rotationRad.y, rotationRad.z)
+		.translate(pos)
+		.setRotationXYZ(rotRad.x, rotRad.y, rotRad.z)
 		.scale(scale)
 		.mul(lookM)
 		;

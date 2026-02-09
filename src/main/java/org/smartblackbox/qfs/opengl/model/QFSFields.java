@@ -33,9 +33,9 @@ public class QFSFields {
 
 	private AppSettings appSettings = AppSettings.getInstance();
 	private QFSProject qfsProject = QFSProject.getInstance();
-	private QFSModel qfsModel = qfsProject.getQfsModel(); 
-	private Scene scene; 
-	
+	private QFSModel qfsModel = qfsProject.getQfsModel();
+	private Scene scene;
+
 	private Entity baseField;
 
 	private OBJFormatLoader loader;
@@ -44,13 +44,13 @@ public class QFSFields {
 
 	public QFSFields(Scene scene) {
 		loader = new OBJFormatLoader();
-		this.scene = scene;  
+		this.scene = scene;
 	}
 
 	public void drawArrows(Entity baseField, float step, ObjFileModel modelSphere, int sizeI, int sizeJ, int sizeK) {
 		ObjFileModel modelArrow = loader.loadOBJModel(Constants.MODEL_ARROW);
 		float scale = 0.5f;
-		
+
 		Entity arrowC = scene.createEntity(baseField, modelSphere,
 				new Vector3d(-(sizeI + 1) / 2 * step, -(sizeJ / 2 + 1) * step, -(sizeK / 2 + 1) * step),
 				new Vector3d(0, 0, 0), scale);
@@ -66,15 +66,15 @@ public class QFSFields {
 		arrowX.getMaterial().setDiffuseColor(new Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
 		arrowX.getMaterial().setAmbientColor(new Vector4f(10.0f, 4.5f, 4.5f, 1.0f));
 		arrowX.getMaterial().setShininess(0.0f);
-		
-		Entity arrowY = scene.createEntity(baseField, modelArrow, 
+
+		Entity arrowY = scene.createEntity(baseField, modelArrow,
 				new Vector3d(-(sizeI + 1) / 2 * step, -(sizeJ / 2 + 1) * step, -(sizeK / 2 + 1) * step),
 				new Vector3d(0, 0, 0), scale);
 		arrowY.setOverrideModelMaterial(true);
 		arrowY.getMaterial().setDiffuseColor(new Vector4f(0.0f, 0.0f, 0.0f, 0.0f));
 		arrowY.getMaterial().setAmbientColor(new Vector4f(4.5f, 4.5f, 10.0f, 1.0f));
 		arrowY.getMaterial().setShininess(0.0f);
-		
+
 		Entity arrowZ = scene.createEntity(baseField, modelArrow,
 				new Vector3d(-(sizeI + 1) / 2 * step, -(sizeJ / 2 + 1) * step, -(sizeK / 2 + 1) * step),
 				new Vector3d(-90, 0, 0), scale);
@@ -83,7 +83,7 @@ public class QFSFields {
 		arrowZ.getMaterial().setAmbientColor(new Vector4f(4.5f, 10.0f, 4.5f, 1.0f));
 		arrowZ.getMaterial().setShininess(0.0f);
 	}
-	
+
 	public void build(Vector3i dimension, Vector3d rotation) {
 		int sizeI = dimension.x;
 		int sizeJ = dimension.y;
@@ -94,7 +94,8 @@ public class QFSFields {
 		Statistics.numNodesY = sizeJ;
 		Statistics.numNodesZ = sizeK;
 
-		ObjFileModel modelSphere = loader.loadOBJModel(Constants.MODEL_NODE);
+		ObjFileModel modelNode = loader.loadOBJModel(Constants.MODEL_NODE);
+		ObjFileModel modelNode1 = loader.loadOBJModel(Constants.MODEL_LIGHT_BULB);
 
 		baseField = new Entity(null, null, new Vector3d(), new Vector3d(), 1.0f);
 		baseField.setPosition(0, 0, 0);
@@ -102,38 +103,47 @@ public class QFSFields {
 		scene.addEntity(baseField);
 
 		float step = Constants.EP_DEFAULT_DISTANCE;
-		
+
 		// Draw xyz arrows on entity baseField.
-		//drawArrows(baseField, step, modelSphere, sizeI, sizeJ, sizeK);
-		
+		// drawArrows(baseField, step, modelSphere, sizeI, sizeJ, sizeK);
+
 		QFSNode[][][] fieldMatrix = new QFSNode[sizeK][sizeJ][sizeI];
 
 		int NumNodes = sizeI * sizeJ * sizeK;
-		
+
 		qfsModel.setLoadingReady(false);
 		qfsModel.setProgress(0.0);
-		
+
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				int countNode = 0;
 				for (int k = 0; k < sizeK; k++) {
 					for (int j = 0; j < sizeJ; j++) {
 						for (int i = 0; i < sizeI; i++) {
-							QFSNode n = scene.createQFSNode(baseField, modelSphere,
-									new Vector3d((i - sizeI / 2) * step, (j - sizeJ / 2) * step, (k - sizeK / 2) * step),
+							QFSNode n = scene.createQFSNode(baseField, modelNode,
+									new Vector3d((i - sizeI / 2) * step, (j - sizeJ / 2) * step,
+											(k - sizeK / 2) * step),
 									new Vector3d(0, 0, 0), Constants.EP_DEFAULT_DISTANCE);
+//							if (true || k == sizeK / 2 && j == sizeJ / 2 && i == sizeI / 2) {
+//								n.help = scene.createEntity(n, modelNode1, new Vector3d(0.0, 0, 0),
+//										new Vector3d(0, 0, 0), 0.0);
+//								n.help.setOverrideModelMaterial(true);
+//								n.help.getMaterial().setDiffuseColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+//								n.help.getMaterial().setAmbientColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+//							}
+
 							n.setIndex(i, j, k);
-							
+
 							n.setOverrideModelMaterial(true);
 							n.getMaterial().setDiffuseColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 							n.getMaterial().setAmbientColor(new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 							fieldMatrix[k][j][i] = n;
-							
-							boolean isEdgeX = (sizeI > 1 && (i == 0 || i == sizeI - 1)); 
-							boolean isEdgeY = (sizeJ > 1 && (j == 0 || j == sizeJ - 1)); 
-							boolean isEdgeZ = (sizeK > 1 && (k == 0 || k == sizeK - 1)); 
+
+							boolean isEdgeX = (sizeI > 1 && (i == 0 || i == sizeI - 1));
+							boolean isEdgeY = (sizeJ > 1 && (j == 0 || j == sizeJ - 1));
+							boolean isEdgeZ = (sizeK > 1 && (k == 0 || k == sizeK - 1));
 
 							n.setFixed(isEdgeX || isEdgeY || isEdgeZ);
 							n.setXFixed(isEdgeX);
@@ -148,7 +158,6 @@ public class QFSFields {
 //								)) {
 //								n.setFixed(true);
 //							}
-
 
 							countNode++;
 							qfsModel.setProgress((double) countNode / (double) NumNodes * 100);
@@ -192,9 +201,9 @@ public class QFSFields {
 				qfsModel.setLoadingReady(true);
 			}
 		}).start();
-		
+
 	}
-	
+
 	public void build() {
 		Vector3i dimension = new Vector3i();
 		qfsProject.getDimension(dimension);
@@ -218,5 +227,5 @@ public class QFSFields {
 	public QFSNode getNode(Vector3i node) {
 		return getNode(node.x, node.y, node.z);
 	}
-	
+
 }

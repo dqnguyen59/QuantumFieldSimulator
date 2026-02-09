@@ -27,27 +27,33 @@ import org.smartblackbox.qfs.settings.QFSProject;
 import org.smartblackbox.qfs.settings.QFSSettings;
 
 public class Entity {
-	
+
 	protected QFSProject qfsProject = QFSProject.getInstance();
 	protected QFSSettings settings = qfsProject.settings;
-	
+
 	protected String name = "";
 	protected Entity parent = null;
+	public Entity help = null;
 	protected ObjFileModel model;
 	protected Material material;
 	protected boolean overrideModelMaterial = false;
-	
-	// Swap between two positions buffers. One for reading and the other for writing.
+
+	// Swap between two positions buffers. One for reading and the other for
+	// writing.
 	// So data will not be messed up when doing some interacting calculations.
-	// After all has been nodes has been calculated, then copy the positionBuff to position.
-	protected Vector3d position = new Vector3d();
-	protected Vector3d positionBuff = new Vector3d();
+	// After all has been nodes has been calculated, then copy the positionBuff to
+	// position.
+	protected Vector3d pos = new Vector3d();
+	protected Vector3d posBuff = new Vector3d();
+	protected Vector3d lastPos = new Vector3d();
 	// swapBufIndex can only be 0 or 1
 	protected static int swapBufIndex = 0;
 
 	protected Vector3d direction = new Vector3d(0, 0, 1);
-	protected Vector3d rotation;
-	protected Vector3d rotationRad = new Vector3d();
+	protected Vector3d rot = new Vector3d();
+	protected Vector3d rotBuff = new Vector3d();
+	protected Vector3d lastRot = new Vector3d();
+	protected Vector3d rotRad = new Vector3d();
 	protected double scale;
 	private Matrix4d transformMatrix = new Matrix4d();
 	protected Matrix4f[] transformMatrixfList = new Matrix4f[2];
@@ -55,17 +61,18 @@ public class Entity {
 	protected boolean isVisible = true;
 	protected boolean isSelected = false;
 	protected boolean isHiLighted = false;
-	
+
 	public Entity(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
 		this.parent = parent;
 		this.model = model;
-		this.position = new Vector3d(position);
+		this.pos = new Vector3d(position);
 		setPosition(new Vector3d(position));
-		this.rotation = new Vector3d(rotation);
+		this.rot = new Vector3d(rotation);
+		setRotation(new Vector3d(rotation));
 		this.scale = scale;
 		transformMatrixfList[0] = new Matrix4f();
 		transformMatrixfList[1] = new Matrix4f();
-		
+
 		if (model != null)
 			material = new Material(model.getMaterial());
 		else
@@ -89,142 +96,137 @@ public class Entity {
 	public void setParent(Entity parent) {
 		this.parent = parent;
 	}
-	
+
 	/**
-	 * This is a read only method.
-	 * Use {@link #getPosiitonBuff()} to modify values.
+	 * This is a read only method. Use {@link #getPosiitonBuff()} to modify values.
 	 * 
 	 * @return position
 	 */
 	public Vector3d getPosition() {
-		return position;
+		return pos;
 	}
 
 	public Vector3d getPositionBuff() {
-		return positionBuff;
+		return posBuff;
 	}
 
 	public void setPosition(Vector3d position) {
-		positionBuff.set(position);
+		posBuff.set(position);
 	}
 
 	public void setPosition(double x, double y, double z) {
-		positionBuff.set(x, y, z);
+		posBuff.set(x, y, z);
 	}
-	
+
 	public void incPosition(Vector3d p) {
 		incPosition(p.x, p.y, p.z);
 	}
 
 	public void incPosition(double x, double y, double z) {
-		positionBuff.add(x, y, z);
+		posBuff.add(x, y, z);
 	}
-	
+
 	public void decPosition(double x, double y, double z) {
-		positionBuff.sub(x, y, z);
+		posBuff.sub(x, y, z);
 	}
-	
+
 	public double setPositionDX(double dx) {
-		return positionBuff.x += dx;
+		return posBuff.x += dx;
 	}
-	
+
 	public double setPositionDY(double dy) {
-		return positionBuff.y += dy;
+		return posBuff.y += dy;
 	}
-	
+
 	public double setPositionDZ(double dz) {
-		return positionBuff.z += dz;
+		return posBuff.z += dz;
 	}
-	
+
 	public double setPositionX(double newPos) {
-		return positionBuff.x = newPos;
+		return posBuff.x = newPos;
 	}
-	
+
 	public double setPositionY(double newPos) {
-		return positionBuff.y = newPos;
+		return posBuff.y = newPos;
 	}
-	
+
 	public double setPositionZ(double newPos) {
-		return positionBuff.z = newPos;
+		return posBuff.z = newPos;
 	}
-	
+
 	public void updatePosition() {
-		position.x = positionBuff.x;
-		position.y = positionBuff.y;
-		position.z = positionBuff.z;
+		pos.set(posBuff);
 	}
-	
+
 	public Vector3d getDirection() {
 		return direction;
 	}
 
 	public void setDirection(Vector3d direction) {
-		this.direction.x = direction.x;
-		this.direction.y = direction.y;
-		this.direction.z = direction.z;
+		this.direction.set(direction);
 	}
 
 	public Vector3d getRotation() {
-		return rotation;
+		return rot;
 	}
 
 	/**
-	 * Values are in degrees.
-	 * Range: 0..360
+	 * Values are in degrees. Range: 0..360
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
+	public void setRotation(Vector3d rotation) {
+		rotBuff.set(rotation);
+	}
+
+	/**
+	 * Values are in degrees. Range: 0..360
 	 * 
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
 	public void setRotation(double x, double y, double z) {
-		this.rotation.x = x;
-		this.rotation.y = y;
-		this.rotation.z = z;
-		updateRotation();
+		rotBuff.set(x, y, z);
 	}
-	
+
 	/**
-	 * Values are in degrees.
-	 * Range: 0..360
+	 * Values are in degrees. Range: 0..360
 	 * 
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
 	public void incRotation(double x, double y, double z) {
-		this.rotation.x += x;
-		this.rotation.y += y;
-		this.rotation.z += z;
-		updateRotation();
+		rotBuff.add(x, y, z);
 	}
-	
+
 	/**
-	 * Values are in degrees.
-	 * Range: 0..360
+	 * Values are in degrees. Range: 0..360
 	 * 
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
 	public void decRotation(double x, double y, double z) {
-		this.rotation.x -= x;
-		this.rotation.y -= y;
-		this.rotation.z -= z;
-		updateRotation();
+		rotBuff.sub(x, y, z);
 	}
-	
+
 	public Vector3d getRotationRad() {
-		return rotationRad;
+		return rotRad;
 	}
 
 	public void setRotationRad(Vector3d rotationRad) {
-		this.rotationRad = rotationRad;
+		this.rotRad = rotationRad;
 	}
 
-	protected synchronized void updateRotation() {
-		rotationRad.x = (double) Math.toRadians(rotation.x);
-		rotationRad.y = (double) Math.toRadians(rotation.y);
-		rotationRad.z = (double) Math.toRadians(rotation.z);
+	protected void updateRotation() {
+		rot.set(rotBuff);
+		rotRad.x = (double) Math.toRadians(rot.x);
+		rotRad.y = (double) Math.toRadians(rot.y);
+		rotRad.z = (double) Math.toRadians(rot.z);
 	}
 
 	public ObjFileModel getModel() {
@@ -240,8 +242,8 @@ public class Entity {
 	}
 
 	/**
-	 * If overrideModelMaterial is true then use the entity material,
-	 * otherwise use material from the model.
+	 * If overrideModelMaterial is true then use the entity material, otherwise use
+	 * material from the model.
 	 * 
 	 * This is useful, if each entity must have its own material.
 	 * 
@@ -252,8 +254,10 @@ public class Entity {
 	}
 
 	public Material getMaterial() {
-		if (overrideModelMaterial || model == null) return material;
-		else return model.getMaterial();
+		if (overrideModelMaterial || model == null)
+			return material;
+		else
+			return model.getMaterial();
 	}
 
 	public void setMaterial(Material material) {
@@ -310,30 +314,31 @@ public class Entity {
 	public void updateMatrix() {
 		updatePosition();
 		updateRotation();
-		
-		transformMatrix
-		.identity()
-		.translate(position)
-		.setRotationXYZ(rotationRad.x, rotationRad.y, rotationRad.z)
-		.scale(scale);
-		
+
+		transformMatrix.identity().translate(pos).setRotationXYZ(rotRad.x, rotRad.y, rotRad.z).scale(scale);
+
 		if (parent != null)
 			parent.transformMatrix.mul(transformMatrix, transformMatrix);
 		transformMatrixfList[swapBufIndex].set(transformMatrix);
 	}
-	
+
 	public Matrix4d getTransformMatrixd() {
 		return getTransformMatrix();
 	}
 
 	/**
-	 * The returned matrix is divided in two fold, enables to use parallel processing.</br></br>
-	 * While one matrix is used for sending data to GPU,
-	 * the other matrix can be used to prepare / processing new updated data for the next frame.</br></br>
-	 * Use the method {@link #swapBuffer()} to swap between these matrices.</br></br>
-	 * When all data for the next frame has been processed,
-	 * call {@link #swapBuffer()} before sending data to the GPU.
-	 * </br></br>
+	 * The returned matrix is divided in two fold, enables to use parallel
+	 * processing.</br>
+	 * </br>
+	 * While one matrix is used for sending data to GPU, the other matrix can be
+	 * used to prepare / processing new updated data for the next frame.</br>
+	 * </br>
+	 * Use the method {@link #swapBuffer()} to swap between these matrices.</br>
+	 * </br>
+	 * When all data for the next frame has been processed, call
+	 * {@link #swapBuffer()} before sending data to the GPU. </br>
+	 * </br>
+	 * 
 	 * @return the processed matrix buffer
 	 */
 	public Matrix4f getTransformMatrixf() {

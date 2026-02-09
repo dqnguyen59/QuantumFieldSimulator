@@ -42,6 +42,7 @@ public class QFSModel {
 		drawWall,
 		eraseNode,
 		eraseWall,
+		fillWall,
 	}
 	
 	public enum NodeSelectionMode {

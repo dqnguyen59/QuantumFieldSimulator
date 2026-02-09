@@ -39,7 +39,7 @@ public class AppSettings extends AbstractSettings implements ISettings {
 	
 	private boolean useFixedNodes = true;
 	// Range: 0.0 - 1.0
-	private double absorptionFixedNodes = 1.0;
+	private double reflectionFixedNodes = 1.0;
 	private boolean useLoop;
 	private boolean isChanged;
 
@@ -189,12 +189,12 @@ public class AppSettings extends AbstractSettings implements ISettings {
 		}
 	}
 
-	public double getAbsorptionFixedNodes() {
-		return absorptionFixedNodes;
+	public double getReflectionFixedNodes() {
+		return reflectionFixedNodes;
 	}
 
-	public void setAbsorptionFixedNodes(double absorptionFixedNodes) {
-		this.absorptionFixedNodes = absorptionFixedNodes;
+	public void setReflectionFixedNodes(double reflectionFixedNodes) {
+		this.reflectionFixedNodes = reflectionFixedNodes;
 	}
 
 	public boolean isUseLoop() {

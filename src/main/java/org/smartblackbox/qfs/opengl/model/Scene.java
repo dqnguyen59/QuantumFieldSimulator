@@ -43,10 +43,11 @@ public class Scene {
 	private QFSProject qfsProject = QFSProject.getInstance();
 	private QFSSettings settings = qfsProject.settings;
 	private SlitWallSettings slitWall = qfsProject.slitWall;
+	private QFSModel qfsModel = qfsProject.getQfsModel();
 
 	private List<Terrain> terrains;
 	private List<Entity> entities;
-	
+
 	private Object[] nodeArray;
 	private Object[] entityArray;
 
@@ -68,7 +69,9 @@ public class Scene {
 	private int animateDirection = -1;
 
 	public String status = "";
-	
+
+	private float lastSlitWallPos = qfsProject.slitWall.getPosition();
+
 	public Scene() {
 		entities = new ArrayList<>();
 		terrains = new ArrayList<>();
@@ -78,11 +81,12 @@ public class Scene {
 	public Entity createEntity(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
 		return addEntity(new Entity(parent, model, position, rotation, scale));
 	}
-	
-	public QFSNode createQFSNode(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation, double scale) {
+
+	public QFSNode createQFSNode(Entity parent, ObjFileModel model, Vector3d position, Vector3d rotation,
+			double scale) {
 		return (QFSNode) addEntity(new QFSNode(parent, model, position, rotation, scale));
 	}
-	
+
 	public Oscillator createOscillator(String name, QFSNode entity) {
 		Oscillator oscillator = new Oscillator(name, entity.getIndex());
 		QFSProject.getInstance().oscillators.add(oscillator);
@@ -120,7 +124,8 @@ public class Scene {
 	}
 
 	public QFSNode getNodeByIndex(Vector3i nodeIndex) {
-		int index = nodeIndex.z * qfsProject.getDimensionY() * qfsProject.getDimensionX() + nodeIndex.y * qfsProject.getDimensionX() + nodeIndex.x;
+		int index = nodeIndex.z * qfsProject.getDimensionY() * qfsProject.getDimensionX()
+				+ nodeIndex.y * qfsProject.getDimensionX() + nodeIndex.x;
 		if (index >= 0 && index < nodeArray.length)
 			return (QFSNode) nodeArray[index];
 		else
@@ -161,17 +166,53 @@ public class Scene {
 		}
 		hiLightedNodes.clear();
 	}
-	
-	public void addNodeHiLight(int x, int y, int z) {
-		QFSNode node = (QFSNode) nodeArray[z * qfsProject.getDimensionX() * qfsProject.getDimensionY() + y * qfsProject.getDimensionX() + x];
+
+	private void iAddNodeHiLight(int x, int y, int z) {
+		QFSNode node = (QFSNode) nodeArray[z * qfsProject.getDimensionX() * qfsProject.getDimensionY()
+				+ y * qfsProject.getDimensionX() + x];
 		node.setHiLighted(true);
 		hiLightedNodes.add(node);
 	}
-	
-	public void removeNodeHiLight(int x, int y, int z) {
-		QFSNode node = (QFSNode) nodeArray[z * qfsProject.getDimensionX() * qfsProject.getDimensionY() + y * qfsProject.getDimensionX() + x];
+
+	public void addNodeHiLight(int x, int y, int z) {
+		int w = qfsProject.getDimensionX();
+		int d = qfsProject.getDimensionY();
+		int h = qfsProject.getDimensionZ();
+		int size = 1;
+
+		for (int k = z - size; k <= z + size; k++) {
+			for (int j = y - size; j <= y + size; j++) {
+				for (int i = x - size; i <= x + size; i++) {
+					if (i >= 0 && i < w && j >= 0 && j < d && k >= 0 && k < h) {
+						iAddNodeHiLight(i, j, k);
+					}
+				}
+			}
+		}
+	}
+
+	private void iRemoveNodeHiLight(int x, int y, int z) {
+		QFSNode node = (QFSNode) nodeArray[z * qfsProject.getDimensionX() * qfsProject.getDimensionY()
+				+ y * qfsProject.getDimensionX() + x];
 		node.setHiLighted(false);
 		hiLightedNodes.remove(node);
+	}
+
+	public void removeNodeHiLight(int x, int y, int z) {
+		int w = qfsProject.getDimensionX();
+		int d = qfsProject.getDimensionY();
+		int h = qfsProject.getDimensionZ();
+		int size = 1;
+
+		for (int k = z - size; k <= z + size; k++) {
+			for (int j = y - size; j <= y + size; j++) {
+				for (int i = x - size; i <= x + size; i++) {
+					if (i >= 0 && i < w && j >= 0 && j < d && k >= 0 && k < h) {
+						iRemoveNodeHiLight(i, j, k);
+					}
+				}
+			}
+		}
 	}
 
 	private Vector3i isWallNodeExists(QFSNode node) {
@@ -182,18 +223,18 @@ public class Scene {
 		}
 		return null;
 	}
-	
+
 	private void addWallNode(QFSNode node) {
 		if (isWallNodeExists(node) == null)
 			wallNodeIndexList.add(node.getIndex());
 	}
-	
+
 	private void removeWallNode(QFSNode node) {
 		Vector3i nodeIndex;
 		if ((nodeIndex = isWallNodeExists(node)) != null)
 			wallNodeIndexList.remove(nodeIndex);
 	}
-	
+
 	private void setNodeWall(QFSNode node, boolean value) {
 		node.setWall(value);
 		if (node.isWall())
@@ -201,7 +242,51 @@ public class Scene {
 		else
 			removeWallNode(node);
 	}
-	
+
+	private void iFillNodeWall(QFSNode node, boolean value, int startX, int startY, int startZ) {
+		int w = qfsProject.getDimensionX();
+		int d = qfsProject.getDimensionY();
+		int h = qfsProject.getDimensionZ();
+		int x = startX;
+		int y = startY;
+		int z = startZ;
+
+		if (x >= 0 && x < w && y >= 0 && y < d && z >= 0 && z < h) {
+			node = (QFSNode) nodeArray[startZ * w * d + startY * w + x];
+			if (!node.isWall() && !node.isFixed()) {
+				while (!node.isWall() && !node.isFixed()) {
+					setNodeWall(node, value);
+					x++;
+					node = (QFSNode) nodeArray[startZ * w * d + startY * w + x];
+				}
+				iFillNodeWall(node, value, x - 2, startY + 1, startZ);
+				iFillNodeWall(node, value, x - 2, startY - 1, startZ);
+			}
+		}
+
+		x = startX - 1;
+		if (x >= 0 && x < w && y >= 0 && y < d && z >= 0 && z < h) {
+			node = (QFSNode) nodeArray[startZ * w * d + startY * w + x];
+			if (!node.isWall() && !node.isFixed()) {
+				while (!node.isWall() && !node.isFixed()) {
+					setNodeWall(node, value);
+					x--;
+					node = (QFSNode) nodeArray[startZ * w * d + startY * w + x];
+				}
+				iFillNodeWall(node, value, x + 2, startY + 1, startZ);
+				iFillNodeWall(node, value, x + 2, startY - 1, startZ);
+			}
+		}
+	}
+
+	public void fillNodeWall(QFSNode node, boolean value) {
+		int startX = node.getIndex().x;
+		int startY = node.getIndex().y;
+		int startZ = node.getIndex().z;
+
+		iFillNodeWall(node, value, startX, startY, startZ);
+	}
+
 	public void swapNodeWall(QFSNode node) {
 		setNodeWall(node, !node.isWall());
 	}
@@ -211,9 +296,10 @@ public class Scene {
 		int y = node.getIndex().y;
 
 		for (int z = 0; z < qfsProject.getDimensionZ(); z++) {
-			node = (QFSNode) nodeArray[z * qfsProject.getDimensionX() * qfsProject.getDimensionY() + y * qfsProject.getDimensionX() + x];
+			node = (QFSNode) nodeArray[z * qfsProject.getDimensionX() * qfsProject.getDimensionY()
+					+ y * qfsProject.getDimensionX() + x];
 			swapNodeWall(node);
-		} 
+		}
 	}
 
 	public void eraseWall(QFSNode node) {
@@ -223,12 +309,13 @@ public class Scene {
 	public void eraseWallZ(QFSNode node) {
 		Vector3i index = node.getIndex();
 		for (int z = 0; z < qfsProject.getDimensionZ(); z++) {
-			int i = z * qfsProject.getDimensionX() * qfsProject.getDimensionY() + index.y * qfsProject.getDimensionX() + index.x;
+			int i = z * qfsProject.getDimensionX() * qfsProject.getDimensionY() + index.y * qfsProject.getDimensionX()
+					+ index.x;
 			node = (QFSNode) nodeArray[i];
 			eraseWall(node);
 		}
 	}
-	
+
 	public void clearAllWalls() {
 		for (Vector3i nodeIndex : wallNodeIndexList) {
 			QFSNode node = getNodeByIndex(nodeIndex);
@@ -244,6 +331,8 @@ public class Scene {
 			node.setHiLighted(false);
 			node.setVisible(false);
 			setNodeWall(node, true);
+			System.out.println("slitWall.getAbsorption(): " + slitWall.getReflection());
+			node.setReflection(slitWall.getReflection());
 		}
 		hiLightedNodes.clear();
 	}
@@ -263,46 +352,61 @@ public class Scene {
 		int p, d, iSize, jSize, ic, jc;
 		boolean isSlit;
 		int numSlits = slitWall.getNumSlits();
-		
+
 		int jStart = 1;
-		
-		switch(slitWall.direction) {
+
+		float slitWallPos = qfsProject.slitWall.getPosition();
+
+		switch (slitWall.direction) {
 		case x:
 			p = (int) (qfsProject.slitWall.getPosition() * qfsProject.getDimensionX());
-			if (p < 1) p = 1;
-			if (p > qfsProject.getDimensionX() - 2) p = qfsProject.getDimensionX() - 2;
+
+			if (slitWallPos != lastSlitWallPos) {
+				if (slitWallPos > lastSlitWallPos) {
+					p++;
+				}
+				slitWallPos = (float) p / (float) qfsProject.getDimensionX();
+				qfsProject.slitWall.setPosition(slitWallPos);
+			}
+
+			if (p < 1)
+				p = 1;
+			if (p > qfsProject.getDimensionX() - 2)
+				p = qfsProject.getDimensionX() - 2;
 			iSize = qfsProject.getDimensionY();
 			jSize = qfsProject.getDimensionZ();
 			ic = iSize / 2;
 			jc = jSize / 2;
 			d = slitWall.getSlitDistance();
-			
+
 			double shw = slitWall.getSlitWidth() * 0.5;
 			double shh = slitWall.getSlitHeight() * 0.5;
-			
+
 			if (jSize == 1) {
 				jStart = 0;
 				jSize = 2;
 			}
-			
+
 			for (int j = jStart; j < jSize - 1; j++) {
 				for (int i = 1; i < iSize - 1; i++) {
 					addNodeHiLight(p, i, j);
 				}
 			}
-			
+
 			for (int j = jStart; j < jSize - 1; j++) {
 				for (int i = 1; i < iSize - 1; i++) {
 					for (int n = 1; n <= numSlits; n++) {
 						double c = (ic + ((n - numSlits * 0.5) - 0.5) * d);
-						
+
 						isSlit = (i > c - shw && i < c + shw && j > jc - shh && j < jc + shh);
-						if (isSlit)
+						if (isSlit) {
 							removeNodeHiLight(p, i, j);
+
+						}
 					}
 				}
-			} 
-			
+			}
+
 			break;
 		case y:
 			break;
@@ -310,13 +414,15 @@ public class Scene {
 			break;
 		default:
 			break;
-		
+
 		}
+
+		lastSlitWallPos = slitWallPos;
 	}
 
 	public void drawLine(QFSNode node) {
 		clearHiLightNodes();
-		
+
 		int z = settings.getVisibleIndexZ();
 		int x1 = firstHiLightedNode.getIndex().x;
 		int y1 = firstHiLightedNode.getIndex().y;
@@ -324,7 +430,8 @@ public class Scene {
 		int y2 = node.getIndex().y;
 		int xD = x2 - x1;
 		int yD = y2 - y1;
-		if (xD == 0 && yD == 0) return;
+		if (xD == 0 && yD == 0)
+			return;
 
 		int xStart = x1, xEnd = x2, yStart = y1, yEnd = y2;
 		if (x2 < x1) {
@@ -335,16 +442,15 @@ public class Scene {
 			yStart = y2;
 			yEnd = y1;
 		}
-		
+
 		if (Math.abs(xD) >= Math.abs(yD)) {
-			yStart = x1 <= x2? y1 : y2;
+			yStart = x1 <= x2 ? y1 : y2;
 			for (int x = xStart; x <= xEnd; x++) {
 				int y = (int) Math.round(yStart + (x - xStart) / (double) xD * yD);
 				addNodeHiLight(x, y, z);
 			}
-		}
-		else {
-			xStart = y1 <= y2? x1 : x2;
+		} else {
+			xStart = y1 <= y2 ? x1 : x2;
 			for (int y = yStart; y <= yEnd; y++) {
 				int x = (int) Math.round(xStart + (y - yStart) / (double) yD * xD);
 				addNodeHiLight(x, y, z);
@@ -354,14 +460,15 @@ public class Scene {
 
 	public void drawWall(QFSNode node) {
 		clearHiLightNodes();
-		
+
 		int x1 = firstHiLightedNode.getIndex().x;
 		int y1 = firstHiLightedNode.getIndex().y;
 		int x2 = node.getIndex().x;
 		int y2 = node.getIndex().y;
 		int xD = x2 - x1;
 		int yD = y2 - y1;
-		if (xD == 0 && yD == 0) return;
+		if (xD == 0 && yD == 0)
+			return;
 
 		int xStart = x1, xEnd = x2, yStart = y1, yEnd = y2;
 		if (x2 < x1) {
@@ -372,17 +479,16 @@ public class Scene {
 			yStart = y2;
 			yEnd = y1;
 		}
-		
+
 		for (int z = 0; z < qfsProject.getDimensionZ(); z++) {
 			if (Math.abs(xD) >= Math.abs(yD)) {
-				yStart = x1 <= x2? y1 : y2;
+				yStart = x1 <= x2 ? y1 : y2;
 				for (int x = xStart; x <= xEnd; x++) {
 					int y = (int) Math.round(yStart + (x - xStart) / (double) xD * yD);
 					addNodeHiLight(x, y, z);
 				}
-			}
-			else {
-				xStart = y1 <= y2? x1 : x2;
+			} else {
+				xStart = y1 <= y2 ? x1 : x2;
 				for (int y = yStart; y <= yEnd; y++) {
 					int x = (int) Math.round(xStart + (y - yStart) / (double) yD * xD);
 					addNodeHiLight(x, y, z);
@@ -392,59 +498,55 @@ public class Scene {
 	}
 
 	public void setFirstHiLightNode(QFSNode node) {
-    	firstHiLightedNode = node;
-    	firstHiLightedNode.setHiLighted(true);
+		firstHiLightedNode = node;
+		firstHiLightedNode.setHiLighted(true);
 	}
 
 	public QFSNode getNodeFromMousePos(double xPos, double yPos) {
-		if (nodeArray == null) return null;
+		if (nodeArray == null)
+			return null;
 		Matrix4f projectionMatrix = qfsProject.camera.getProjectionMatrix();
 		Matrix4f viewMatrix = qfsProject.camera.getViewMatrix();
 		Vector3f cameraPos = qfsProject.camera.getPosition();
-		
+
 		float x = (float) ((2 * (xPos - 0)) / appSettings.getWindowWidth() - 1);
 		float y = (float) ((2 * (appSettings.getWindowHeight() - (yPos + 0))) / appSettings.getWindowHeight() - 1);
-		
+
 		Vector4f clipCoords = new Vector4f(x, y, 0, 1);
-		
+
 		Matrix4f invProjection = new Matrix4f(projectionMatrix).invert();
 		Vector4f eyeCoords = invProjection.transform(clipCoords);
 		eyeCoords.w = 0;
 		Matrix4f invViewMatrix = new Matrix4f(viewMatrix).invert();
 		Vector4f rayWorld = invViewMatrix.transform(eyeCoords);
 		Vector3f ray = new Vector3f(rayWorld.x, rayWorld.y, rayWorld.z).normalize();
-		
-		Vector4f nodePos = new Vector4f();
-        Vector2f result = new Vector2f();
-		Vector3f scale = new Vector3f();
-		
-        int iMin = settings.getVisibleIndexZ() * qfsProject.getDimensionX() * qfsProject.getDimensionY();
-        int iMax = (settings.getVisibleIndexZ() + 1) * qfsProject.getDimensionX() * qfsProject.getDimensionY();
 
-        // FPS drops when using large number of nodes.
-        // TODO: use BSP to improve performance.
-        for (int i = iMin; i >= 0 && i < iMax && i < nodeArray.length; i++) {
-        	QFSNode node = (QFSNode) nodeArray[i];
-	    	if (node.isVisible() && (!node.isFixed() || node.isWall())) {
-	    		node.getTransformMatrixf().transform(0, 0, 0, 1, nodePos);
+		Vector4f nodePos = new Vector4f();
+		Vector2f result = new Vector2f();
+		Vector3f scale = new Vector3f();
+
+		int iMin = settings.getVisibleIndexZ() * qfsProject.getDimensionX() * qfsProject.getDimensionY();
+		int iMax = (settings.getVisibleIndexZ() + 1) * qfsProject.getDimensionX() * qfsProject.getDimensionY();
+
+		// FPS drops when using large number of nodes.
+		// TODO: use BSP to improve performance.
+		for (int i = iMin; i >= 0 && i < iMax && i < nodeArray.length; i++) {
+			QFSNode node = (QFSNode) nodeArray[i];
+			if (node.isVisible() && (!node.isFixed() || node.isWall())) {
+				node.getTransformMatrixf().transform(0, 0, 0, 1, nodePos);
 				node.getTransformMatrixf().getScale(scale);
-	    		
+
 				double radius = settings.scale * node.getScale() * 0.5;
-		        
-		        if (Intersectionf.intersectRaySphere(
-		        		cameraPos.x, cameraPos.y, cameraPos.z,
-		        		ray.x, ray.y, ray.z,
-		        		nodePos.x, nodePos.y, nodePos.z,
-		        		(float) (radius * radius),
-		        		result
-		        		)) {
-			    	return node;
-		        }
-	    	}
+
+				if (Intersectionf.intersectRaySphere(cameraPos.x, cameraPos.y, cameraPos.z, ray.x, ray.y, ray.z,
+						nodePos.x, nodePos.y, nodePos.z, (float) (radius * radius), result)) {
+					return node;
+				}
+			}
 		}
-        return null;
+		return null;
 	}
-	
+
 	public void threadUpdateMatrix(final int start, final int end) {
 		incTask();
 		status = "threadUpdateMatrix(" + start + ", " + end + "); TaskNo.:" + numTask;
@@ -464,11 +566,11 @@ public class Scene {
 
 	public void processMatrixUpdateTasks(int numThreads, int segmentSize) {
 		resetTasks();
-		
+
 		for (int i = 0; i < numThreads; i++) {
 			int start = i * segmentSize;
 			int end = start + segmentSize;
-			end = end >= entityArray.length? entityArray.length : end;
+			end = end >= entityArray.length ? entityArray.length : end;
 			threadUpdateMatrix(start, end);
 		}
 	}
@@ -479,12 +581,37 @@ public class Scene {
 		new Thread(new Runnable() {
 
 			volatile int i = start;
-			
+
 			@Override
 			public void run() {
-				while (i < end) {
-					((QFSNode) nodeArray[i++]).calcNewPosition();
+				// If set to false then the node stops updating its position
+				if (qfsModel.isSimulating()) {
+					switch (settings.getNodeFormulaVersion()) {
+					case v_1_3:
+						while (i < end) {
+							((QFSNode) nodeArray[i++]).updateNodePropertiesV1_3();
+						}
+						break;
+					case v_1_2:
+						while (i < end) {
+							((QFSNode) nodeArray[i++]).updateNodePropertiesV1_2();
+						}
+						break;
+					case v_1_1:
+						while (i < end) {
+							((QFSNode) nodeArray[i++]).updateNodePropertiesV1_1();
+						}
+						break;
+					case v_1_0:
+					default:
+						while (i < end) {
+							((QFSNode) nodeArray[i++]).updateNodePropertiesV1_0();
+						}
+						break;
+
+					}
 				}
+
 				taskCompleted();
 			}
 		}).start();
@@ -492,15 +619,15 @@ public class Scene {
 
 	public void processPhysicsTasks(int numThreads, int segmentSize) {
 		resetTasks();
-		
+
 		for (int i = 0; i < numThreads; i++) {
 			int start = i * segmentSize;
 			int end = start + segmentSize;
-			end = end >= nodeArray.length? nodeArray.length : end;
+			end = end >= nodeArray.length ? nodeArray.length : end;
 			threadCalcPhysics(start, end);
 		}
 	}
-	
+
 	public int getNumTask() {
 		return numTask;
 	}
@@ -519,7 +646,7 @@ public class Scene {
 
 	public synchronized void taskCompleted() {
 		numTask--;
-		synchronized(tasks) {
+		synchronized (tasks) {
 			if (numTask <= 0) {
 				tasks.notifyAll();
 				numTask = 0;
@@ -528,12 +655,12 @@ public class Scene {
 	}
 
 	public void waitForAllTasksReady() {
-		synchronized(tasks) {
+		synchronized (tasks) {
 			try {
 				tasks.wait();
-			} catch(InterruptedException e) {
+			} catch (InterruptedException e) {
 			}
-		}			
+		}
 		numTask = 0;
 	}
 
@@ -556,14 +683,13 @@ public class Scene {
 	public void runAnimation() {
 		if (animated) {
 			double z = getQfsFields().getBaseField().getRotation().z;
-			
+
 			if (animateDirection == -1 && z <= -170) {
 				animateDirection = 1;
-			}
-			else if (animateDirection == 1 && z >= -10) {
+			} else if (animateDirection == 1 && z >= -10) {
 				animateDirection = -1;
 			}
-			
+
 			getQfsFields().getBaseField().incRotation(0.0f, 0.0f, 0.5 * animateDirection);
 		}
 	}

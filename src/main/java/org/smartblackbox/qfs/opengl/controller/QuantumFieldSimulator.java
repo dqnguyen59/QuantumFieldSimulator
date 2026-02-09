@@ -60,15 +60,17 @@ import org.smartblackbox.utils.Utils;
 public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEvents {
 
 	//////////////////////////////////////////////////////////////////////////////////
-	/// Project Settings /////////////////////////////////////////////////////////////
+	/// Project Settings
+	////////////////////////////////////////////////////////////////////////////////// /////////////////////////////////////////////////////////////
 	private AppSettings appSettings = AppSettings.getInstance();
 	private QFSProject qfsProject = QFSProject.getInstance();
-	private QFSModel qfsModel = qfsProject.getQfsModel(); 
+	private QFSModel qfsModel = qfsProject.getQfsModel();
 	private Scene scene = qfsProject.scene;
 	private QFSSettings settings = qfsProject.settings;
 	private SlitWallSettings slitWall = qfsProject.slitWall;
 	private DetectorModel detectorModel = qfsProject.detectorModel;
-	/// Project Settings /////////////////////////////////////////////////////////////
+	/// Project Settings
+	/// /////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////
 
 	private final Renderer renderer;
@@ -122,7 +124,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		modelSpotLight.getMaterial().setDiffuseColor(0.5f, 0.2f, 0.0f, 1.0f);
 		modelSpotLight.getMaterial().setDiffuseIntensity(0.8);
 
-		//Point light
+		// Point light
 		float lightIntensity = 3.0f;
 		Vector3d lightPosition = new Vector3d(30, 200, 175);
 		Vector3d lightRotation = new Vector3d(0, 0, 0);
@@ -135,7 +137,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		pointLight.setName("DefaultPointLight");
 		pointLight.setSpotLight(false);
 
-		//Spot light
+		// Spot light
 		lightIntensity = 3.0f;
 		lightPosition = new Vector3d(25.0f, 40.0f, -10.0f);
 		lightRotation = new Vector3d(0, 0, 0);
@@ -161,18 +163,18 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 		// Create a default scene with xyz nodes.
 		qfsProject.setDimension(51, 51, 31);
-		// The scene is (re)build when settings has been changed and reset, see checksettingsChanged().
+		// The scene is (re)build when settings has been changed and reset, see
+		// checksettingsChanged().
 		qfsProject.reset();
 	}
 
 	public void initDefaultTerrain() throws Exception {
-		qfsProject.terrain = new Terrain(
-				new Vector3f(-Terrain.SIZE / 2,  -150,  -Terrain.SIZE / 2),
-				loader,
+		qfsProject.terrain = new Terrain(new Vector3f(-Terrain.SIZE / 2, -150, -Terrain.SIZE / 2), loader,
 				new Material());
 		qfsProject.terrain.setTerrainTexturePath(Constants.TEXTURE_FILE_PATH);
 		qfsProject.terrain.setTerrainTextureFile(Constants.TEXTURE_DEFAULT_FILE);
-		Texture texture = new Texture(loader.loadTexture(Constants.BASE_PATH + qfsProject.terrain.getTerrainTextureFilePath()));
+		Texture texture = new Texture(
+				loader.loadTexture(Constants.BASE_PATH + qfsProject.terrain.getTerrainTextureFilePath()));
 		qfsProject.terrain.getMaterial().setTexture(texture);
 		scene.addTerrain(qfsProject.terrain);
 	}
@@ -191,28 +193,24 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				int dimZ = qfsProject.getDimensionZ();
 
 				if (i != -1 || j != -1 || k != -1) {
-					boolean isBoundingLine =
-							i == 0								&& j == 0								||
-							i == 0								&& j == qfsProject.getDimensionY() - 1  ||
-							i == qfsProject.getDimensionX() - 1	&& j == 0								||
-							i == qfsProject.getDimensionX() - 1	&& j == qfsProject.getDimensionY() - 1	||
+					boolean isBoundingLine = i == 0 && j == 0 || i == 0 && j == qfsProject.getDimensionY() - 1
+							|| i == qfsProject.getDimensionX() - 1 && j == 0
+							|| i == qfsProject.getDimensionX() - 1 && j == qfsProject.getDimensionY() - 1 ||
 
-							i == 0								&& k == 0								||
-							i == 0								&& k == qfsProject.getDimensionZ() - 1  ||
-							i == qfsProject.getDimensionX() - 1	&& k == 0								||
-							i == qfsProject.getDimensionX() - 1	&& k == qfsProject.getDimensionZ() - 1	||
+							i == 0 && k == 0 || i == 0 && k == qfsProject.getDimensionZ() - 1
+							|| i == qfsProject.getDimensionX() - 1 && k == 0
+							|| i == qfsProject.getDimensionX() - 1 && k == qfsProject.getDimensionZ() - 1 ||
 
-							j == 0								&& k == 0								||
-							j == 0								&& k == qfsProject.getDimensionZ() - 1  ||
-							j == qfsProject.getDimensionY() - 1	&& k == 0								||
-							j == qfsProject.getDimensionY() - 1	&& k == qfsProject.getDimensionZ() - 1
-							;
+							j == 0 && k == 0 || j == 0 && k == qfsProject.getDimensionZ() - 1
+							|| j == qfsProject.getDimensionY() - 1 && k == 0
+							|| j == qfsProject.getDimensionY() - 1 && k == qfsProject.getDimensionZ() - 1;
 
 					boolean isVisible = false;
-					
+
 					switch (settings.getSliceType()) {
 					case none:
-						isVisible = isBoundingLine || (i > 0 && i < dimX - 1 && j > 0 && j < dimY - 1 && k >  0 && k < dimZ - 1);
+						isVisible = isBoundingLine
+								|| (i > 0 && i < dimX - 1 && j > 0 && j < dimY - 1 && k > 0 && k < dimZ - 1);
 						break;
 					case sliceX:
 						isVisible = isBoundingLine || (i == settings.getVisibleIndexX());
@@ -224,16 +222,19 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 						isVisible = isBoundingLine || (k == settings.getVisibleIndexZ());
 						break;
 					case sliceXZ:
-						isVisible = isBoundingLine || (i == settings.getVisibleIndexX() && k == settings.getVisibleIndexZ());
+						isVisible = isBoundingLine
+								|| (i == settings.getVisibleIndexX() && k == settings.getVisibleIndexZ());
 						break;
 					case sliceYZ:
-						isVisible = isBoundingLine || (j == settings.getVisibleIndexY() && k == settings.getVisibleIndexZ());
+						isVisible = isBoundingLine
+								|| (j == settings.getVisibleIndexY() && k == settings.getVisibleIndexZ());
 						break;
 					case sliceXY:
-						isVisible = isBoundingLine || (i == settings.getVisibleIndexX() && j == settings.getVisibleIndexY());
+						isVisible = isBoundingLine
+								|| (i == settings.getVisibleIndexX() && j == settings.getVisibleIndexY());
 						break;
 					}
-					
+
 					node.setVisible(isVisible || node.isHiLighted());
 
 				}
@@ -279,12 +280,15 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					scene.setFirstHiLightNode(node);
 					isDrawing = true;
 				}
-			}
-			else {
+			} else {
 				scene.makeWallFromHiLightNodes();
 				isNodesUpdateRequired = true;
 				isDrawing = false;
 			}
+			break;
+		case fillWall:
+			scene.fillNodeWall(node, true);
+			isNodesUpdateRequired = true;
 			break;
 		default:
 			break;
@@ -329,7 +333,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 		QFSNode node = scene.getNodeFromMousePos(xPos, yPos);
 		if (node != null) {
-			if (selectedNode != null) selectedNode.setSelected(false);
+			if (selectedNode != null)
+				selectedNode.setSelected(false);
 			selectedNode = node;
 			selectedNode.setSelected(true);
 			qfsModel.getCurrentMouseNodeIndex().set(selectedNode.getIndex());
@@ -357,7 +362,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				deltaX = (float) y;
 		}
 		if (rightButtonPress) {
-			qfsProject.camera.moveRotation(deltaX * Constants.MOUSE_SENSITIVITY, deltaY * Constants.MOUSE_SENSITIVITY, 0);
+			qfsProject.camera.moveRotation(deltaX * Constants.MOUSE_SENSITIVITY, deltaY * Constants.MOUSE_SENSITIVITY,
+					0);
 		}
 
 		lastMousePos.x = xPos;
@@ -407,8 +413,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					mouseReleaseWall(node);
 				}
 			}
-		}
-		else {
+		} else {
 			leftButtonPressed = false;
 			leftButtonReleased = false;
 			rightButtonPress = false;
@@ -418,12 +423,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 	@Override
 	public boolean mouseScrollCallback(long handle, double xOffset, double yOffset) {
-		float incCamera = keyEvents != null &&  keyEvents.isCtrlPressed? 2 : 12;
-		qfsProject.camera.movePosition(
-				(float) (incCamera * xOffset * Constants.CAMERA_MOVE_SPEED),
-				0,
-				(float) (incCamera * yOffset * Constants.CAMERA_MOVE_SPEED)
-				);
+		float incCamera = keyEvents != null && keyEvents.isCtrlPressed ? 2 : 12;
+		qfsProject.camera.movePosition((float) (incCamera * xOffset * Constants.CAMERA_MOVE_SPEED), 0,
+				(float) (incCamera * yOffset * Constants.CAMERA_MOVE_SPEED));
 
 		return false;
 	}
@@ -443,8 +445,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 		this.keyEvents = keyEvents;
 
-		float incCamera = keyEvents.isShiftPressed? 2 : 8;
-		float inc = keyEvents.isCtrlPressed? (keyEvents.isShiftPressed? 0.2f : 1.0f) : 0f;
+		float incCamera = keyEvents.isShiftPressed ? 2 : 8;
+		float inc = keyEvents.isCtrlPressed ? (keyEvents.isShiftPressed ? 0.2f : 1.0f) : 0f;
 
 		switch (key) {
 		case GLFW.GLFW_KEY_W:
@@ -521,12 +523,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			case normal:
 				if (keyEvents.isCtrlPressed) {
 					qfsModel.getCurrentMouseNodeIndex().z--;
-					if (qfsModel.getCurrentMouseNodeIndex().z < 1) qfsModel.getCurrentMouseNodeIndex().z = 1;
+					if (qfsModel.getCurrentMouseNodeIndex().z < 1)
+						qfsModel.getCurrentMouseNodeIndex().z = 1;
 					updateSelectedNode();
 
 					if (qfsProject.getDimensionZ() > 1) {
 						settings.setVisibleIndexZ(settings.getVisibleIndexZ() - 1);
-						if (settings.getVisibleIndexZ() < 1) settings.setVisibleIndexZ(1);
+						if (settings.getVisibleIndexZ() < 1)
+							settings.setVisibleIndexZ(1);
 						isNodesUpdateRequired = true;
 					}
 				}
@@ -604,8 +608,11 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			if (qfsModel.isSimulating() && selectedNode != null)
 				selectedNode.incPosition(new Vector3d(0, 0, qfsProject.rainModel.getForce()));
 			break;
+		case GLFW.GLFW_KEY_END:
+			if (qfsModel.isSimulating() && selectedNode != null)
+				selectedNode.incRotation(0, 0, qfsProject.rainModel.getForce());
+			break;
 		}
-		
 
 		return false;
 	}
@@ -613,9 +620,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	@Override
 	public boolean keyCallback(long handle, int key, int scanCode, int action, int mods) {
 		isReleased = action == GLFW.GLFW_RELEASE;
-		
+
 		boolean isShiftPressed = (mods & GLFW.GLFW_MOD_SHIFT) == GLFW.GLFW_MOD_SHIFT;
-		
+
 		if (isReleased) {
 			switch (key) {
 			case GLFW.GLFW_KEY_N:
@@ -646,16 +653,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 					for (QFSNode qfsNode : customNodeFixed) {
 						qfsNode.setFixed(false);
 					}
-				}
-				else {
+				} else {
 					if (!selectedNode.isFixed()) {
 						// Set the node position and make it fixed.
 						selectedNode.getPositionBuff().z = qfsProject.rainModel.getForce();
 						selectedNode.setFixed(true);
 						// Remember that this node is set fixed.
 						customNodeFixed.add(selectedNode);
-					}
-					else {
+					} else {
 						// Release the node.
 						selectedNode.setFixed(false);
 					}
@@ -672,15 +677,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				Screenshot.prepareScreenshot(4, 4, 0xFF);
 				break;
 			case GLFW.GLFW_KEY_F12:
-				settings.setSliceType(settings.getSliceType() == SliceType.none? SliceType.sliceZ : SliceType.none);
+				settings.setSliceType(settings.getSliceType() == SliceType.none ? SliceType.sliceZ : SliceType.none);
 				updateNodesProperties();
 				break;
 			case GLFW.GLFW_KEY_F7:
 				if (lastSelectedNode != null) {
 					lastSelectedNode.setFixed(false);
 					lastSelectedNode = null;
-				}
-				else if (qfsModel.isSimulating() && selectedNode != null) {
+				} else if (qfsModel.isSimulating() && selectedNode != null) {
 					Vector3d p = selectedNode.getPosition();
 					selectedNode.setPosition(new Vector3d(p.x, p.y, qfsProject.rainModel.getForce()));
 					selectedNode.setFixed(true);
@@ -694,11 +698,8 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	}
 
 	private void moveCamera(float x, float y, float z) {
-		qfsProject.camera.movePosition(
-				x * Constants.CAMERA_MOVE_SPEED,
-				y * Constants.CAMERA_MOVE_SPEED,
-				z * Constants.CAMERA_MOVE_SPEED
-				);
+		qfsProject.camera.movePosition(x * Constants.CAMERA_MOVE_SPEED, y * Constants.CAMERA_MOVE_SPEED,
+				z * Constants.CAMERA_MOVE_SPEED);
 	}
 
 	private void updateSelectedNode() {
@@ -716,15 +717,17 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		if (qfsProject.terrain.isVisible())
 			qfsProject.terrain.updateTransformationMatrix();
 	}
-	
+
 	private void checkSettingsChanged() {
 		if (qfsProject.isChanged() || appSettings.isChanged()) {
 			setCustomTitle(qfsProject.getCurrentFilename());
 			nuklearModel.showFrame(Frame.progress);
 			try {
-				qfsProject.terrain.getMaterial().setTexture(new Texture(loader.loadTexture(Constants.BASE_PATH + qfsProject.terrain.getTerrainTextureFilePath())));
+				qfsProject.terrain.getMaterial().setTexture(new Texture(
+						loader.loadTexture(Constants.BASE_PATH + qfsProject.terrain.getTerrainTextureFilePath())));
 			} catch (Exception e) {
-				String message = String.format("Texture file '%s' not found!", qfsProject.terrain.getTerrainTextureFilePath());
+				String message = String.format("Texture file '%s' not found!",
+						qfsProject.terrain.getTerrainTextureFilePath());
 				nuklearModel.showErrorDialog("Loading terrain texture", message);
 			}
 			scene.getEntities().clear();
@@ -734,13 +737,13 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			scene.getQfsFields().build();
 			waitAfterReset = 0;
 		}
-		
+
 		if (!isLoadingStarted) {
 			if (qfsProject.isFileSaved()) {
 				qfsProject.setFileSaved(false);
 				setCustomTitle(qfsProject.getCurrentFilename());
 			}
-			
+
 			if (qfsModel.isChanged()) {
 				qfsModel.setChanged(false);
 				isNodesUpdateRequired = true;
@@ -754,8 +757,10 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 			if (slitWall.isChanged()) {
 				slitWall.setChanged(false);
-				if (slitWall.isActive()) scene.drawSlitWall();
-				else scene.clearHiLightNodes();
+				if (slitWall.isActive())
+					scene.drawSlitWall();
+				else
+					scene.clearHiLightNodes();
 				isNodesUpdateRequired = true;
 			}
 
@@ -793,15 +798,14 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 				int numThreads = appSettings.getNumThreads();
 				int numNodes = scene.getEntities().size();
-				int segmentSize = numNodes > numThreads? numNodes / numThreads + 1 : numNodes;
+				int segmentSize = numNodes > numThreads ? numNodes / numThreads + 1 : numNodes;
 
 				PerformanceMonitor.start(Measurement.physics);
 
 				if (waitAfterReset <= 0) {
 					simulateRain();
 					oscillateSelectedNodes();
-				}
-				else {
+				} else {
 					waitAfterReset--;
 				}
 				detector();
@@ -810,7 +814,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 
 				if (qfsModel.isSimulating())
 					PerformanceMonitor.stop(Measurement.physics);
-				else 
+				else
 					PerformanceMonitor.reset(Measurement.physics);
 
 				PerformanceMonitor.start(Measurement.updateMatrix);
@@ -819,7 +823,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 				PerformanceMonitor.stop(Measurement.updateMatrix);
 
 				PerformanceMonitor.stop(Measurement.totalCPURenderTime);
-				
+
 				isCalcNextPhysicsReady = true;
 			}
 
@@ -851,8 +855,10 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 			Vector3i index = new Vector3i();
 
 			for (int i = 0; i < qfsProject.rainModel.getIterations(); i++) {
-				index.x = (int) (Math.max(2, Math.min(Math.random() * qfsProject.getDimensionX(), qfsProject.getDimensionX() - 2)));
-				index.y = (int) (Math.max(2, Math.min(Math.random() * qfsProject.getDimensionY(), qfsProject.getDimensionY() - 2)));
+				index.x = (int) (Math.max(2,
+						Math.min(Math.random() * qfsProject.getDimensionX(), qfsProject.getDimensionX() - 2)));
+				index.y = (int) (Math.max(2,
+						Math.min(Math.random() * qfsProject.getDimensionY(), qfsProject.getDimensionY() - 2)));
 				index.z = settings.getVisibleIndexZ();
 
 				QFSNode node = scene.getNodeByIndex(index);
@@ -887,7 +893,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	public void resetMonitoringDeadThreads() {
 		currentTime = System.currentTimeMillis();
 	}
-	
+
 	/**
 	 * This should never occur and should not be needed.
 	 */
@@ -937,8 +943,7 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 	public void render(boolean isAnimated) {
 		if (Screenshot.isTakingScreenShot()) {
 			Screenshot.updateScreenshotViewport();
-		}
-		else if (glWindow.isResize()) {
+		} else if (glWindow.isResize()) {
 			GL11.glViewport(0, 0, glWindow.getWidth(), glWindow.getHeight());
 		}
 
@@ -949,14 +954,13 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		if (isLoadingStarted) {
 			// Make sure it is not doing any calculation while updating new scene.
 			updateNodesArray();
-		}
-		else {
+		} else {
 			waitForRenderingReady();
 			resetMonitoringDeadThreads();
 			// Meanwhile, start calculating the next frame while rendering.
 			calcNextPhysicsFrame();
 		}
-		
+
 		PerformanceMonitor.start(Measurement.sendToGPU);
 		isRenderingReady = false;
 		if (qfsProject.terrain.isVisible())
@@ -964,9 +968,9 @@ public class QuantumFieldSimulator extends Engine implements IMouseAndKeyboardEv
 		renderer.render(qfsProject.camera, scene);
 		isRenderingReady = true;
 		PerformanceMonitor.stop(Measurement.sendToGPU);
-		
+
 		scene.runAnimation();
-		
+
 		super.render(scene.isAnimated());
 
 		if (Screenshot.isTakingScreenShot()) {

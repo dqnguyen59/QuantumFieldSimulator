@@ -54,6 +54,8 @@ public class SlitWallSettings extends AbstractSettings implements ISettings {
 	private boolean isChanged;
 	private boolean isUpdated;
 	
+	private float reflection = 1.0f;
+	
 	public SlitWallSettings() {
 		super();
 	}
@@ -173,6 +175,14 @@ public class SlitWallSettings extends AbstractSettings implements ISettings {
 		}
 	}
 
+	public float getReflection() {
+		return reflection;
+	}
+
+	public void setReflection(float reflection) {
+		this.reflection = reflection;
+	}
+
 	public void reset() {
 		new Thread(new Runnable() {
 			
@@ -199,6 +209,7 @@ public class SlitWallSettings extends AbstractSettings implements ISettings {
 		slitHeight = getInt(section, "slitHeight", 10);
 		slitDistance = getInt(section, "slitDistance", 51);
 		position = getFloat(section, "position", 0.25f);
+		reflection = getFloat(section, "reflection", 1.0f);
 		reset();
 	}
 
@@ -212,6 +223,7 @@ public class SlitWallSettings extends AbstractSettings implements ISettings {
 		put(section, "slitHeight", slitHeight);
 		put(section, "slitDistance", slitDistance);
 		put(section, "position", position);
+		put(section, "reflection", reflection);
 	}
 
 }

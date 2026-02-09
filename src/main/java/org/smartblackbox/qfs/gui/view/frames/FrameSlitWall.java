@@ -29,14 +29,15 @@ import org.smartblackbox.qfs.settings.SlitWallSettings;
 public class FrameSlitWall extends AbstractFrame {
 
 	private QFSProject qfsProject = QFSProject.getInstance();
+	private SlitWallSettings slitWall = qfsProject.slitWall;
 	private QFSModel qfsModel = qfsProject.getQfsModel(); 
 
 	private int width = 300;
-	private int height = 310;
+	private int height = 400;
 	private double leftCol = 0.50;
 	private double rightCol = 0.50;
 
-	private SlitWallSettings slitWall = QFSProject.getInstance().slitWall;
+	private StringBuffer bufReflection = new StringBuffer();
 
 	public FrameSlitWall(NuklearModel frames) {
 		super(frames);
@@ -76,7 +77,12 @@ public class FrameSlitWall extends AbstractFrame {
 			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 1);
 			slitWall.setPosition(Nuklear.nk_propertyf(ctx, "Wall position", 0, slitWall.getPosition(), 1f, 0.001f, 0.001f));
 			
-			Nuklear.nk_layout_row_dynamic(ctx, spacer1 , 1);
+			nk_spacer(ctx, spacer1, 1);
+			slitWall.setReflection(nk_label_edit(ctx, stack, " Reflection:",
+				bufReflection, slitWall.getReflection(), leftCol, rightCol));
+			slitWall.setReflection(nk_slider(ctx, 0.0, slitWall.getReflection(), 1.0, 0.01));
+			nk_spacer(ctx, spacer1, 1);
+
 			Nuklear.nk_layout_row_dynamic(ctx, rowHeight, 2);
 			if (nk_button_label(ctx, "Clear All Walls")) {
 				qfsModel.clearWalls();
